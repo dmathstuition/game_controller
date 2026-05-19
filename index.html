@@ -3,417 +3,443 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IJA MathQuiz — Controller</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<title>IJA Maths Quiz — Organiser</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --red:#CC0022;--red-dark:#8B0016;--white:#FFFFFF;--offwhite:#FFF5F6;
-  --yellow:#FFD600;--blue:#006FFF;--orange:#FF6A00;--purple:#8B00E6;--teal:#00B8D4;
-  --green:#00C853;--gray:#F2F2F5;--gray2:#E0E0E8;--text:#1A1A2E;--muted:#999;
+  --bg:#080d18;--card:#0e1729;--border:#1a2844;
+  --accent:#2563eb;--gold:#f59e0b;--text:#e2e8f0;
+  --text2:#64748b;--green:#10b981;--red:#ef4444;--purple:#7c3aed;
 }
-html,body{height:100%;background:var(--offwhite);color:var(--text);font-family:'Nunito',sans-serif}
-#login-overlay{position:fixed;inset:0;background:linear-gradient(135deg,var(--red) 0%,var(--red-dark) 100%);display:flex;align-items:center;justify-content:center;z-index:999;overflow:hidden}
-#login-overlay::before{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.06);top:-100px;right:-100px}
-#login-overlay::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);bottom:-80px;left:-60px}
-.lg-sym{position:absolute;font-family:'Fredoka One',cursive;color:rgba(255,255,255,.12);animation:lg-float var(--t,10s) ease-in-out infinite alternate;animation-delay:var(--d,0s)}
-@keyframes lg-float{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(-30px) rotate(15deg)}}
-.login-card{background:white;border-radius:28px;padding:46px 50px 42px;text-align:center;min-width:360px;max-width:440px;width:90%;box-shadow:0 24px 80px rgba(0,0,0,.25);position:relative;z-index:1}
-.login-emoji{font-size:50px;margin-bottom:6px;display:block;animation:bob 2s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.login-title{font-family:'Fredoka One',cursive;font-size:26px;color:var(--red);margin-bottom:4px}
-.login-sub{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:26px}
-.login-card input{width:100%;background:var(--offwhite);border:2.5px solid var(--gray2);border-radius:14px;color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;padding:13px 16px;margin-bottom:12px;outline:none;transition:border-color .2s,box-shadow .2s}
-.login-card input:focus{border-color:var(--red);box-shadow:0 0 0 4px rgba(204,0,34,.1)}
-.login-card input::placeholder{color:#ccc;font-weight:700}
-.btn-login{width:100%;background:var(--red);color:white;border:none;border-radius:14px;font-family:'Fredoka One',cursive;font-size:18px;padding:15px;cursor:pointer;letter-spacing:.5px;box-shadow:0 5px 0 var(--red-dark),0 8px 24px rgba(204,0,34,.3);transition:transform .12s,box-shadow .12s}
-.btn-login:hover{transform:translateY(-2px)}
-.btn-login:active{transform:translateY(2px);box-shadow:0 3px 0 var(--red-dark)}
-.error-msg{color:var(--orange);font-size:13px;font-weight:700;margin-top:10px;min-height:18px}
-#app{display:none;height:100vh;flex-direction:column}
-.topbar{background:var(--red);box-shadow:0 3px 16px rgba(0,0,0,.18);padding:10px 22px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
-.topbar-logo{width:40px;height:40px;border-radius:50%;background:white;border:2.5px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:19px;color:var(--red);flex-shrink:0}
-.topbar-title{font-family:'Fredoka One',cursive;font-size:clamp(13px,1.7vw,21px);color:white;flex:1}
-.topbar-title span{color:var(--yellow)}
-.phase-pill{font-family:'Fredoka One',cursive;font-size:13px;padding:5px 16px;border-radius:100px;border:2.5px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);transition:all .3s}
-.phase-pill.waiting{color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.25)}
-.phase-pill.question{background:var(--yellow);color:var(--red-dark);border-color:var(--yellow);box-shadow:0 0 12px rgba(255,214,0,.5)}
-.phase-pill.reveal{background:var(--green);color:#004d1c;border-color:var(--green);box-shadow:0 0 12px rgba(0,200,83,.5)}
-.body{display:flex;flex:1;overflow:hidden}
-.q-panel{width:300px;flex-shrink:0;background:white;border-right:2.5px solid var(--gray2);display:flex;flex-direction:column;overflow:hidden}
-.q-panel-hdr{background:var(--red);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
-.q-panel-hdr-title{font-family:'Fredoka One',cursive;font-size:15px;color:white}
-.q-count-badge{background:var(--yellow);color:var(--red-dark);font-family:'Fredoka One',cursive;font-size:12px;padding:3px 11px;border-radius:100px}
-.q-list{flex:1;overflow-y:auto;padding:8px}
-.q-list::-webkit-scrollbar{width:4px}
-.q-list::-webkit-scrollbar-thumb{background:var(--gray2);border-radius:4px}
-.q-item{padding:10px 12px;border-radius:12px;cursor:pointer;display:flex;align-items:flex-start;gap:9px;border:2.5px solid transparent;margin-bottom:5px;transition:all .15s;background:var(--offwhite)}
-.q-item:hover{background:var(--gray);border-color:var(--gray2)}
-.q-item.active{background:rgba(204,0,34,.08);border-color:var(--red)}
-.q-num-badge{width:28px;height:28px;border-radius:50%;flex-shrink:0;background:var(--gray2);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted);transition:all .15s}
-.q-item.active .q-num-badge{background:var(--red);color:white}
-.q-preview{font-size:12px;font-weight:700;color:var(--text);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.q-meta-line{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px}
-.ctrl-panel{flex:1;overflow-y:auto;padding:20px 26px;display:flex;flex-direction:column;gap:18px}
-.ctrl-panel::-webkit-scrollbar{width:4px}
-.ctrl-panel::-webkit-scrollbar-thumb{background:var(--gray2);border-radius:4px}
-.section-label{font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;color:var(--red);text-transform:uppercase;padding-bottom:8px;border-bottom:2.5px solid var(--gray2);margin-bottom:11px;display:flex;align-items:center;gap:7px}
-.stats-row{display:flex;gap:10px;flex-wrap:wrap}
-.stat-card{background:white;border:2.5px solid var(--gray2);border-radius:14px;padding:11px 18px;text-align:center;flex:1;min-width:75px;box-shadow:0 3px 0 var(--gray2)}
-.stat-val{font-family:'Fredoka One',cursive;font-size:24px;color:var(--red)}
-.stat-lbl{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:2px}
-.timer-picker{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.timer-btn{flex:1;min-width:70px;background:white;border:3px solid var(--gray2);border-radius:14px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;font-family:'Fredoka One',cursive}
-.timer-btn:hover{border-color:var(--red);background:rgba(204,0,34,.05)}
-.timer-btn.active{border-color:var(--red);background:rgba(204,0,34,.1);box-shadow:0 4px 0 rgba(204,0,34,.2)}
-.timer-btn .t-secs{font-size:22px;color:var(--red);display:block;line-height:1}
-.timer-btn .t-label{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
-.timer-btn.active .t-label{color:var(--red)}
-.timer-apply{background:var(--red);color:white;border:none;border-radius:12px;font-family:'Fredoka One',cursive;font-size:14px;padding:12px 20px;cursor:pointer;white-space:nowrap;box-shadow:0 4px 0 var(--red-dark);transition:transform .12s;flex-shrink:0}
-.timer-apply:hover{transform:translateY(-2px)}
-.timer-apply:active{transform:translateY(1px)}
-.timer-note{font-size:11px;font-weight:700;color:var(--muted);margin-top:6px;width:100%}
-.current-card{background:white;border:2.5px solid var(--gray2);border-radius:18px;padding:16px 20px;box-shadow:0 4px 0 var(--gray2)}
-.cur-q-tag{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:white;font-family:'Fredoka One',cursive;font-size:13px;padding:4px 13px;border-radius:100px;margin-bottom:9px}
-.cur-q-text{font-size:14px;font-weight:800;color:var(--text);line-height:1.5;margin-bottom:13px}
-.cur-q-text .katex{font-size:14px!important}
-.opts-preview{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.opt-prev{border-radius:11px;padding:7px 11px;display:flex;align-items:center;gap:8px;border:2px solid transparent}
-.opt-prev:nth-child(1){background:rgba(0,111,255,.1);border-color:rgba(0,111,255,.3)}
-.opt-prev:nth-child(2){background:rgba(255,106,0,.1);border-color:rgba(255,106,0,.3)}
-.opt-prev:nth-child(3){background:rgba(139,0,230,.1);border-color:rgba(139,0,230,.3)}
-.opt-prev:nth-child(4){background:rgba(0,184,212,.1);border-color:rgba(0,184,212,.3)}
-.opt-prev.is-correct{background:rgba(0,200,83,.15)!important;border-color:var(--green)!important}
-.opt-prev-letter{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:11px;color:white}
-.opt-prev:nth-child(1) .opt-prev-letter{background:var(--blue)}
-.opt-prev:nth-child(2) .opt-prev-letter{background:var(--orange)}
-.opt-prev:nth-child(3) .opt-prev-letter{background:var(--purple)}
-.opt-prev:nth-child(4) .opt-prev-letter{background:var(--teal)}
-.opt-prev.is-correct .opt-prev-letter{background:var(--green)!important}
-.opt-prev-text{font-size:11px;font-weight:700;color:var(--text);flex:1;line-height:1.3}
-.opt-prev-text .katex{font-size:11px!important}
-.nav-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.btn{border:none;border-radius:13px;cursor:pointer;font-family:'Fredoka One',cursive;font-size:14px;letter-spacing:.5px;padding:12px 14px;transition:transform .12s,box-shadow .12s;display:flex;align-items:center;justify-content:center;gap:6px}
-.btn:hover{transform:translateY(-2px)}
-.btn:active{transform:translateY(1px)}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-red{background:var(--red);color:white;box-shadow:0 4px 0 var(--red-dark)}
-.btn-green{background:var(--green);color:white;box-shadow:0 4px 0 #007A30}
-.btn-blue{background:var(--blue);color:white;box-shadow:0 4px 0 #004ABB}
-.btn-orange{background:var(--orange);color:white;box-shadow:0 4px 0 #B84900}
-.btn-gray{background:var(--gray);color:var(--text);border:2px solid var(--gray2);box-shadow:0 4px 0 var(--gray2)}
-.btn-gray:hover{background:var(--gray2)}
-/* Live indicator badge next to "ready" button */
-.live-badge{background:rgba(0,200,83,.15);border:2px solid var(--green);color:var(--green);font-family:'Fredoka One',cursive;font-size:12px;padding:3px 12px;border-radius:100px;display:none;align-items:center;gap:5px}
-.live-badge.show{display:flex}
-.toast{position:fixed;bottom:18px;right:18px;background:white;border-radius:14px;padding:11px 18px;font-size:13px;font-weight:800;box-shadow:0 8px 30px rgba(0,0,0,.15);border-left:5px solid var(--green);transform:translateY(80px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:500;max-width:280px}
-.toast.show{transform:translateY(0);opacity:1}
-.toast.error{border-left-color:var(--orange);color:var(--orange)}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;font-size:14px}
+
+/* ── Login ── */
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#0a1a3a 0%,var(--bg) 70%)}
+.lcard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:380px;text-align:center}
+.lcard .logo{font-size:3rem;margin-bottom:16px}
+.lcard h1{color:var(--gold);font-size:1.4rem;font-weight:700;margin-bottom:6px}
+.lcard p{color:var(--text2);font-size:0.85rem;margin-bottom:28px}
+input,select,textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border .15s;margin-bottom:10px}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:72px}
+button{padding:11px 20px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;transition:all .15s}
+.bp{background:var(--accent);color:#fff;width:100%}.bp:hover{background:#1d4ed8}
+.bg{background:var(--green);color:#fff}.bg:hover{background:#059669}
+.bgo{background:var(--gold);color:#080d18}.bgo:hover{background:#d97706}
+.br{background:var(--red);color:#fff}.br:hover{background:#dc2626}
+.bo{background:transparent;border:1px solid var(--border);color:var(--text)}.bo:hover{border-color:var(--accent);color:var(--accent)}
+.berr{color:var(--red);font-size:0.82rem;margin-top:8px;display:none}
+
+/* ── Layout ── */
+#main{display:none}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar h1{font-size:1rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:8px}
+.badge{padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace}
+.s-lobby{background:rgba(37,99,235,.2);color:#60a5fa;border:1px solid #1d4ed8}
+.s-question_active{background:rgba(16,185,129,.2);color:#34d399;border:1px solid #059669}
+.s-reveal{background:rgba(245,158,11,.2);color:#fbbf24;border:1px solid #d97706}
+.s-leaderboard{background:rgba(124,58,237,.2);color:#a78bfa;border:1px solid #7c3aed}
+.s-ended{background:rgba(239,68,68,.2);color:#f87171;border:1px solid #dc2626}
+.layout{display:grid;grid-template-columns:1fr 320px;height:calc(100vh - 49px)}
+.main-p{padding:24px;overflow-y:auto}
+.side-p{background:var(--card);border-left:1px solid var(--border);padding:20px;overflow-y:auto}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:6px;margin-bottom:20px}
+.tab{padding:8px 18px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;background:transparent;border:1px solid var(--border);color:var(--text2);transition:all .15s}
+.tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ── Card ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
+.ct{font-size:0.72rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:14px;font-family:'JetBrains Mono',monospace}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:0.75rem;color:var(--text2);margin-bottom:4px;font-weight:600}
+.fgroup{margin-bottom:10px}
+.fgroup input,.fgroup select,.fgroup textarea{margin-bottom:0}
+
+/* ── Question items ── */
+.qi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.qidx{font-size:0.72rem;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.qtext{font-size:0.92rem;font-weight:600;margin-bottom:10px}
+.opts-mini{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.om{padding:5px 10px;border-radius:6px;font-size:0.78rem;background:var(--card);border:1px solid var(--border)}
+.om.correct{background:rgba(16,185,129,.15);border-color:var(--green)}
+.om .ol{font-weight:700;margin-right:4px}
+
+/* ── Controls ── */
+.ctrl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.cbtn{padding:16px;border-radius:12px;border:none;cursor:pointer;font-family:inherit;font-size:0.92rem;font-weight:700;transition:all .15s;text-align:center}
+
+/* ── Nav q list ── */
+.nqi{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;margin-bottom:6px;background:var(--bg);border:1px solid var(--border);transition:all .15s}
+.nqi.cur{background:rgba(37,99,235,.12);border-color:var(--accent)}
+.nqt{font-size:0.88rem;font-weight:600;flex:1;margin-right:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── Player list ── */
+.pl-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;margin-bottom:5px;background:var(--bg);border:1px solid var(--border)}
+.pl-name{font-weight:600;font-size:0.88rem;display:flex;align-items:center;gap:7px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0}
+.dot.ans{background:var(--green)}
+.pl-score{color:var(--gold);font-weight:700;font-family:'JetBrains Mono',monospace}
+
+/* ── Answer stats ── */
+.abar-wrap{height:6px;background:var(--bg);border-radius:3px;margin-top:4px;overflow:hidden}
+.abar{height:100%;border-radius:3px;transition:width .4s ease}
+.astat{margin-bottom:10px}
+.astat-row{display:flex;justify-content:space-between;font-size:0.82rem}
+
+/* ── Alert ── */
+.alert{padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:0.85rem}
+.alert-s{background:rgba(16,185,129,.12);border:1px solid var(--green);color:var(--green)}
+.alert-e{background:rgba(239,68,68,.12);border:1px solid var(--red);color:var(--red)}
+
+.empty{text-align:center;padding:32px;color:var(--text2);font-size:0.88rem}
+.empty-ico{font-size:2rem;margin-bottom:8px}
+hr.div{border:none;border-top:1px solid var(--border);margin:16px 0}
+.cur-q-wrap .opts-disp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.odisp{padding:9px 12px;border-radius:8px;font-size:0.88rem;border:1px solid var(--border);background:var(--bg)}
+pre{background:var(--bg);padding:12px;border-radius:8px;font-size:0.78rem;color:var(--text2);overflow-x:auto;font-family:'JetBrains Mono',monospace;border:1px solid var(--border);line-height:1.5}
+.topbar-right{display:flex;align-items:center;gap:10px}
 </style>
 </head>
 <body>
 
-<div id="login-overlay">
-  <div class="lg-sym" style="font-size:58px;top:8%;left:5%;--t:11s">π</div>
-  <div class="lg-sym" style="font-size:44px;top:22%;left:18%;--t:9s;--d:1s">∑</div>
-  <div class="lg-sym" style="font-size:52px;bottom:14%;left:8%;--t:13s;--d:2s">√</div>
-  <div class="lg-sym" style="font-size:40px;top:10%;right:10%;--t:10s;--d:.5s">∞</div>
-  <div class="lg-sym" style="font-size:62px;bottom:12%;right:6%;--t:12s;--d:1.5s">∫</div>
-  <div class="login-card">
-    <span class="login-emoji">🎮</span>
-    <div class="login-title">Controller Access</div>
-    <div class="login-sub">Infant Jesus Academy — Maths Competition</div>
-    <input type="text" id="url-input" placeholder="Paste your GAS Web App URL" autocomplete="off">
-    <input type="password" id="pwd-input" placeholder="Controller password" autocomplete="off">
-    <button class="btn-login" onclick="doLogin()">🚀 Enter Control Panel</button>
-    <div class="error-msg" id="login-error"></div>
+<!-- LOGIN -->
+<div id="login">
+  <div class="lcard">
+    <div class="logo">🏆</div>
+    <h1>IJA Maths Quiz</h1>
+    <p>Organiser Panel — Enter password to continue</p>
+    <input type="password" id="pass-inp" placeholder="Password" />
+    <button class="bp" onclick="doLogin()">Enter Panel</button>
+    <div class="berr" id="login-err">Incorrect password. Try again.</div>
   </div>
 </div>
 
-<div id="app">
+<!-- MAIN -->
+<div id="main">
   <div class="topbar">
-    <div class="topbar-logo">∑</div>
-    <div class="topbar-title">IJA Maths <span>Control Panel</span></div>
-    <div class="phase-pill waiting" id="phase-badge">Waiting</div>
-  </div>
-  <div class="body">
-    <div class="q-panel">
-      <div class="q-panel-hdr">
-        <div class="q-panel-hdr-title">📋 Questions</div>
-        <div class="q-count-badge" id="q-count">0 Qs</div>
-      </div>
-      <div class="q-list" id="q-list"></div>
+    <h1>🏆 IJA Maths Quiz — Organiser</h1>
+    <div class="topbar-right">
+      <span id="state-badge" class="badge s-lobby">Lobby</span>
+      <button class="bo" style="padding:6px 12px;font-size:0.8rem" onclick="resetGame()">↺ Reset</button>
     </div>
-    <div class="ctrl-panel">
-      <div>
-        <div class="section-label">📊 Session Status</div>
-        <div class="stats-row">
-          <div class="stat-card"><div class="stat-val" id="stat-current">—</div><div class="stat-lbl">Live Q</div></div>
-          <div class="stat-card"><div class="stat-val" id="stat-total">—</div><div class="stat-lbl">Total Qs</div></div>
-          <div class="stat-card"><div class="stat-val" id="stat-phase" style="font-size:17px">—</div><div class="stat-lbl">Phase</div></div>
-        </div>
+  </div>
+  <div class="layout">
+    <!-- MAIN -->
+    <div class="main-p">
+      <div class="tabs">
+        <button class="tab on" onclick="switchTab('questions')">📝 Questions</button>
+        <button class="tab" onclick="switchTab('control')">🎮 Game Control</button>
+        <button class="tab" onclick="switchTab('setup')">⚙️ Firebase Setup</button>
       </div>
-      <div>
-        <div class="section-label">⏱ Timer Per Question</div>
-        <div class="timer-picker">
-          <div class="timer-btn active" id="tbtn-30" onclick="selectTimer(30)">
-            <span class="t-secs">30s</span><div class="t-label">Quick</div>
+
+      <!-- QUESTIONS TAB -->
+      <div id="tab-questions">
+        <div class="card">
+          <div class="ct">Add New Question</div>
+          <div class="fgroup"><label>Question Text</label><textarea id="nq-text" placeholder="Enter the question..."></textarea></div>
+          <div class="grid2">
+            <div class="fgroup"><label>Option A</label><input id="nq-a" type="text" placeholder="Option A"/></div>
+            <div class="fgroup"><label>Option B</label><input id="nq-b" type="text" placeholder="Option B"/></div>
+            <div class="fgroup"><label>Option C</label><input id="nq-c" type="text" placeholder="Option C"/></div>
+            <div class="fgroup"><label>Option D</label><input id="nq-d" type="text" placeholder="Option D"/></div>
+            <div class="fgroup"><label>Correct Answer</label><select id="nq-ans"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+            <div class="fgroup"><label>Time Limit (seconds)</label><input id="nq-time" type="number" value="30" min="10" max="120"/></div>
           </div>
-          <div class="timer-btn" id="tbtn-45" onclick="selectTimer(45)">
-            <span class="t-secs">45s</span><div class="t-label">Normal</div>
+          <button class="bo" style="width:auto" onclick="addQuestion()">+ Add Question</button>
+        </div>
+        <div style="font-weight:700;margin-bottom:12px">Question Bank &nbsp;<span id="q-count" style="color:var(--text2);font-weight:400">0 questions</span></div>
+        <div id="q-list"><div class="empty"><div class="empty-ico">📋</div>No questions yet.</div></div>
+      </div>
+
+      <!-- CONTROL TAB -->
+      <div id="tab-control" style="display:none">
+        <div class="card cur-q-wrap">
+          <div class="ct">Current Question</div>
+          <div id="cur-q"><div class="empty">No question active yet.</div></div>
+        </div>
+        <div class="card">
+          <div class="ct">Game Controls</div>
+          <div class="ctrl-grid">
+            <button class="cbtn bg" onclick="startGame()">▶ Start Game</button>
+            <button class="cbtn bgo" onclick="revealAnswer()">👁 Reveal Answer</button>
+            <button class="cbtn" style="background:var(--purple);color:#fff" onclick="showLeaderboard()">🏆 Leaderboard</button>
+            <button class="cbtn br" onclick="endGame()">⏹ End Game</button>
           </div>
-          <div class="timer-btn" id="tbtn-60" onclick="selectTimer(60)">
-            <span class="t-secs">60s</span><div class="t-label">Extended</div>
+        </div>
+        <div class="card">
+          <div class="ct">Launch Question</div>
+          <div id="nav-q-list"><div class="empty" style="padding:16px">No questions loaded.</div></div>
+        </div>
+      </div>
+
+      <!-- SETUP TAB -->
+      <div id="tab-setup" style="display:none">
+        <div class="card">
+          <div class="ct">Firebase Configuration</div>
+          <p style="color:var(--text2);font-size:0.85rem;margin-bottom:16px;line-height:1.6">
+            Create a free project at <strong style="color:var(--text)">console.firebase.google.com</strong>, enable Realtime Database, then paste your config values below. You only do this once — it saves to your browser.
+          </p>
+          <div class="fgroup"><label>API Key</label><input id="cfg-key" type="text" placeholder="AIzaSy..."/></div>
+          <div class="fgroup"><label>Database URL</label><input id="cfg-db" type="text" placeholder="https://your-project-default-rtdb.firebaseio.com"/></div>
+          <div class="fgroup"><label>Project ID</label><input id="cfg-pid" type="text" placeholder="your-project-id"/></div>
+          <div class="fgroup"><label>Auth Domain</label><input id="cfg-auth" type="text" placeholder="your-project.firebaseapp.com"/></div>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <button class="bp" style="width:auto" onclick="saveConfig()">Save & Connect</button>
+            <button class="bo" onclick="testConn()">Test Connection</button>
           </div>
-          <button class="timer-apply" onclick="applyTimer()">✓ Apply</button>
-          <div class="timer-note">⚠️ Apply timer before pressing Show Question. It starts automatically.</div>
+          <div id="cfg-status"></div>
+        </div>
+        <div class="card">
+          <div class="ct">Database Rules (paste in Firebase console)</div>
+          <pre>{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}</pre>
+          <p style="color:var(--text2);font-size:0.78rem;margin-top:10px">These open rules are fine for a one-day competition. Restrict them after the event.</p>
         </div>
       </div>
-      <div>
-        <div class="section-label">🔍 Selected Question <span id="live-badge" class="live-badge">🔴 LIVE</span></div>
-        <div class="current-card">
-          <div class="cur-q-tag" id="cur-qnum">No question selected</div>
-          <div class="cur-q-text" id="cur-qtext" style="color:var(--muted)">Click any question in the list to preview it here.</div>
-          <div class="opts-preview" id="cur-options"></div>
-        </div>
-      </div>
-      <div>
-        <div class="section-label">🔀 Navigate Questions</div>
-        <div class="nav-row">
-          <button class="btn btn-gray" onclick="prevQuestion()">◀ Previous</button>
-          <button class="btn btn-blue" onclick="nextQuestion()">Next ▶</button>
-        </div>
-      </div>
-      <div>
-        <div class="section-label">🎮 Controls</div>
-        <div class="action-grid">
-          <button class="btn btn-red" onclick="showQuestion()">📢 Show Question</button>
-          <button class="btn btn-green" onclick="revealAnswer()">✅ Reveal Answer</button>
-          <button class="btn btn-orange" onclick="setWaiting()">⏸ Pause / Cancel</button>
-          <button class="btn btn-gray" onclick="resetGame()">⟳ Reset All</button>
-        </div>
-      </div>
+    </div>
+
+    <!-- SIDE -->
+    <div class="side-p">
+      <div class="ct">👥 Players &nbsp;<span id="player-count" style="color:var(--text);font-size:0.85rem">0</span></div>
+      <div id="player-list"><div class="empty" style="padding:16px">No players yet.</div></div>
+      <hr class="div"/>
+      <div class="ct">📊 Answers This Round</div>
+      <div id="ans-stats"><div style="color:var(--text2);font-size:0.82rem">No active question.</div></div>
     </div>
   </div>
 </div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-// ── State ──────────────────────────────────────────────────────
-let API_URL='', PASSWORD='', questions=[], selectedTimer=30;
+const PASS = "IJAadmin2024"; // ← Change this password
+let db = null, questions = [], gs = {state:'lobby',qIndex:-1}, players = {}, roundAnswers = {};
+const OPT_COLORS = {A:'#ef4444',B:'#3b82f6',C:'#f59e0b',D:'#10b981'};
 
-// ✅ FIX #3 ROOT CAUSE: Two separate IDs — never mix them up
-// localQId  = what the teacher is browsing right now (changed by click/next/prev)
-// serverQId = what is actually live on the display right now (changed only by poll)
-// poll() must NEVER write to localQId — that's what caused next/prev to revert!
-let localQId = 1;
-let serverQId = 1;
-let userIsNavigating = false; // true while teacher is browsing ahead of server
-let pollBusy = false;
-
-function renderLatex(el){
-  if(!window.renderMathInElement) return;
-  renderMathInElement(el,{delimiters:[
-    {left:'$$',right:'$$',display:true},
-    {left:'$',right:'$',display:false},
-    {left:'\\(',right:'\\)',display:false},
-    {left:'\\[',right:'\\]',display:true}
-  ],throwOnError:false});
-}
-
-// ── Timer picker ──────────────────────────────────────────────
-function selectTimer(secs){
-  selectedTimer=secs;
-  [30,45,60].forEach(s=>{
-    const el=document.getElementById('tbtn-'+s);
-    if(el) el.className='timer-btn'+(s===secs?' active':'');
-  });
-}
-async function applyTimer(){
-  await apiCall({action:'setTimer',duration:selectedTimer});
-  showToast(`Timer set to ${selectedTimer}s ⏱ — takes effect on next Show Question`,'success');
-}
-
-// ── Login ─────────────────────────────────────────────────────
-async function doLogin(){
-  const url=document.getElementById('url-input').value.trim();
-  const pwd=document.getElementById('pwd-input').value.trim();
-  if(!url||!pwd){document.getElementById('login-error').textContent='Please fill in both fields.';return}
-  API_URL=url; PASSWORD=pwd;
-  document.getElementById('login-error').textContent='Connecting…';
-  try{
-    const res=await fetch(`${API_URL}?action=getQuestions&pwd=${encodeURIComponent(PASSWORD)}`,{redirect:'follow',cache:'no-store'});
-    const data=await res.json();
-    if(data.error==='Unauthorized'){document.getElementById('login-error').textContent='Wrong password.';return}
-    if(!data.questions||!data.questions.length){document.getElementById('login-error').textContent='No questions found. Check your Google Sheet.';return}
-    questions=data.questions;
-    document.getElementById('login-overlay').style.display='none';
-    document.getElementById('app').style.display='flex';
-    buildQuestionList();
-    poll();
-    setInterval(poll, 1500); // ⚡ 1.5s — fast but not hammering GAS
-  }catch(e){document.getElementById('login-error').textContent='Connection failed. Check URL and try again.'}
-}
-document.getElementById('pwd-input').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
-
-function buildQuestionList(){
-  document.getElementById('q-count').textContent=questions.length+' Qs';
-  const list=document.getElementById('q-list');list.innerHTML='';
-  questions.forEach(q=>{
-    const div=document.createElement('div');
-    div.className='q-item';
-    div.id='qi-'+q.id;
-    div.onclick=()=>browseToQuestion(q.id);
-    const preview=q.text
-      .replace(/\$\$[\s\S]*?\$\$/g,'[math]')
-      .replace(/\$[^$]+\$/g,'[math]')
-      .replace(/\\\([\s\S]*?\\\)/g,'[math]')
-      .replace(/\\\[[\s\S]*?\\\]/g,'[math]');
-    div.innerHTML=`<div class="q-num-badge">${q.id}</div>
-      <div><div class="q-preview">${preview}</div>
-      <div class="q-meta-line">${q.category||''}${q.category&&q.points?' · ':''}${q.points} pts</div></div>`;
-    list.appendChild(div);
-  });
-}
-
-function showCurrentCard(q){
-  const liveEl=document.getElementById('live-badge');
-  if(!q){
-    document.getElementById('cur-qnum').textContent='No question selected';
-    document.getElementById('cur-qtext').textContent='Click any question in the list.';
-    document.getElementById('cur-qtext').style.color='var(--muted)';
-    document.getElementById('cur-options').innerHTML='';
-    liveEl.classList.remove('show');
-    return;
+/* ─ Auth ─ */
+function doLogin(){
+  if(document.getElementById('pass-inp').value === PASS){
+    document.getElementById('login').style.display='none';
+    document.getElementById('main').style.display='block';
+    loadCfgInputs();
+    const c=getCfg(); if(c) initFB(c);
+  } else {
+    document.getElementById('login-err').style.display='block';
   }
-  const isLive=q.id===serverQId;
-  liveEl.className='live-badge'+(isLive?' show':'');
-  document.getElementById('cur-qnum').textContent=`Q ${q.id}  ·  ${q.points} pts`;
-  const qt=document.getElementById('cur-qtext');qt.textContent=q.text;qt.style.color='var(--text)';
-  renderLatex(qt);
-  const grid=document.getElementById('cur-options');grid.innerHTML='';
-  ['A','B','C','D'].forEach(letter=>{
-    if(!q.options[letter]) return;
-    const d=document.createElement('div');
-    d.className='opt-prev'+(letter===q.correct?' is-correct':'');
-    d.innerHTML=`<div class="opt-prev-letter">${letter}</div>
-      <div class="opt-prev-text">${q.options[letter]}</div>
-      ${letter===q.correct?'<span style="font-size:14px;margin-left:auto;flex-shrink:0">✅</span>':''}`;
-    grid.appendChild(d);
-    renderLatex(d.querySelector('.opt-prev-text'));
+}
+document.getElementById('pass-inp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+/* ─ Config ─ */
+function getCfg(){return JSON.parse(localStorage.getItem('ija_cfg')||'null');}
+function saveConfig(){
+  const c={apiKey:v('cfg-key'),databaseURL:v('cfg-db'),projectId:v('cfg-pid'),authDomain:v('cfg-auth')};
+  if(!c.apiKey||!c.databaseURL){cfgStatus('Fill in API Key and Database URL','e');return;}
+  localStorage.setItem('ija_cfg',JSON.stringify(c)); initFB(c);
+}
+function loadCfgInputs(){
+  const c=getCfg(); if(!c)return;
+  setV('cfg-key',c.apiKey||'');setV('cfg-db',c.databaseURL||'');setV('cfg-pid',c.projectId||'');setV('cfg-auth',c.authDomain||'');
+}
+function testConn(){
+  if(!db){cfgStatus('Not connected — save config first','e');return;}
+  db.ref('.info/connected').once('value').then(s=>cfgStatus(s.val()?'✓ Connected to Firebase!':'Offline',s.val()?'s':'e')).catch(e=>cfgStatus(e.message,'e'));
+}
+function cfgStatus(msg,t){
+  const el=document.getElementById('cfg-status');
+  el.className='alert alert-'+(t==='s'?'s':'e');el.textContent=msg;
+}
+function initFB(cfg){
+  try{
+    if(firebase.apps.length>0) firebase.app().delete().then(()=>startFB(cfg)); else startFB(cfg);
+  }catch(e){startFB(cfg);}
+}
+function startFB(cfg){
+  try{
+    firebase.initializeApp(cfg); db=firebase.database();
+    cfgStatus('✓ Connected!','s'); setupListeners();
+  }catch(e){cfgStatus('Error: '+e.message,'e');}
+}
+
+/* ─ Tabs ─ */
+function switchTab(t){
+  ['questions','control','setup'].forEach(n=>{
+    document.getElementById('tab-'+n).style.display=n===t?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((el,i)=>{
+    el.classList.toggle('on',['questions','control','setup'][i]===t);
   });
 }
 
-function highlightActive(id){
-  document.querySelectorAll('.q-item').forEach(el=>el.classList.remove('active'));
-  const el=document.getElementById('qi-'+id);
-  if(el){el.classList.add('active');el.scrollIntoView({block:'nearest',behavior:'smooth'})}
+/* ─ Questions ─ */
+function addQuestion(){
+  const text=v('nq-text'),a=v('nq-a'),b=v('nq-b'),c=v('nq-c'),d=v('nq-d'),ans=v('nq-ans'),time=parseInt(v('nq-time'))||30;
+  if(!text||!a||!b||!c||!d){alert('Fill in question and all 4 options.');return;}
+  questions.push({text,options:{A:a,B:b,C:c,D:d},answer:ans,timeLimit:time});
+  saveQs();
+  ['nq-text','nq-a','nq-b','nq-c','nq-d'].forEach(id=>setV(id,''));
+  setV('nq-time','30');
+}
+function deleteQ(i){if(!confirm('Delete this question?'))return; questions.splice(i,1); saveQs();}
+function saveQs(){
+  if(!db){alert('Not connected. Go to Firebase Setup tab first.');return;}
+  db.ref('quiz/questions').set(questions);
+  renderQList(); renderNavQ();
+}
+function renderQList(){
+  const el=document.getElementById('q-list');
+  document.getElementById('q-count').textContent=questions.length+' question'+(questions.length!==1?'s':'');
+  if(!questions.length){el.innerHTML='<div class="empty"><div class="empty-ico">📋</div>No questions yet.</div>';return;}
+  el.innerHTML=questions.map((q,i)=>`
+    <div class="qi">
+      <div class="qidx">Q${i+1} · ${q.timeLimit}s</div>
+      <div class="qtext">${q.text}</div>
+      <div class="opts-mini">
+        ${['A','B','C','D'].map(o=>`<div class="om ${q.answer===o?'correct':''}"><span class="ol" style="color:${OPT_COLORS[o]}">${o}</span>${q.options[o]}</div>`).join('')}
+      </div>
+      <button class="bo" style="padding:5px 10px;font-size:0.78rem" onclick="deleteQ(${i})">🗑 Remove</button>
+    </div>`).join('');
+}
+function renderNavQ(){
+  const el=document.getElementById('nav-q-list');
+  if(!questions.length){el.innerHTML='<div class="empty" style="padding:16px">No questions. Add them in the Questions tab.</div>';return;}
+  el.innerHTML=questions.map((q,i)=>`
+    <div class="nqi ${gs.qIndex===i?'cur':''}">
+      <div class="nqt">Q${i+1}: ${q.text}</div>
+      <button class="bp" style="padding:6px 14px;font-size:0.8rem" onclick="launchQ(${i})">Launch</button>
+    </div>`).join('');
 }
 
-async function apiCall(params){
-  const qs=Object.entries({...params,pwd:PASSWORD}).map(([k,v])=>`${k}=${encodeURIComponent(v)}`).join('&');
-  const res=await fetch(`${API_URL}?${qs}`,{redirect:'follow',cache:'no-store'});
-  return res.json();
+/* ─ Game Control ─ */
+function startGame(){
+  if(!db){alert('Not connected to Firebase.');return;}
+  if(!questions.length){alert('Add questions first.');return;}
+  if(!confirm('Start the competition? All scores will reset.'))return;
+  const upd={};
+  Object.keys(players).forEach(pid=>{
+    upd[`quiz/players/${pid}/score`]=0;
+    upd[`quiz/players/${pid}/answered`]=false;
+    upd[`quiz/players/${pid}/lastAnswer`]=null;
+    upd[`quiz/players/${pid}/lastCorrect`]=null;
+  });
+  upd['quiz/state']='lobby';
+  upd['quiz/currentQuestion']=null;
+  upd['quiz/roundAnswers']=null;
+  upd['quiz/currentQIndex']=-1;
+  upd['quiz/questions']=questions;
+  db.ref().update(upd);
 }
-
-// ✅ FIX #3: browseToQuestion only changes LOCAL view — never touches server
-function browseToQuestion(id){
-  localQId=id;
-  userIsNavigating=true;
-  showCurrentCard(questions.find(x=>x.id===id));
-  highlightActive(id);
+function launchQ(idx){
+  if(!db)return;
+  const q=questions[idx], now=Date.now(), upd={};
+  Object.keys(players).forEach(pid=>{
+    upd[`quiz/players/${pid}/answered`]=false;
+    upd[`quiz/players/${pid}/lastAnswer`]=null;
+    upd[`quiz/players/${pid}/lastCorrect`]=null;
+  });
+  upd['quiz/roundAnswers']=null;
+  upd['quiz/state']='question_active';
+  upd['quiz/currentQIndex']=idx;
+  upd['quiz/currentQuestion']={index:idx,text:q.text,options:q.options,timeLimit:q.timeLimit,startTime:now};
+  db.ref().update(upd);
 }
-
-// ✅ FIX #3: Next/Prev are purely local — instant, no server call
-function nextQuestion(){
-  const idx=questions.findIndex(x=>x.id===localQId);
-  if(idx<questions.length-1) browseToQuestion(questions[idx+1].id);
-  else showToast('Already at the last question!','error');
-}
-function prevQuestion(){
-  const idx=questions.findIndex(x=>x.id===localQId);
-  if(idx>0) browseToQuestion(questions[idx-1].id);
-  else showToast('Already at the first question!','error');
-}
-
-// showQuestion is the ONLY function that writes localQId to server
-async function showQuestion(){
-  if(!localQId){showToast('Select a question first!','error');return}
-  await apiCall({action:'setQuestion',id:localQId});
-  serverQId=localQId;      // Now server matches local
-  userIsNavigating=false;  // Poll can sync stats again
-  showCurrentCard(questions.find(x=>x.id===localQId)); // Refresh live badge
-  showToast(`Q${localQId} is LIVE! ⏱ Timer started 🚀`,'success');
-}
-
-async function revealAnswer(){
-  await apiCall({action:'setPhase',phase:'reveal'});
-  showToast('Answer revealed! 🎉','success');
-}
-
-// ✅ FIX #1: setWaiting tells all screens to reset
-async function setWaiting(){
-  await apiCall({action:'setPhase',phase:'waiting'});
-  showToast('Session paused — all screens returning to default ⏸','success');
-}
-
-async function resetGame(){
-  if(!confirm('Reset the game? All screens will return to the waiting screen.')) return;
-  await apiCall({action:'reset'});
-  localQId=1; serverQId=1; userIsNavigating=false;
-  highlightActive(1);
-  showCurrentCard(questions.find(x=>x.id===1));
-  showToast('Game fully reset — all screens are now on default ⟳','success');
-}
-
-// ✅ FIX #3: poll() NEVER writes to localQId — only updates stats + server state display
-async function poll(){
-  if(pollBusy) return;
-  pollBusy=true;
-  try{
-    const data=await apiCall({action:'getState'});
-
-    // Update status display
-    serverQId=data.currentQuestion;
-    document.getElementById('stat-current').textContent=data.currentQuestion;
-    document.getElementById('stat-total').textContent=data.totalQuestions;
-    document.getElementById('stat-phase').textContent=(data.phase||'—').charAt(0).toUpperCase()+(data.phase||'—').slice(1);
-    const b=document.getElementById('phase-badge');
-    b.textContent=data.phase.charAt(0).toUpperCase()+data.phase.slice(1);
-    b.className='phase-pill '+data.phase;
-
-    // Sync timer picker UI to server setting
-    if(data.timerDuration) selectTimer(data.timerDuration);
-
-    // If teacher is NOT navigating ahead, follow the server's current question
-    if(!userIsNavigating){
-      localQId=data.currentQuestion;
-      highlightActive(data.currentQuestion);
-      showCurrentCard(questions.find(x=>x.id===data.currentQuestion));
+function revealAnswer(){
+  if(!db)return;
+  const idx=gs.qIndex;
+  if(idx<0||!questions[idx]){alert('No active question to reveal.');return;}
+  const correct=questions[idx].answer, upd={}, tl=questions[idx].timeLimit||30;
+  Object.keys(players).forEach(pid=>{
+    const p=players[pid], ra=roundAnswers[pid];
+    if(p.lastAnswer===correct){
+      const timeTaken=ra&&ra.timeTaken?ra.timeTaken:tl;
+      const pts=calcScore(tl,timeTaken);
+      upd[`quiz/players/${pid}/score`]=(p.score||0)+pts;
+      upd[`quiz/players/${pid}/lastCorrect`]=true;
+      upd[`quiz/players/${pid}/pointsEarned`]=pts;
     } else {
-      // Teacher IS browsing — just refresh the live badge without changing card
-      showCurrentCard(questions.find(x=>x.id===localQId));
+      upd[`quiz/players/${pid}/lastCorrect`]=false;
+      upd[`quiz/players/${pid}/pointsEarned`]=0;
     }
-  }catch(e){
-    // Silent fail
-  }finally{
-    pollBusy=false;
-  }
+  });
+  upd['quiz/state']='reveal';
+  upd['quiz/currentQuestion/answer']=correct;
+  db.ref().update(upd);
+}
+function showLeaderboard(){if(!db)return; db.ref('quiz/state').set('leaderboard');}
+function endGame(){if(!db)return;if(!confirm('End the competition?'))return; db.ref('quiz/state').set('ended');}
+function resetGame(){
+  if(!db)return;if(!confirm('Reset everything? Clears all players and scores.'))return;
+  db.ref('quiz').set({state:'lobby',questions:questions,players:null,roundAnswers:null,currentQuestion:null,currentQIndex:-1});
+}
+function calcScore(tl,timeTaken){const r=Math.min(timeTaken/tl,1);return Math.round(1000-r*500);}
+
+/* ─ Listeners ─ */
+function setupListeners(){
+  if(!db)return;
+  db.ref('quiz/state').on('value',s=>{gs.state=s.val()||'lobby';updateBadge(gs.state);});
+  db.ref('quiz/currentQIndex').on('value',s=>{gs.qIndex=s.val()??-1;renderCurQ();renderNavQ();});
+  db.ref('quiz/currentQuestion').on('value',s=>{gs.cq=s.val();renderCurQ();});
+  db.ref('quiz/questions').on('value',s=>{const q=s.val();if(q&&Array.isArray(q)){questions=q;renderQList();renderNavQ();}});
+  db.ref('quiz/players').on('value',s=>{players=s.val()||{};renderPlayerList();renderAnsStats();});
+  db.ref('quiz/roundAnswers').on('value',s=>{roundAnswers=s.val()||{};renderAnsStats();});
 }
 
-let toastTimer;
-function showToast(msg,type='success'){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast show '+(type||'');
-  clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>{t.className='toast'},3000);
+/* ─ Render ─ */
+function updateBadge(state){
+  const b=document.getElementById('state-badge');
+  b.className='badge s-'+state;
+  b.textContent={lobby:'Lobby',question_active:'Question Live',reveal:'Revealing',leaderboard:'Leaderboard',ended:'Ended'}[state]||state;
 }
+function renderCurQ(){
+  const el=document.getElementById('cur-q'), idx=gs.qIndex;
+  if(idx<0||!questions[idx]){el.innerHTML='<div class="empty">No question active. Use the Launch buttons below.</div>';return;}
+  const q=questions[idx];
+  el.innerHTML=`
+    <div style="font-size:0.78rem;color:var(--text2);margin-bottom:6px;font-family:'JetBrains Mono',monospace">Q${idx+1} of ${questions.length} · ${q.timeLimit}s</div>
+    <div style="font-weight:700;font-size:1rem;margin-bottom:12px">${q.text}</div>
+    <div class="opts-disp">
+      ${['A','B','C','D'].map(o=>`
+        <div class="odisp" style="border-color:${OPT_COLORS[o]}44;background:${OPT_COLORS[o]}11">
+          <span style="color:${OPT_COLORS[o]};font-weight:700">${o} </span>${q.options[o]}
+        </div>`).join('')}
+    </div>`;
+}
+function renderPlayerList(){
+  const el=document.getElementById('player-list');
+  const arr=Object.values(players).sort((a,b)=>(b.score||0)-(a.score||0));
+  document.getElementById('player-count').textContent=arr.length;
+  if(!arr.length){el.innerHTML='<div class="empty" style="padding:16px">No players yet.</div>';return;}
+  el.innerHTML=arr.map(p=>`
+    <div class="pl-item">
+      <div class="pl-name"><div class="dot ${p.answered?'ans':''}"></div>${p.name||'?'}</div>
+      <div class="pl-score">${p.score||0}</div>
+    </div>`).join('');
+}
+function renderAnsStats(){
+  const el=document.getElementById('ans-stats');
+  if(gs.qIndex<0){el.innerHTML='<div style="color:var(--text2);font-size:0.82rem">No active question.</div>';return;}
+  const counts={A:0,B:0,C:0,D:0};
+  Object.values(players).forEach(p=>{if(p.lastAnswer&&counts[p.lastAnswer]!==undefined)counts[p.lastAnswer]++;});
+  const total=Object.values(counts).reduce((a,b)=>a+b,0);
+  const answered=Object.values(players).filter(p=>p.answered).length;
+  const totalP=Object.keys(players).length;
+  el.innerHTML=`<div style="color:var(--text2);font-size:0.8rem;margin-bottom:10px">${answered}/${totalP} answered</div>`+
+    ['A','B','C','D'].map(o=>`
+      <div class="astat">
+        <div class="astat-row"><span style="color:${OPT_COLORS[o]};font-weight:700">${o}</span><span style="color:var(--text2)">${counts[o]}</span></div>
+        <div class="abar-wrap"><div class="abar" style="width:${total?Math.round(counts[o]/total*100):0}%;background:${OPT_COLORS[o]}"></div></div>
+      </div>`).join('');
+}
+
+/* ─ Utils ─ */
+function v(id){return document.getElementById(id).value.trim();}
+function setV(id,val){document.getElementById(id).value=val;}
 </script>
 </body>
 </html>
