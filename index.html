@@ -6,103 +6,193 @@
 <title>IJA Maths Quiz — Organiser</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#080d18;--card:#0e1729;--border:#1a2844;
-  --accent:#2563eb;--gold:#f59e0b;--text:#e2e8f0;
-  --text2:#64748b;--green:#10b981;--red:#ef4444;--purple:#7c3aed;
+  --bg:#050910;--surf:#09111f;--surf2:#0d1828;--border:#172035;--border2:#1e2d48;
+  --text:#dde8f5;--text2:#4a6080;--text3:#8099bb;
+  --gold:#f5a623;--green:#22c55e;--red:#f43f5e;--blue:#3b82f6;
+  --s1:#38bdf8;--s2:#a855f7;--s3:#34d399;
+  --s1bg:rgba(56,189,248,.08);--s2bg:rgba(168,85,247,.08);--s3bg:rgba(52,211,153,.08);
+  --s1border:rgba(56,189,248,.25);--s2border:rgba(168,85,247,.25);--s3border:rgba(52,211,153,.25);
 }
-body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;font-size:14px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;font-size:14px}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--surf)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 
 /* ── Login ── */
-#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,#0a1a3a 0%,var(--bg) 70%)}
-.lcard{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:380px;text-align:center}
-.lcard .logo{font-size:3rem;margin-bottom:16px}
-.lcard h1{color:var(--gold);font-size:1.4rem;font-weight:700;margin-bottom:6px}
-.lcard p{color:var(--text2);font-size:0.85rem;margin-bottom:28px}
-input,select,textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:14px;outline:none;transition:border .15s;margin-bottom:10px}
-input:focus,select:focus,textarea:focus{border-color:var(--accent)}
-textarea{resize:vertical;min-height:72px}
-button{padding:11px 20px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:700;transition:all .15s}
-.bp{background:var(--accent);color:#fff;width:100%}.bp:hover{background:#1d4ed8}
-.bg{background:var(--green);color:#fff}.bg:hover{background:#059669}
-.bgo{background:var(--gold);color:#080d18}.bgo:hover{background:#d97706}
-.br{background:var(--red);color:#fff}.br:hover{background:#dc2626}
-.bo{background:transparent;border:1px solid var(--border);color:var(--text)}.bo:hover{border-color:var(--accent);color:var(--accent)}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse 80% 50% at 50% -10%,#0a2040,var(--bg))}
+.lcard{background:var(--surf);border:1px solid var(--border2);border-radius:24px;padding:52px 44px;width:400px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.lcard .l-logo{font-size:3rem;margin-bottom:18px;filter:drop-shadow(0 0 20px rgba(245,166,35,.4))}
+.lcard h1{font-family:'Chakra Petch',monospace;color:var(--gold);font-size:1.6rem;font-weight:700;margin-bottom:6px;letter-spacing:.5px}
+.lcard p{color:var(--text2);font-size:0.85rem;margin-bottom:30px}
+
+/* ── Inputs / Buttons ── */
+input,select,textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border .2s,box-shadow .2s;margin-bottom:10px}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,166,35,.1)}
+textarea{resize:vertical;min-height:80px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.5}
+button{padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.bp{background:var(--blue);color:#fff}.bp:hover{background:#2563eb;transform:translateY(-1px)}
+.bg{background:var(--green);color:#fff}.bg:hover{background:#16a34a;transform:translateY(-1px)}
+.bgo{background:var(--gold);color:#050910;font-weight:700}.bgo:hover{background:#d97706;transform:translateY(-1px)}
+.br{background:var(--red);color:#fff}.br:hover{background:#e11d48;transform:translateY(-1px)}
+.bo{background:transparent;border:1px solid var(--border2);color:var(--text3)}.bo:hover{border-color:var(--text3);color:var(--text)}
+.bs1{background:var(--s1bg);border:1px solid var(--s1border);color:var(--s1)}.bs1:hover{background:rgba(56,189,248,.15)}
+.bs2{background:var(--s2bg);border:1px solid var(--s2border);color:var(--s2)}.bs2:hover{background:rgba(168,85,247,.15)}
+.bs3{background:var(--s3bg);border:1px solid var(--s3border);color:var(--s3)}.bs3:hover{background:rgba(52,211,153,.15)}
 .berr{color:var(--red);font-size:0.82rem;margin-top:8px;display:none}
 
 /* ── Layout ── */
 #main{display:none}
-.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.topbar h1{font-size:1rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:8px}
-.badge{padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace}
-.s-lobby{background:rgba(37,99,235,.2);color:#60a5fa;border:1px solid #1d4ed8}
-.s-question_active{background:rgba(16,185,129,.2);color:#34d399;border:1px solid #059669}
-.s-reveal{background:rgba(245,158,11,.2);color:#fbbf24;border:1px solid #d97706}
-.s-leaderboard{background:rgba(124,58,237,.2);color:#a78bfa;border:1px solid #7c3aed}
-.s-ended{background:rgba(239,68,68,.2);color:#f87171;border:1px solid #dc2626}
-.layout{display:grid;grid-template-columns:1fr 320px;height:calc(100vh - 49px)}
-.main-p{padding:24px;overflow-y:auto}
-.side-p{background:var(--card);border-left:1px solid var(--border);padding:20px;overflow-y:auto}
+.topbar{background:var(--surf);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border)}
+.topbar-left{display:flex;align-items:center;gap:14px}
+.topbar h1{font-family:'Chakra Petch',monospace;font-size:1rem;font-weight:700;color:var(--gold);letter-spacing:.5px}
+.badge{padding:4px 12px;border-radius:20px;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;font-family:'JetBrains Mono',monospace}
+.s-lobby{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.s-section_intro{background:rgba(168,85,247,.2);color:#c084fc;border:1px solid rgba(168,85,247,.4)}
+.s-question_active{background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.s-reveal{background:rgba(245,166,35,.15);color:#fbbf24;border:1px solid rgba(245,166,35,.3)}
+.s-leaderboard{background:rgba(168,85,247,.15);color:#c084fc;border:1px solid rgba(168,85,247,.3)}
+.s-section_end{background:rgba(52,211,153,.15);color:#6ee7b7;border:1px solid rgba(52,211,153,.3)}
+.s-ended{background:rgba(244,63,94,.15);color:#fb7185;border:1px solid rgba(244,63,94,.3)}
+
+.sec-indicator{padding:4px 10px;border-radius:8px;font-size:0.72rem;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+.si1{background:var(--s1bg);color:var(--s1);border:1px solid var(--s1border)}
+.si2{background:var(--s2bg);color:var(--s2);border:1px solid var(--s2border)}
+.si3{background:var(--s3bg);color:var(--s3);border:1px solid var(--s3border)}
+
+.layout{display:grid;grid-template-columns:1fr 310px;height:calc(100vh - 52px)}
+.main-p{padding:20px 24px;overflow-y:auto}
+.side-p{background:var(--surf);border-left:1px solid var(--border);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:16px}
 
 /* ── Tabs ── */
-.tabs{display:flex;gap:6px;margin-bottom:20px}
-.tab{padding:8px 18px;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;background:transparent;border:1px solid var(--border);color:var(--text2);transition:all .15s}
-.tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:4px}
+.tab{padding:8px 16px;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;background:transparent;border:none;color:var(--text2);transition:all .15s;flex:1;text-align:center}
+.tab.on{background:var(--surf2);color:var(--text);box-shadow:0 1px 0 var(--border)}
 
-/* ── Card ── */
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:16px}
-.ct{font-size:0.72rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin-bottom:14px;font-family:'JetBrains Mono',monospace}
+/* ── Section Tabs ── */
+.sec-tabs{display:flex;gap:8px;margin-bottom:16px}
+.sec-tab{flex:1;padding:12px 8px;border-radius:12px;cursor:pointer;font-size:0.82rem;font-weight:700;border:1px solid var(--border);background:var(--surf2);color:var(--text2);transition:all .2s;text-align:center;font-family:'Chakra Petch',monospace}
+.sec-tab.t1.on{background:var(--s1bg);border-color:var(--s1border);color:var(--s1)}
+.sec-tab.t2.on{background:var(--s2bg);border-color:var(--s2border);color:var(--s2)}
+.sec-tab.t3.on{background:var(--s3bg);border-color:var(--s3border);color:var(--s3)}
+.sec-tab:hover{transform:translateY(-1px)}
+
+/* ── Cards ── */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px}
+.card.c1{border-color:var(--s1border)}
+.card.c2{border-color:var(--s2border)}
+.card.c3{border-color:var(--s3border)}
+.ct{font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:14px;font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:6px}
+.ct .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-s1{background:var(--s1)}
+.dot-s2{background:var(--s2)}
+.dot-s3{background:var(--s3)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-label{display:block;font-size:0.75rem;color:var(--text2);margin-bottom:4px;font-weight:600}
+label{display:block;font-size:0.72rem;color:var(--text2);margin-bottom:4px;font-weight:600}
 .fgroup{margin-bottom:10px}
 .fgroup input,.fgroup select,.fgroup textarea{margin-bottom:0}
 
+/* ── JSON Import ── */
+.import-box{background:var(--bg);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-bottom:10px}
+.import-box textarea{background:transparent;border:none;padding:0;margin:0;font-size:11px;color:#7dd3fc;min-height:100px}
+.import-box textarea:focus{box-shadow:none;border-color:transparent}
+.import-actions{display:flex;gap:8px;margin-top:8px}
+.schema-hint{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2);line-height:1.6;background:var(--bg);padding:10px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;white-space:pre}
+
 /* ── Question items ── */
-.qi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
-.qidx{font-size:0.72rem;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
-.qtext{font-size:0.92rem;font-weight:600;margin-bottom:10px}
-.opts-mini{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-.om{padding:5px 10px;border-radius:6px;font-size:0.78rem;background:var(--card);border:1px solid var(--border)}
-.om.correct{background:rgba(16,185,129,.15);border-color:var(--green)}
+.qi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px;transition:border-color .15s}
+.qi:hover{border-color:var(--border2)}
+.qidx{font-size:0.68rem;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.qtext{font-size:0.88rem;font-weight:600;margin-bottom:10px;line-height:1.4}
+.opts-mini{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
+.om{padding:5px 9px;border-radius:6px;font-size:0.75rem;background:var(--surf);border:1px solid var(--border)}
+.om.correct{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:var(--green)}
 .om .ol{font-weight:700;margin-right:4px}
 
-/* ── Controls ── */
-.ctrl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.cbtn{padding:16px;border-radius:12px;border:none;cursor:pointer;font-family:inherit;font-size:0.92rem;font-weight:700;transition:all .15s;text-align:center}
+/* ── Game Control ── */
+.section-switcher{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.sw-btn{padding:16px 8px;border-radius:14px;border:1px solid var(--border);background:var(--surf2);cursor:pointer;text-align:center;transition:all .2s;font-family:'DM Sans',sans-serif}
+.sw-btn .sw-num{font-family:'Chakra Petch',monospace;font-size:1.4rem;font-weight:700;margin-bottom:4px}
+.sw-btn .sw-label{font-size:0.7rem;color:var(--text2);font-weight:600}
+.sw-btn .sw-count{font-size:0.68rem;font-family:'JetBrains Mono',monospace;margin-top:4px}
+.sw-btn.s1.active,.sw-btn.s1:hover{background:var(--s1bg);border-color:var(--s1border)}.sw-btn.s1 .sw-num{color:var(--s1)}
+.sw-btn.s2.active,.sw-btn.s2:hover{background:var(--s2bg);border-color:var(--s2border)}.sw-btn.s2 .sw-num{color:var(--s2)}
+.sw-btn.s3.active,.sw-btn.s3:hover{background:var(--s3bg);border-color:var(--s3border)}.sw-btn.s3 .sw-num{color:var(--s3)}
+.sw-btn.active .sw-label{color:var(--text)}
+
+.ctrl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.cbtn{padding:14px;border-radius:12px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:700;transition:all .15s;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+.cbtn:hover{transform:translateY(-2px);filter:brightness(1.1)}
 
 /* ── Nav q list ── */
-.nqi{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;margin-bottom:6px;background:var(--bg);border:1px solid var(--border);transition:all .15s}
-.nqi.cur{background:rgba(37,99,235,.12);border-color:var(--accent)}
-.nqt{font-size:0.88rem;font-weight:600;flex:1;margin-right:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nqi{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;margin-bottom:5px;background:var(--bg);border:1px solid var(--border);transition:all .15s}
+.nqi:hover{border-color:var(--border2)}
+.nqi.cur{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.3)}
+.nqt{font-size:0.82rem;font-weight:600;flex:1;margin-right:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nqi-meta{font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:var(--text2)}
 
-/* ── Player list ── */
-.pl-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;margin-bottom:5px;background:var(--bg);border:1px solid var(--border)}
-.pl-name{font-weight:600;font-size:0.88rem;display:flex;align-items:center;gap:7px}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0}
-.dot.ans{background:var(--green)}
-.pl-score{color:var(--gold);font-weight:700;font-family:'JetBrains Mono',monospace}
+/* ── Live Scoreboard ── */
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:7px;background:var(--bg);border:1px solid var(--border);transition:all .3s;animation:slideInScore .35s ease both}
+@keyframes slideInScore{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.lb-rank-num{font-family:'Chakra Petch',monospace;font-size:1.2rem;font-weight:700;width:40px;text-align:center;flex-shrink:0;color:var(--text2)}
+.lb-row.r1{background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.3)}.lb-row.r1 .lb-rank-num{color:var(--gold)}
+.lb-row.r2{border-color:rgba(148,163,184,.25)}.lb-row.r2 .lb-rank-num{color:#94a3b8}
+.lb-row.r3{border-color:rgba(205,127,50,.25)}.lb-row.r3 .lb-rank-num{color:#cd7f32}
+.lb-name-col{flex:1;font-weight:600;font-size:0.9rem}
+.lb-score-col{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;color:var(--gold)}
+.lb-answered-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0}
+.lb-answered-dot.ans{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,.5)}
+
+/* ── Players sidebar ── */
+.pl-item{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:8px;margin-bottom:4px;background:var(--bg);border:1px solid var(--border)}
+.pl-name{font-weight:600;font-size:0.82rem;display:flex;align-items:center;gap:6px}
+.pdot{width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0}
+.pdot.ans{background:var(--green)}
+.pl-score{color:var(--gold);font-weight:700;font-family:'JetBrains Mono',monospace;font-size:0.82rem}
 
 /* ── Answer stats ── */
-.abar-wrap{height:6px;background:var(--bg);border-radius:3px;margin-top:4px;overflow:hidden}
-.abar{height:100%;border-radius:3px;transition:width .4s ease}
-.astat{margin-bottom:10px}
-.astat-row{display:flex;justify-content:space-between;font-size:0.82rem}
+.abar-wrap{height:5px;background:var(--bg);border-radius:3px;margin-top:3px;overflow:hidden}
+.abar{height:100%;border-radius:3px;transition:width .5s ease}
+.astat{margin-bottom:8px}
+.astat-row{display:flex;justify-content:space-between;font-size:0.78rem}
 
-/* ── Alert ── */
-.alert{padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:0.85rem}
-.alert-s{background:rgba(16,185,129,.12);border:1px solid var(--green);color:var(--green)}
-.alert-e{background:rgba(239,68,68,.12);border:1px solid var(--red);color:var(--red)}
+/* ── Alert / Status ── */
+.alert{padding:9px 13px;border-radius:8px;margin-bottom:10px;font-size:0.82rem}
+.alert-s{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--green)}
+.alert-e{background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.3);color:var(--red)}
+.alert-i{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:#93c5fd}
 
-.empty{text-align:center;padding:32px;color:var(--text2);font-size:0.88rem}
+.empty{text-align:center;padding:28px;color:var(--text2);font-size:0.85rem}
 .empty-ico{font-size:2rem;margin-bottom:8px}
-hr.div{border:none;border-top:1px solid var(--border);margin:16px 0}
+hr.div{border:none;border-top:1px solid var(--border);margin:12px 0}
 .cur-q-wrap .opts-disp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.odisp{padding:9px 12px;border-radius:8px;font-size:0.88rem;border:1px solid var(--border);background:var(--bg)}
-pre{background:var(--bg);padding:12px;border-radius:8px;font-size:0.78rem;color:var(--text2);overflow-x:auto;font-family:'JetBrains Mono',monospace;border:1px solid var(--border);line-height:1.5}
-.topbar-right{display:flex;align-items:center;gap:10px}
+.odisp{padding:8px 11px;border-radius:8px;font-size:0.85rem;border:1px solid var(--border);background:var(--bg)}
+
+/* ── Pre / code ── */
+pre{background:var(--bg);padding:12px;border-radius:8px;font-size:0.75rem;color:var(--text3);overflow-x:auto;font-family:'JetBrains Mono',monospace;border:1px solid var(--border);line-height:1.6}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surf2);border:1px solid var(--border2);border-radius:12px;padding:10px 20px;font-size:0.85rem;font-weight:600;color:var(--text);z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok{border-color:rgba(34,197,94,.4);color:var(--green)}
+.toast.err{border-color:rgba(244,63,94,.4);color:var(--red)}
+
+/* ── Collapsible ── */
+.collapsible-toggle{cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;margin-bottom:10px}
+.collapsible-content{overflow:hidden;transition:max-height .3s ease;max-height:0}
+.collapsible-content.open{max-height:600px}
+.toggle-arrow{transition:transform .3s;font-size:0.8rem;color:var(--text2)}
+.collapsible-content.open ~ .toggle-arrow,.open .toggle-arrow{transform:rotate(180deg)}
+
+/* ── Utility ── */
+.topbar-right{display:flex;align-items:center;gap:8px}
+.pill{padding:3px 9px;border-radius:20px;font-size:0.68rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.section-label{font-size:0.75rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -110,11 +200,11 @@ pre{background:var(--bg);padding:12px;border-radius:8px;font-size:0.78rem;color:
 <!-- LOGIN -->
 <div id="login">
   <div class="lcard">
-    <div class="logo">🏆</div>
+    <div class="l-logo">🏆</div>
     <h1>IJA Maths Quiz</h1>
     <p>Organiser Panel — Enter password to continue</p>
     <input type="password" id="pass-inp" placeholder="Password" />
-    <button class="bp" onclick="doLogin()">Enter Panel</button>
+    <button class="bgo" style="width:100%;justify-content:center;font-size:15px;padding:13px" onclick="doLogin()">Enter Organiser Panel</button>
     <div class="berr" id="login-err">Incorrect password. Try again.</div>
   </div>
 </div>
@@ -122,129 +212,372 @@ pre{background:var(--bg);padding:12px;border-radius:8px;font-size:0.78rem;color:
 <!-- MAIN -->
 <div id="main">
   <div class="topbar">
-    <h1>🏆 IJA Maths Quiz — Organiser</h1>
-    <div class="topbar-right">
+    <div class="topbar-left">
+      <h1>🏆 IJA Maths — Organiser</h1>
       <span id="state-badge" class="badge s-lobby">Lobby</span>
-      <button class="bo" style="padding:6px 12px;font-size:0.8rem" onclick="resetGame()">↺ Reset</button>
+      <span id="active-sec-indicator" class="sec-indicator si1" style="display:none">Section 1</span>
+    </div>
+    <div class="topbar-right">
+      <span style="font-size:0.75rem;color:var(--text2);font-family:'JetBrains Mono',monospace" id="player-count-top">0 players</span>
+      <button class="bo" style="padding:5px 10px;font-size:0.78rem" onclick="resetGame()">↺ Reset</button>
     </div>
   </div>
+
   <div class="layout">
-    <!-- MAIN -->
+    <!-- MAIN CONTENT -->
     <div class="main-p">
       <div class="tabs">
-        <button class="tab on" onclick="switchTab('questions')">📝 Questions</button>
+        <button class="tab on" onclick="switchTab('sections')">📁 Sections</button>
         <button class="tab" onclick="switchTab('control')">🎮 Game Control</button>
-        <button class="tab" onclick="switchTab('setup')">⚙️ Firebase Setup</button>
+        <button class="tab" onclick="switchTab('scoreboard')">📊 Scoreboard</button>
+        <button class="tab" onclick="switchTab('setup')">⚙️ Setup</button>
       </div>
 
-      <!-- QUESTIONS TAB -->
-      <div id="tab-questions">
-        <div class="card">
-          <div class="ct">Add New Question</div>
-          <div class="fgroup"><label>Question Text</label><textarea id="nq-text" placeholder="Enter the question..."></textarea></div>
-          <div class="grid2">
-            <div class="fgroup"><label>Option A</label><input id="nq-a" type="text" placeholder="Option A"/></div>
-            <div class="fgroup"><label>Option B</label><input id="nq-b" type="text" placeholder="Option B"/></div>
-            <div class="fgroup"><label>Option C</label><input id="nq-c" type="text" placeholder="Option C"/></div>
-            <div class="fgroup"><label>Option D</label><input id="nq-d" type="text" placeholder="Option D"/></div>
-            <div class="fgroup"><label>Correct Answer</label><select id="nq-ans"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
-            <div class="fgroup"><label>Time Limit (seconds)</label><input id="nq-time" type="number" value="30" min="10" max="120"/></div>
+      <!-- ════ SECTIONS TAB ════ -->
+      <div id="tab-sections">
+        <div class="sec-tabs">
+          <button class="sec-tab t1 on" onclick="switchSection(1)">§ Section 1</button>
+          <button class="sec-tab t2" onclick="switchSection(2)">§ Section 2</button>
+          <button class="sec-tab t3" onclick="switchSection(3)">§ Section 3</button>
+        </div>
+
+        <!-- Section 1 Panel -->
+        <div id="sec-panel-1">
+          <div class="card c1">
+            <div class="ct"><span class="dot dot-s1"></span>Section 1 Settings</div>
+            <div class="fgroup"><label>Section Name</label><input id="sname-1" type="text" placeholder="e.g. Section 1: Arithmetic" value="Section 1"/></div>
+            <button class="bs1" style="font-size:0.78rem" onclick="saveSectionName(1)">Save Name</button>
           </div>
-          <button class="bo" style="width:auto" onclick="addQuestion()">+ Add Question</button>
+
+          <div class="card c1">
+            <div class="ct"><span class="dot dot-s1"></span>Bulk JSON Import — Section 1</div>
+            <div class="schema-hint">Format: array of questions
+[
+  {
+    "text": "What is 6 × 8?",
+    "options": {"A":"42","B":"48","C":"54","D":"56"},
+    "answer": "B",
+    "timeLimit": 30
+  }
+]</div>
+            <div class="import-box">
+              <textarea id="json-1" placeholder="Paste your JSON question array here..."></textarea>
+            </div>
+            <div class="import-actions">
+              <button class="bs1" onclick="importJSON(1)">⬆ Import Questions</button>
+              <button class="bo" onclick="clearImport(1)">Clear</button>
+              <button class="bo" onclick="downloadTemplate()">⬇ Template</button>
+            </div>
+            <div id="import-status-1" style="margin-top:8px"></div>
+          </div>
+
+          <div class="card c1">
+            <div class="collapsible-toggle" onclick="toggleCollapse('add-form-1')">
+              <div class="ct" style="margin-bottom:0"><span class="dot dot-s1"></span>Add Single Question</div>
+              <span class="toggle-arrow" id="arrow-add-form-1">▼</span>
+            </div>
+            <div class="collapsible-content" id="add-form-1">
+              <div style="padding-top:10px">
+                <div class="fgroup"><label>Question Text</label><textarea id="nq-text-1" placeholder="Enter the question..."></textarea></div>
+                <div class="grid2">
+                  <div class="fgroup"><label>Option A</label><input id="nq-a-1" type="text" placeholder="Option A"/></div>
+                  <div class="fgroup"><label>Option B</label><input id="nq-b-1" type="text" placeholder="Option B"/></div>
+                  <div class="fgroup"><label>Option C</label><input id="nq-c-1" type="text" placeholder="Option C"/></div>
+                  <div class="fgroup"><label>Option D</label><input id="nq-d-1" type="text" placeholder="Option D"/></div>
+                  <div class="fgroup"><label>Correct Answer</label><select id="nq-ans-1"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                  <div class="fgroup"><label>Time Limit (sec)</label><input id="nq-time-1" type="number" value="30" min="10" max="120"/></div>
+                </div>
+                <button class="bs1" onclick="addQuestion(1)">+ Add to Section 1</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-weight:700;font-size:0.9rem">Section 1 Questions &nbsp;<span id="q-count-1" style="color:var(--text2);font-weight:400">0 questions</span></div>
+            <button class="bo" style="padding:5px 10px;font-size:0.75rem;color:var(--red);border-color:rgba(244,63,94,.3)" onclick="clearSection(1)">🗑 Clear All</button>
+          </div>
+          <div id="q-list-1"><div class="empty"><div class="empty-ico">📋</div>No questions yet.</div></div>
         </div>
-        <div style="font-weight:700;margin-bottom:12px">Question Bank &nbsp;<span id="q-count" style="color:var(--text2);font-weight:400">0 questions</span></div>
-        <div id="q-list"><div class="empty"><div class="empty-ico">📋</div>No questions yet.</div></div>
+
+        <!-- Section 2 Panel -->
+        <div id="sec-panel-2" style="display:none">
+          <div class="card c2">
+            <div class="ct"><span class="dot dot-s2"></span>Section 2 Settings</div>
+            <div class="fgroup"><label>Section Name</label><input id="sname-2" type="text" placeholder="e.g. Section 2: Geometry" value="Section 2"/></div>
+            <button class="bs2" style="font-size:0.78rem" onclick="saveSectionName(2)">Save Name</button>
+          </div>
+          <div class="card c2">
+            <div class="ct"><span class="dot dot-s2"></span>Bulk JSON Import — Section 2</div>
+            <div class="schema-hint">Format: array of questions
+[
+  {
+    "text": "What is the area of a circle with r=7?",
+    "options": {"A":"44π","B":"49π","C":"14π","D":"7π"},
+    "answer": "B",
+    "timeLimit": 40
+  }
+]</div>
+            <div class="import-box">
+              <textarea id="json-2" placeholder="Paste your JSON question array here..."></textarea>
+            </div>
+            <div class="import-actions">
+              <button class="bs2" onclick="importJSON(2)">⬆ Import Questions</button>
+              <button class="bo" onclick="clearImport(2)">Clear</button>
+            </div>
+            <div id="import-status-2" style="margin-top:8px"></div>
+          </div>
+          <div class="card c2">
+            <div class="collapsible-toggle" onclick="toggleCollapse('add-form-2')">
+              <div class="ct" style="margin-bottom:0"><span class="dot dot-s2"></span>Add Single Question</div>
+              <span class="toggle-arrow" id="arrow-add-form-2">▼</span>
+            </div>
+            <div class="collapsible-content" id="add-form-2">
+              <div style="padding-top:10px">
+                <div class="fgroup"><label>Question Text</label><textarea id="nq-text-2" placeholder="Enter the question..."></textarea></div>
+                <div class="grid2">
+                  <div class="fgroup"><label>Option A</label><input id="nq-a-2" type="text" placeholder="Option A"/></div>
+                  <div class="fgroup"><label>Option B</label><input id="nq-b-2" type="text" placeholder="Option B"/></div>
+                  <div class="fgroup"><label>Option C</label><input id="nq-c-2" type="text" placeholder="Option C"/></div>
+                  <div class="fgroup"><label>Option D</label><input id="nq-d-2" type="text" placeholder="Option D"/></div>
+                  <div class="fgroup"><label>Correct Answer</label><select id="nq-ans-2"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                  <div class="fgroup"><label>Time Limit (sec)</label><input id="nq-time-2" type="number" value="30" min="10" max="120"/></div>
+                </div>
+                <button class="bs2" onclick="addQuestion(2)">+ Add to Section 2</button>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-weight:700;font-size:0.9rem">Section 2 Questions &nbsp;<span id="q-count-2" style="color:var(--text2);font-weight:400">0 questions</span></div>
+            <button class="bo" style="padding:5px 10px;font-size:0.75rem;color:var(--red);border-color:rgba(244,63,94,.3)" onclick="clearSection(2)">🗑 Clear All</button>
+          </div>
+          <div id="q-list-2"><div class="empty"><div class="empty-ico">📋</div>No questions yet.</div></div>
+        </div>
+
+        <!-- Section 3 Panel -->
+        <div id="sec-panel-3" style="display:none">
+          <div class="card c3">
+            <div class="ct"><span class="dot dot-s3"></span>Section 3 Settings</div>
+            <div class="fgroup"><label>Section Name</label><input id="sname-3" type="text" placeholder="e.g. Section 3: Advanced" value="Section 3"/></div>
+            <button class="bs3" style="font-size:0.78rem" onclick="saveSectionName(3)">Save Name</button>
+          </div>
+          <div class="card c3">
+            <div class="ct"><span class="dot dot-s3"></span>Bulk JSON Import — Section 3</div>
+            <div class="schema-hint">Format: array of questions
+[
+  {
+    "text": "Solve: 2x² + 5x - 3 = 0",
+    "options": {"A":"x=½,x=-3","B":"x=1,x=-3","C":"x=½,x=3","D":"x=-½,x=3"},
+    "answer": "A",
+    "timeLimit": 60
+  }
+]</div>
+            <div class="import-box">
+              <textarea id="json-3" placeholder="Paste your JSON question array here..."></textarea>
+            </div>
+            <div class="import-actions">
+              <button class="bs3" onclick="importJSON(3)">⬆ Import Questions</button>
+              <button class="bo" onclick="clearImport(3)">Clear</button>
+            </div>
+            <div id="import-status-3" style="margin-top:8px"></div>
+          </div>
+          <div class="card c3">
+            <div class="collapsible-toggle" onclick="toggleCollapse('add-form-3')">
+              <div class="ct" style="margin-bottom:0"><span class="dot dot-s3"></span>Add Single Question</div>
+              <span class="toggle-arrow" id="arrow-add-form-3">▼</span>
+            </div>
+            <div class="collapsible-content" id="add-form-3">
+              <div style="padding-top:10px">
+                <div class="fgroup"><label>Question Text</label><textarea id="nq-text-3" placeholder="Enter the question..."></textarea></div>
+                <div class="grid2">
+                  <div class="fgroup"><label>Option A</label><input id="nq-a-3" type="text" placeholder="Option A"/></div>
+                  <div class="fgroup"><label>Option B</label><input id="nq-b-3" type="text" placeholder="Option B"/></div>
+                  <div class="fgroup"><label>Option C</label><input id="nq-c-3" type="text" placeholder="Option C"/></div>
+                  <div class="fgroup"><label>Option D</label><input id="nq-d-3" type="text" placeholder="Option D"/></div>
+                  <div class="fgroup"><label>Correct Answer</label><select id="nq-ans-3"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
+                  <div class="fgroup"><label>Time Limit (sec)</label><input id="nq-time-3" type="number" value="30" min="10" max="120"/></div>
+                </div>
+                <button class="bs3" onclick="addQuestion(3)">+ Add to Section 3</button>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-weight:700;font-size:0.9rem">Section 3 Questions &nbsp;<span id="q-count-3" style="color:var(--text2);font-weight:400">0 questions</span></div>
+            <button class="bo" style="padding:5px 10px;font-size:0.75rem;color:var(--red);border-color:rgba(244,63,94,.3)" onclick="clearSection(3)">🗑 Clear All</button>
+          </div>
+          <div id="q-list-3"><div class="empty"><div class="empty-ico">📋</div>No questions yet.</div></div>
+        </div>
+
+        <!-- Full Export/Import -->
+        <div class="card" style="margin-top:16px">
+          <div class="ct">📦 Full Competition Export / Import</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="bo" onclick="exportAll()">⬇ Export All Sections as JSON</button>
+            <button class="bo" onclick="document.getElementById('full-import-area').style.display=document.getElementById('full-import-area').style.display==='none'?'block':'none'">⬆ Full Import</button>
+          </div>
+          <div id="full-import-area" style="display:none;margin-top:12px">
+            <label>Paste full competition JSON</label>
+            <textarea id="full-json" placeholder='{"sections":{"1":{"name":"...","questions":[...]},"2":{...},"3":{...}}}' style="min-height:120px;margin-top:4px"></textarea>
+            <button class="bgo" style="margin-top:8px" onclick="importFull()">⬆ Import All Sections</button>
+          </div>
+        </div>
       </div>
 
-      <!-- CONTROL TAB -->
+      <!-- ════ GAME CONTROL TAB ════ -->
       <div id="tab-control" style="display:none">
-        <div class="card cur-q-wrap">
-          <div class="ct">Current Question</div>
-          <div id="cur-q"><div class="empty">No question active yet.</div></div>
+        <!-- Section Switcher -->
+        <div class="card">
+          <div class="ct">§ Section Switcher — Broadcast to All Screens</div>
+          <div class="section-switcher">
+            <div class="sw-btn s1" id="sw-1" onclick="broadcastSection(1)">
+              <div class="sw-num">S1</div>
+              <div class="sw-label" id="sw-name-1">Section 1</div>
+              <div class="sw-count" id="sw-count-1" style="color:var(--s1)">0 questions</div>
+            </div>
+            <div class="sw-btn s2" id="sw-2" onclick="broadcastSection(2)">
+              <div class="sw-num">S2</div>
+              <div class="sw-label" id="sw-name-2">Section 2</div>
+              <div class="sw-count" id="sw-count-2" style="color:var(--s2)">0 questions</div>
+            </div>
+            <div class="sw-btn s3" id="sw-3" onclick="broadcastSection(3)">
+              <div class="sw-num">S3</div>
+              <div class="sw-label" id="sw-name-3">Section 3</div>
+              <div class="sw-count" id="sw-count-3" style="color:var(--s3)">0 questions</div>
+            </div>
+          </div>
+          <p style="font-size:0.75rem;color:var(--text2)">Clicking a section broadcasts a transition screen to the audience and competitors, then you can launch questions from that section below.</p>
         </div>
+
+        <!-- Current Question -->
+        <div class="card cur-q-wrap">
+          <div class="ct">Active Question</div>
+          <div id="cur-q"><div class="empty" style="padding:16px">No question active.</div></div>
+        </div>
+
+        <!-- Controls -->
         <div class="card">
           <div class="ct">Game Controls</div>
           <div class="ctrl-grid">
-            <button class="cbtn bg" onclick="startGame()">▶ Start Game</button>
+            <button class="cbtn bg" onclick="startGame()">▶ Start Competition</button>
             <button class="cbtn bgo" onclick="revealAnswer()">👁 Reveal Answer</button>
-            <button class="cbtn" style="background:var(--purple);color:#fff" onclick="showLeaderboard()">🏆 Leaderboard</button>
-            <button class="cbtn br" onclick="endGame()">⏹ End Game</button>
+            <button class="cbtn" style="background:var(--s2bg);border:1px solid var(--s2border);color:var(--s2)" onclick="showLeaderboard()">🏆 Leaderboard</button>
+            <button class="cbtn br" onclick="endGame()">⏹ End Competition</button>
           </div>
         </div>
+
+        <!-- Active Section Q List -->
         <div class="card">
-          <div class="ct">Launch Question</div>
-          <div id="nav-q-list"><div class="empty" style="padding:16px">No questions loaded.</div></div>
+          <div class="ct" id="nav-q-ct">Questions — Active Section</div>
+          <div id="nav-q-list"><div class="empty" style="padding:16px">Select a section above to see its questions.</div></div>
         </div>
       </div>
 
-      <!-- SETUP TAB -->
+      <!-- ════ SCOREBOARD TAB ════ -->
+      <div id="tab-scoreboard" style="display:none">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div class="ct" style="margin-bottom:0">🏆 Live Scoreboard</div>
+            <span style="font-size:0.75rem;font-family:'JetBrains Mono',monospace;color:var(--text2)" id="lb-updated">Auto-updates</span>
+          </div>
+          <div id="live-lb"><div class="empty"><div class="empty-ico">🏆</div>No players yet.</div></div>
+        </div>
+      </div>
+
+      <!-- ════ SETUP TAB ════ -->
       <div id="tab-setup" style="display:none">
         <div class="card">
           <div class="ct">Firebase Configuration</div>
-          <p style="color:var(--text2);font-size:0.85rem;margin-bottom:16px;line-height:1.6">
-            Create a free project at <strong style="color:var(--text)">console.firebase.google.com</strong>, enable Realtime Database, then paste your config values below. You only do this once — it saves to your browser.
-          </p>
+          <p style="color:var(--text2);font-size:0.82rem;margin-bottom:16px;line-height:1.6">Create a free project at <strong style="color:var(--text)">console.firebase.google.com</strong>, enable Realtime Database, then paste your config values below.</p>
           <div class="fgroup"><label>API Key</label><input id="cfg-key" type="text" placeholder="AIzaSy..."/></div>
           <div class="fgroup"><label>Database URL</label><input id="cfg-db" type="text" placeholder="https://your-project-default-rtdb.firebaseio.com"/></div>
           <div class="fgroup"><label>Project ID</label><input id="cfg-pid" type="text" placeholder="your-project-id"/></div>
           <div class="fgroup"><label>Auth Domain</label><input id="cfg-auth" type="text" placeholder="your-project.firebaseapp.com"/></div>
           <div style="display:flex;gap:8px;margin-bottom:12px">
-            <button class="bp" style="width:auto" onclick="saveConfig()">Save & Connect</button>
+            <button class="bp" onclick="saveConfig()">Save & Connect</button>
             <button class="bo" onclick="testConn()">Test Connection</button>
           </div>
           <div id="cfg-status"></div>
         </div>
         <div class="card">
-          <div class="ct">Database Rules (paste in Firebase console)</div>
-          <pre>{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}</pre>
-          <p style="color:var(--text2);font-size:0.78rem;margin-top:10px">These open rules are fine for a one-day competition. Restrict them after the event.</p>
+          <div class="ct">Database Rules</div>
+          <pre>{"rules":{".read":true,".write":true}}</pre>
+          <p style="color:var(--text2);font-size:0.75rem;margin-top:8px">Open rules are fine for a one-day competition. Restrict after the event.</p>
+        </div>
+        <div class="card">
+          <div class="ct">Organiser Password</div>
+          <div class="fgroup"><label>New Password</label><input id="new-pass" type="password" placeholder="Enter new password"/></div>
+          <button class="bo" onclick="changePass()">Update Password</button>
+          <p style="color:var(--text2);font-size:0.75rem;margin-top:8px">Saved to your browser's localStorage.</p>
         </div>
       </div>
     </div>
 
-    <!-- SIDE -->
+    <!-- SIDEBAR -->
     <div class="side-p">
-      <div class="ct">👥 Players &nbsp;<span id="player-count" style="color:var(--text);font-size:0.85rem">0</span></div>
-      <div id="player-list"><div class="empty" style="padding:16px">No players yet.</div></div>
-      <hr class="div"/>
-      <div class="ct">📊 Answers This Round</div>
-      <div id="ans-stats"><div style="color:var(--text2);font-size:0.82rem">No active question.</div></div>
+      <div>
+        <div class="ct">👥 Players &nbsp;<span id="player-count" style="color:var(--text);font-size:0.85rem;font-weight:700">0</span></div>
+        <div id="player-list"><div class="empty" style="padding:12px">No players yet.</div></div>
+      </div>
+      <hr class="div" style="margin:0"/>
+      <div>
+        <div class="ct">📊 Answer Distribution</div>
+        <div id="ans-stats"><div style="color:var(--text2);font-size:0.78rem">No active question.</div></div>
+      </div>
     </div>
   </div>
 </div>
 
-<script>
-const PASS = "IJAadmin2024"; // ← Change this password
-let db = null, questions = [], gs = {state:'lobby',qIndex:-1}, players = {}, roundAnswers = {};
-const OPT_COLORS = {A:'#ef4444',B:'#3b82f6',C:'#f59e0b',D:'#10b981'};
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
-/* ─ Auth ─ */
+<script>
+const DEFAULT_PASS = "IJAadmin2024";
+const PASS_KEY = 'ija_organiser_pass';
+const OPT_COLORS = {A:'#f43f5e',B:'#3b82f6',C:'#f59e0b',D:'#22c55e'};
+const SEC_COLORS = {1:'#38bdf8',2:'#a855f7',3:'#34d399'};
+
+let db = null;
+let sections = {
+  1:{name:'Section 1',questions:[]},
+  2:{name:'Section 2',questions:[]},
+  3:{name:'Section 3',questions:[]}
+};
+let currentTab = 'sections';
+let viewingSection = 1; // section tab we're viewing in editor
+let activeSection = 1;  // section currently live in game
+let gs = {state:'lobby', qIndex:-1};
+let players = {}, roundAnswers = {};
+
+/* ── Auth ── */
+function getPass(){return localStorage.getItem(PASS_KEY)||DEFAULT_PASS;}
 function doLogin(){
-  if(document.getElementById('pass-inp').value === PASS){
+  if(document.getElementById('pass-inp').value===getPass()){
     document.getElementById('login').style.display='none';
     document.getElementById('main').style.display='block';
     loadCfgInputs();
     const c=getCfg(); if(c) initFB(c);
+    loadLocalSections();
   } else {
     document.getElementById('login-err').style.display='block';
   }
 }
 document.getElementById('pass-inp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function changePass(){
+  const np=document.getElementById('new-pass').value.trim();
+  if(!np){toast('Enter a new password','err');return;}
+  localStorage.setItem(PASS_KEY,np);
+  toast('Password updated','ok');
+  document.getElementById('new-pass').value='';
+}
 
-/* ─ Config ─ */
+/* ── Config ── */
 function getCfg(){return JSON.parse(localStorage.getItem('ija_cfg')||'null');}
 function saveConfig(){
   const c={apiKey:v('cfg-key'),databaseURL:v('cfg-db'),projectId:v('cfg-pid'),authDomain:v('cfg-auth')};
   if(!c.apiKey||!c.databaseURL){cfgStatus('Fill in API Key and Database URL','e');return;}
-  localStorage.setItem('ija_cfg',JSON.stringify(c)); initFB(c);
+  localStorage.setItem('ija_cfg',JSON.stringify(c));initFB(c);
 }
 function loadCfgInputs(){
-  const c=getCfg(); if(!c)return;
+  const c=getCfg();if(!c)return;
   setV('cfg-key',c.apiKey||'');setV('cfg-db',c.databaseURL||'');setV('cfg-pid',c.projectId||'');setV('cfg-auth',c.authDomain||'');
 }
 function testConn(){
@@ -256,70 +589,179 @@ function cfgStatus(msg,t){
   el.className='alert alert-'+(t==='s'?'s':'e');el.textContent=msg;
 }
 function initFB(cfg){
-  try{
-    if(firebase.apps.length>0) firebase.app().delete().then(()=>startFB(cfg)); else startFB(cfg);
-  }catch(e){startFB(cfg);}
+  try{if(firebase.apps.length>0)firebase.app().delete().then(()=>startFB(cfg));else startFB(cfg);}catch(e){startFB(cfg);}
 }
 function startFB(cfg){
   try{
-    firebase.initializeApp(cfg); db=firebase.database();
-    cfgStatus('✓ Connected!','s'); setupListeners();
+    firebase.initializeApp(cfg);db=firebase.database();
+    cfgStatus('✓ Connected!','s');setupListeners();
   }catch(e){cfgStatus('Error: '+e.message,'e');}
 }
 
-/* ─ Tabs ─ */
+/* ── Tabs ── */
 function switchTab(t){
-  ['questions','control','setup'].forEach(n=>{
+  currentTab=t;
+  ['sections','control','scoreboard','setup'].forEach(n=>{
     document.getElementById('tab-'+n).style.display=n===t?'block':'none';
   });
   document.querySelectorAll('.tab').forEach((el,i)=>{
-    el.classList.toggle('on',['questions','control','setup'][i]===t);
+    el.classList.toggle('on',['sections','control','scoreboard','setup'][i]===t);
   });
 }
 
-/* ─ Questions ─ */
-function addQuestion(){
-  const text=v('nq-text'),a=v('nq-a'),b=v('nq-b'),c=v('nq-c'),d=v('nq-d'),ans=v('nq-ans'),time=parseInt(v('nq-time'))||30;
-  if(!text||!a||!b||!c||!d){alert('Fill in question and all 4 options.');return;}
-  questions.push({text,options:{A:a,B:b,C:c,D:d},answer:ans,timeLimit:time});
-  saveQs();
-  ['nq-text','nq-a','nq-b','nq-c','nq-d'].forEach(id=>setV(id,''));
-  setV('nq-time','30');
-}
-function deleteQ(i){if(!confirm('Delete this question?'))return; questions.splice(i,1); saveQs();}
-function saveQs(){
-  if(!db){alert('Not connected. Go to Firebase Setup tab first.');return;}
-  db.ref('quiz/questions').set(questions);
-  renderQList(); renderNavQ();
-}
-function renderQList(){
-  const el=document.getElementById('q-list');
-  document.getElementById('q-count').textContent=questions.length+' question'+(questions.length!==1?'s':'');
-  if(!questions.length){el.innerHTML='<div class="empty"><div class="empty-ico">📋</div>No questions yet.</div>';return;}
-  el.innerHTML=questions.map((q,i)=>`
-    <div class="qi">
-      <div class="qidx">Q${i+1} · ${q.timeLimit}s</div>
-      <div class="qtext">${q.text}</div>
-      <div class="opts-mini">
-        ${['A','B','C','D'].map(o=>`<div class="om ${q.answer===o?'correct':''}"><span class="ol" style="color:${OPT_COLORS[o]}">${o}</span>${q.options[o]}</div>`).join('')}
-      </div>
-      <button class="bo" style="padding:5px 10px;font-size:0.78rem" onclick="deleteQ(${i})">🗑 Remove</button>
-    </div>`).join('');
-}
-function renderNavQ(){
-  const el=document.getElementById('nav-q-list');
-  if(!questions.length){el.innerHTML='<div class="empty" style="padding:16px">No questions. Add them in the Questions tab.</div>';return;}
-  el.innerHTML=questions.map((q,i)=>`
-    <div class="nqi ${gs.qIndex===i?'cur':''}">
-      <div class="nqt">Q${i+1}: ${q.text}</div>
-      <button class="bp" style="padding:6px 14px;font-size:0.8rem" onclick="launchQ(${i})">Launch</button>
-    </div>`).join('');
+/* ── Section Tabs (editor) ── */
+function switchSection(n){
+  viewingSection=n;
+  [1,2,3].forEach(i=>{
+    document.getElementById('sec-panel-'+i).style.display=i===n?'block':'none';
+  });
+  document.querySelectorAll('.sec-tab').forEach((el,i)=>{
+    el.classList.toggle('on',i+1===n);
+  });
 }
 
-/* ─ Game Control ─ */
+/* ── Collapsible ── */
+function toggleCollapse(id){
+  const el=document.getElementById(id);
+  const arrow=document.getElementById('arrow-'+id);
+  el.classList.toggle('open');
+  if(arrow) arrow.style.transform=el.classList.contains('open')?'rotate(180deg)':'rotate(0deg)';
+}
+
+/* ── Local Section Storage ── */
+function loadLocalSections(){
+  const saved=localStorage.getItem('ija_sections');
+  if(saved){
+    try{
+      const d=JSON.parse(saved);
+      [1,2,3].forEach(i=>{if(d[i]){sections[i]=d[i];}});
+    }catch(e){}
+  }
+  renderAllSections();
+  syncSectionsToFB();
+}
+function saveLocalSections(){
+  localStorage.setItem('ija_sections',JSON.stringify(sections));
+}
+
+/* ── Section Name ── */
+function saveSectionName(n){
+  const name=v('sname-'+n)||'Section '+n;
+  sections[n].name=name;
+  saveLocalSections();
+  syncSectionsToFB();
+  toast('Section '+n+' name saved','ok');
+  updateSwitcherLabels();
+}
+
+/* ── JSON Import ── */
+function importJSON(n){
+  const raw=document.getElementById('json-'+n).value.trim();
+  if(!raw){importStatus(n,'Paste JSON first','e');return;}
+  let arr;
+  try{arr=JSON.parse(raw);}catch(e){importStatus(n,'Invalid JSON: '+e.message,'e');return;}
+  if(!Array.isArray(arr)){importStatus(n,'Expected a JSON array [...] of questions','e');return;}
+  const valid=[];
+  for(let i=0;i<arr.length;i++){
+    const q=arr[i];
+    if(!q.text||!q.options||!q.options.A||!q.options.B||!q.options.C||!q.options.D||!q.answer){
+      importStatus(n,`Question ${i+1} is missing required fields (text, options.A/B/C/D, answer)`,'e');return;
+    }
+    if(!['A','B','C','D'].includes(q.answer.toUpperCase())){
+      importStatus(n,`Question ${i+1}: answer must be A, B, C, or D`,'e');return;
+    }
+    valid.push({text:q.text,options:{A:q.options.A,B:q.options.B,C:q.options.C,D:q.options.D},answer:q.answer.toUpperCase(),timeLimit:parseInt(q.timeLimit)||30});
+  }
+  sections[n].questions=valid;
+  saveLocalSections();
+  syncSectionsToFB();
+  renderQList(n);
+  importStatus(n,'✓ Imported '+valid.length+' questions into Section '+n,'s');
+  document.getElementById('json-'+n).value='';
+  toast('Imported '+valid.length+' questions into Section '+n,'ok');
+}
+function clearImport(n){document.getElementById('json-'+n).value='';importStatus(n,'','');}
+function importStatus(n,msg,t){
+  const el=document.getElementById('import-status-'+n);
+  if(!msg){el.innerHTML='';return;}
+  el.innerHTML='<div class="alert alert-'+(t==='s'?'s':'e')+'">'+msg+'</div>';
+}
+
+/* ── Full Export/Import ── */
+function exportAll(){
+  const data=JSON.stringify({sections},null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ija-competition.json';a.click();
+  toast('Exported competition JSON','ok');
+}
+function importFull(){
+  const raw=v('full-json');
+  if(!raw){toast('Paste JSON first','err');return;}
+  let data;
+  try{data=JSON.parse(raw);}catch(e){toast('Invalid JSON','err');return;}
+  if(!data.sections){toast('Missing "sections" key','err');return;}
+  [1,2,3].forEach(i=>{
+    if(data.sections[i]){
+      sections[i]=data.sections[i];
+      if(sections[i].name) setV('sname-'+i,sections[i].name);
+    }
+  });
+  saveLocalSections();
+  syncSectionsToFB();
+  renderAllSections();
+  document.getElementById('full-json').value='';
+  document.getElementById('full-import-area').style.display='none';
+  toast('Full competition imported','ok');
+}
+function downloadTemplate(){
+  const t=[{text:"What is 6 × 8?",options:{A:"42",B:"48",C:"54",D:"56"},answer:"B",timeLimit:30},{text:"What is √144?",options:{A:"11",B:"12",C:"13",D:"14"},answer:"B",timeLimit:30}];
+  const blob=new Blob([JSON.stringify(t,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ija-questions-template.json';a.click();
+}
+
+/* ── Manual Add Question ── */
+function addQuestion(n){
+  const text=v('nq-text-'+n),a=v('nq-a-'+n),b=v('nq-b-'+n),c=v('nq-c-'+n),d=v('nq-d-'+n),ans=v('nq-ans-'+n),time=parseInt(v('nq-time-'+n))||30;
+  if(!text||!a||!b||!c||!d){toast('Fill in question and all 4 options','err');return;}
+  sections[n].questions.push({text,options:{A:a,B:b,C:c,D:d},answer:ans,timeLimit:time});
+  saveLocalSections();
+  syncSectionsToFB();
+  ['nq-text-','nq-a-','nq-b-','nq-c-','nq-d-'].forEach(id=>setV(id+n,''));
+  setV('nq-time-'+n,'30');
+  renderQList(n);
+  toast('Question added to Section '+n,'ok');
+}
+function deleteQ(sn,qi){
+  if(!confirm('Delete this question?'))return;
+  sections[sn].questions.splice(qi,1);
+  saveLocalSections();
+  syncSectionsToFB();
+  renderQList(sn);
+  renderNavQ();
+}
+function clearSection(sn){
+  if(!confirm('Clear ALL questions from Section '+sn+'?'))return;
+  sections[sn].questions=[];
+  saveLocalSections();
+  syncSectionsToFB();
+  renderQList(sn);
+  renderNavQ();
+  toast('Section '+sn+' cleared','ok');
+}
+
+/* ── Firebase Sync ── */
+function syncSectionsToFB(){
+  if(!db)return;
+  const update={'quiz/sections':sections};
+  db.ref().update(update);
+  updateSwitcherLabels();
+}
+
+/* ── Game Control ── */
 function startGame(){
-  if(!db){alert('Not connected to Firebase.');return;}
-  if(!questions.length){alert('Add questions first.');return;}
+  if(!db){toast('Not connected to Firebase','err');return;}
+  const total=[1,2,3].reduce((s,n)=>s+sections[n].questions.length,0);
+  if(!total){toast('Add questions to at least one section first','err');return;}
   if(!confirm('Start the competition? All scores will reset.'))return;
   const upd={};
   Object.keys(players).forEach(pid=>{
@@ -332,12 +774,41 @@ function startGame(){
   upd['quiz/currentQuestion']=null;
   upd['quiz/roundAnswers']=null;
   upd['quiz/currentQIndex']=-1;
-  upd['quiz/questions']=questions;
+  upd['quiz/currentSection']=activeSection;
+  upd['quiz/currentSectionName']=sections[activeSection].name;
+  upd['quiz/sections']=sections;
   db.ref().update(upd);
+  toast('Competition started!','ok');
 }
+
+function broadcastSection(n){
+  if(!db){toast('Not connected to Firebase','err');return;}
+  activeSection=n;
+  updateSwitcherUI();
+  const sname=sections[n].name||'Section '+n;
+  const upd={
+    'quiz/state':'section_intro',
+    'quiz/currentSection':n,
+    'quiz/currentSectionName':sname,
+    'quiz/currentQIndex':-1,
+    'quiz/currentQuestion':null,
+    'quiz/roundAnswers':null
+  };
+  db.ref().update(upd);
+  renderNavQ();
+  document.getElementById('nav-q-ct').textContent='Questions — '+sname;
+  const ind=document.getElementById('active-sec-indicator');
+  ind.style.display='inline-flex';
+  ind.className='sec-indicator si'+n;
+  ind.textContent=sname;
+  toast('Broadcasting: '+sname,'ok');
+}
+
 function launchQ(idx){
   if(!db)return;
-  const q=questions[idx], now=Date.now(), upd={};
+  const q=sections[activeSection].questions[idx];
+  if(!q){return;}
+  const now=Date.now(), upd={};
   Object.keys(players).forEach(pid=>{
     upd[`quiz/players/${pid}/answered`]=false;
     upd[`quiz/players/${pid}/lastAnswer`]=null;
@@ -346,14 +817,16 @@ function launchQ(idx){
   upd['quiz/roundAnswers']=null;
   upd['quiz/state']='question_active';
   upd['quiz/currentQIndex']=idx;
-  upd['quiz/currentQuestion']={index:idx,text:q.text,options:q.options,timeLimit:q.timeLimit,startTime:now};
+  upd['quiz/currentQuestion']={index:idx,text:q.text,options:q.options,timeLimit:q.timeLimit,startTime:now,sectionNum:activeSection,sectionName:sections[activeSection].name,totalInSection:sections[activeSection].questions.length};
   db.ref().update(upd);
 }
+
 function revealAnswer(){
   if(!db)return;
   const idx=gs.qIndex;
-  if(idx<0||!questions[idx]){alert('No active question to reveal.');return;}
-  const correct=questions[idx].answer, upd={}, tl=questions[idx].timeLimit||30;
+  const qs=sections[activeSection].questions;
+  if(idx<0||!qs[idx]){toast('No active question to reveal','err');return;}
+  const correct=qs[idx].answer, upd={}, tl=qs[idx].timeLimit||30;
   Object.keys(players).forEach(pid=>{
     const p=players[pid], ra=roundAnswers[pid];
     if(p.lastAnswer===correct){
@@ -362,7 +835,7 @@ function revealAnswer(){
       upd[`quiz/players/${pid}/score`]=(p.score||0)+pts;
       upd[`quiz/players/${pid}/lastCorrect`]=true;
       upd[`quiz/players/${pid}/pointsEarned`]=pts;
-    } else {
+    }else{
       upd[`quiz/players/${pid}/lastCorrect`]=false;
       upd[`quiz/players/${pid}/pointsEarned`]=0;
     }
@@ -371,65 +844,129 @@ function revealAnswer(){
   upd['quiz/currentQuestion/answer']=correct;
   db.ref().update(upd);
 }
-function showLeaderboard(){if(!db)return; db.ref('quiz/state').set('leaderboard');}
-function endGame(){if(!db)return;if(!confirm('End the competition?'))return; db.ref('quiz/state').set('ended');}
+function showLeaderboard(){if(!db)return;db.ref('quiz/state').set('leaderboard');}
+function endGame(){if(!db)return;if(!confirm('End the competition?'))return;db.ref('quiz/state').set('ended');}
 function resetGame(){
-  if(!db)return;if(!confirm('Reset everything? Clears all players and scores.'))return;
-  db.ref('quiz').set({state:'lobby',questions:questions,players:null,roundAnswers:null,currentQuestion:null,currentQIndex:-1});
+  if(!db)return;if(!confirm('Reset everything? Clears all scores and game state.'))return;
+  db.ref('quiz').set({state:'lobby',sections:sections,players:null,roundAnswers:null,currentQuestion:null,currentQIndex:-1,currentSection:1,currentSectionName:sections[1].name});
+  toast('Competition reset','ok');
 }
 function calcScore(tl,timeTaken){const r=Math.min(timeTaken/tl,1);return Math.round(1000-r*500);}
 
-/* ─ Listeners ─ */
+/* ── Listeners ── */
 function setupListeners(){
   if(!db)return;
   db.ref('quiz/state').on('value',s=>{gs.state=s.val()||'lobby';updateBadge(gs.state);});
   db.ref('quiz/currentQIndex').on('value',s=>{gs.qIndex=s.val()??-1;renderCurQ();renderNavQ();});
   db.ref('quiz/currentQuestion').on('value',s=>{gs.cq=s.val();renderCurQ();});
-  db.ref('quiz/questions').on('value',s=>{const q=s.val();if(q&&Array.isArray(q)){questions=q;renderQList();renderNavQ();}});
-  db.ref('quiz/players').on('value',s=>{players=s.val()||{};renderPlayerList();renderAnsStats();});
+  db.ref('quiz/currentSection').on('value',s=>{const n=s.val()||1;activeSection=n;updateSwitcherUI();});
+  db.ref('quiz/sections').on('value',s=>{
+    const d=s.val();
+    if(d){[1,2,3].forEach(i=>{if(d[i])sections[i]=d[i];});renderAllSections();saveLocalSections();}
+  });
+  db.ref('quiz/players').on('value',s=>{players=s.val()||{};renderPlayerList();renderAnsStats();renderLiveScoreboard();});
   db.ref('quiz/roundAnswers').on('value',s=>{roundAnswers=s.val()||{};renderAnsStats();});
 }
 
-/* ─ Render ─ */
+/* ── Render ── */
 function updateBadge(state){
   const b=document.getElementById('state-badge');
   b.className='badge s-'+state;
-  b.textContent={lobby:'Lobby',question_active:'Question Live',reveal:'Revealing',leaderboard:'Leaderboard',ended:'Ended'}[state]||state;
+  const labels={lobby:'Lobby',section_intro:'Section Intro',question_active:'Question Live',reveal:'Revealing',leaderboard:'Leaderboard',section_end:'Section End',ended:'Ended'};
+  b.textContent=labels[state]||state;
 }
+
+function updateSwitcherUI(){
+  [1,2,3].forEach(n=>{
+    const el=document.getElementById('sw-'+n);
+    if(el){el.classList.toggle('active',n===activeSection);}
+  });
+}
+
+function updateSwitcherLabels(){
+  [1,2,3].forEach(n=>{
+    const nameEl=document.getElementById('sw-name-'+n);
+    const countEl=document.getElementById('sw-count-'+n);
+    if(nameEl) nameEl.textContent=sections[n].name||'Section '+n;
+    if(countEl) countEl.textContent=sections[n].questions.length+' questions';
+  });
+}
+
+function renderAllSections(){
+  [1,2,3].forEach(n=>{
+    renderQList(n);
+    setV('sname-'+n,sections[n].name||'Section '+n);
+  });
+  updateSwitcherLabels();
+}
+
+function renderQList(n){
+  const el=document.getElementById('q-list-'+n);
+  const cnt=document.getElementById('q-count-'+n);
+  const qs=sections[n].questions;
+  if(cnt) cnt.textContent=qs.length+' question'+(qs.length!==1?'s':'');
+  if(!qs.length){el.innerHTML='<div class="empty"><div class="empty-ico">📋</div>No questions yet.</div>';return;}
+  el.innerHTML=qs.map((q,i)=>`
+    <div class="qi">
+      <div class="qidx">Q${i+1} · ${q.timeLimit}s</div>
+      <div class="qtext">${q.text}</div>
+      <div class="opts-mini">
+        ${['A','B','C','D'].map(o=>`<div class="om ${q.answer===o?'correct':''}"><span class="ol" style="color:${OPT_COLORS[o]}">${o}</span>${q.options[o]}</div>`).join('')}
+      </div>
+      <button class="bo" style="padding:4px 10px;font-size:0.72rem;color:var(--red);border-color:rgba(244,63,94,.3)" onclick="deleteQ(${n},${i})">🗑 Remove</button>
+    </div>`).join('');
+}
+
+function renderNavQ(){
+  const el=document.getElementById('nav-q-list');
+  const qs=sections[activeSection]?.questions||[];
+  if(!qs.length){el.innerHTML='<div class="empty" style="padding:12px">No questions in this section.</div>';return;}
+  el.innerHTML=qs.map((q,i)=>`
+    <div class="nqi ${gs.qIndex===i?'cur':''}">
+      <div>
+        <div class="nqt">Q${i+1}: ${q.text}</div>
+        <div class="nqi-meta">${q.timeLimit}s</div>
+      </div>
+      <button class="bp" style="padding:5px 12px;font-size:0.78rem;flex-shrink:0" onclick="launchQ(${i})">▶ Launch</button>
+    </div>`).join('');
+}
+
 function renderCurQ(){
   const el=document.getElementById('cur-q'), idx=gs.qIndex;
-  if(idx<0||!questions[idx]){el.innerHTML='<div class="empty">No question active. Use the Launch buttons below.</div>';return;}
-  const q=questions[idx];
+  const qs=sections[activeSection]?.questions||[];
+  if(idx<0||!qs[idx]){el.innerHTML='<div class="empty" style="padding:12px">No question active.</div>';return;}
+  const q=qs[idx];
   el.innerHTML=`
-    <div style="font-size:0.78rem;color:var(--text2);margin-bottom:6px;font-family:'JetBrains Mono',monospace">Q${idx+1} of ${questions.length} · ${q.timeLimit}s</div>
-    <div style="font-weight:700;font-size:1rem;margin-bottom:12px">${q.text}</div>
+    <div style="font-size:0.72rem;color:var(--text2);margin-bottom:6px;font-family:'JetBrains Mono',monospace">Q${idx+1} of ${qs.length} · ${q.timeLimit}s · Section ${activeSection}</div>
+    <div style="font-weight:700;font-size:0.95rem;margin-bottom:12px">${q.text}</div>
     <div class="opts-disp">
-      ${['A','B','C','D'].map(o=>`
-        <div class="odisp" style="border-color:${OPT_COLORS[o]}44;background:${OPT_COLORS[o]}11">
-          <span style="color:${OPT_COLORS[o]};font-weight:700">${o} </span>${q.options[o]}
-        </div>`).join('')}
+      ${['A','B','C','D'].map(o=>`<div class="odisp" style="border-color:${OPT_COLORS[o]}44;background:${OPT_COLORS[o]}11"><span style="color:${OPT_COLORS[o]};font-weight:700">${o} </span>${q.options[o]}</div>`).join('')}
     </div>`;
 }
+
 function renderPlayerList(){
   const el=document.getElementById('player-list');
   const arr=Object.values(players).sort((a,b)=>(b.score||0)-(a.score||0));
-  document.getElementById('player-count').textContent=arr.length;
-  if(!arr.length){el.innerHTML='<div class="empty" style="padding:16px">No players yet.</div>';return;}
+  const cnt=arr.length;
+  document.getElementById('player-count').textContent=cnt;
+  document.getElementById('player-count-top').textContent=cnt+' player'+(cnt!==1?'s':'');
+  if(!arr.length){el.innerHTML='<div class="empty" style="padding:12px">No players yet.</div>';return;}
   el.innerHTML=arr.map(p=>`
     <div class="pl-item">
-      <div class="pl-name"><div class="dot ${p.answered?'ans':''}"></div>${p.name||'?'}</div>
+      <div class="pl-name"><div class="pdot ${p.answered?'ans':''}"></div>${p.name||'?'}</div>
       <div class="pl-score">${p.score||0}</div>
     </div>`).join('');
 }
+
 function renderAnsStats(){
   const el=document.getElementById('ans-stats');
-  if(gs.qIndex<0){el.innerHTML='<div style="color:var(--text2);font-size:0.82rem">No active question.</div>';return;}
+  if(gs.qIndex<0){el.innerHTML='<div style="color:var(--text2);font-size:0.78rem">No active question.</div>';return;}
   const counts={A:0,B:0,C:0,D:0};
   Object.values(players).forEach(p=>{if(p.lastAnswer&&counts[p.lastAnswer]!==undefined)counts[p.lastAnswer]++;});
   const total=Object.values(counts).reduce((a,b)=>a+b,0);
   const answered=Object.values(players).filter(p=>p.answered).length;
   const totalP=Object.keys(players).length;
-  el.innerHTML=`<div style="color:var(--text2);font-size:0.8rem;margin-bottom:10px">${answered}/${totalP} answered</div>`+
+  el.innerHTML=`<div style="color:var(--text2);font-size:0.75rem;margin-bottom:8px">${answered}/${totalP} answered</div>`+
     ['A','B','C','D'].map(o=>`
       <div class="astat">
         <div class="astat-row"><span style="color:${OPT_COLORS[o]};font-weight:700">${o}</span><span style="color:var(--text2)">${counts[o]}</span></div>
@@ -437,9 +974,29 @@ function renderAnsStats(){
       </div>`).join('');
 }
 
-/* ─ Utils ─ */
-function v(id){return document.getElementById(id).value.trim();}
-function setV(id,val){document.getElementById(id).value=val;}
+function renderLiveScoreboard(){
+  const el=document.getElementById('live-lb');
+  const arr=Object.values(players).sort((a,b)=>(b.score||0)-(a.score||0));
+  if(!arr.length){el.innerHTML='<div class="empty"><div class="empty-ico">🏆</div>No players yet.</div>';return;}
+  const medals=['🥇','🥈','🥉'];
+  el.innerHTML=arr.map((p,i)=>`
+    <div class="lb-row ${i<3?'r'+(i+1):''}" style="animation-delay:${i*0.04}s">
+      <div class="lb-rank-num">${medals[i]||i+1}</div>
+      <div class="lb-answered-dot ${p.answered?'ans':''}"></div>
+      <div class="lb-name-col">${p.name||'?'}</div>
+      <div class="lb-score-col">${p.score||0}</div>
+    </div>`).join('');
+  document.getElementById('lb-updated').textContent='Updated '+new Date().toLocaleTimeString();
+}
+
+/* ── Utils ── */
+function v(id){return document.getElementById(id)?.value?.trim()||'';}
+function setV(id,val){const el=document.getElementById(id);if(el)el.value=val;}
+function toast(msg,type){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast show'+(type?' '+type:'');
+  clearTimeout(el._t);el._t=setTimeout(()=>{el.className='toast';},3000);
+}
 </script>
 </body>
 </html>
