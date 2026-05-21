@@ -28,7 +28,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
 textarea{resize:vertical;min-height:70px;margin-bottom:0}
 button{padding:10px 18px;border-radius:9px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;transition:all .15s;white-space:nowrap}
 .btn-p{background:var(--accent);color:#fff}.btn-p:hover{background:#1d4ed8;transform:translateY(-1px)}
-.btn-g{background:var(--gold);color:#060c18}.btn-g:hover{background:#d97706;transform:translateY(-1px)}
+.btn-g{background:var(--gold);color:#060c18}.btn-g:hover{background:#d97706}
 .btn-grn{background:var(--green);color:#fff}.btn-grn:hover{background:#059669}
 .btn-r{background:var(--red);color:#fff}.btn-r:hover{background:#dc2626}
 .btn-pur{background:var(--purple);color:#fff}.btn-pur:hover{background:#6d28d9}
@@ -59,7 +59,7 @@ button{padding:10px 18px;border-radius:9px;border:none;cursor:pointer;font-famil
 .body{display:flex;flex:1;overflow:hidden}
 .sidebar{width:54px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;flex-shrink:0;transition:width .2s}
 .sidebar.open{width:188px}
-.nav-btn{width:38px;height:38px;border-radius:9px;border:none;cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center;font-size:1.15rem;color:var(--text2);transition:all .15s;flex-shrink:0;position:relative}
+.nav-btn{width:38px;height:38px;border-radius:9px;border:none;cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center;font-size:1.15rem;color:var(--text2);transition:all .15s;flex-shrink:0}
 .sidebar.open .nav-btn{width:calc(100% - 14px);justify-content:flex-start;padding:0 10px;gap:10px;font-size:.95rem}
 .nav-btn:hover{background:var(--card);color:var(--text)}
 .nav-btn.on{background:rgba(37,99,235,.15);color:var(--accent)}
@@ -75,7 +75,7 @@ button{padding:10px 18px;border-radius:9px;border:none;cursor:pointer;font-famil
 .panel-scroll{flex:1;overflow-y:auto;padding:18px}
 
 /* Section tabs */
-.s-tabs{display:flex;gap:6px;margin-bottom:16px}
+.s-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
 .stab{padding:7px 18px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--text2);font-weight:700;font-size:.8rem;cursor:pointer;transition:all .15s;position:relative}
 .stab:hover{border-color:var(--text3)}
 .stab.on{background:rgba(37,99,235,.15);border-color:var(--accent);color:#60a5fa}
@@ -90,10 +90,21 @@ button{padding:10px 18px;border-radius:9px;border:none;cursor:pointer;font-famil
 .fg input,.fg select,.fg textarea{margin-bottom:0}
 .row-btns{display:flex;gap:7px;flex-wrap:wrap}
 
-/* Import */
-.import-zone{background:var(--bg);border:2px dashed var(--border);border-radius:12px;padding:20px;text-align:center;margin-bottom:12px;transition:all .2s;cursor:pointer}
-.import-zone:hover{border-color:var(--accent);background:rgba(37,99,235,.05)}
+/* FIX: File import - label-based, no programmatic click */
+.file-label{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:8px;border:1px solid var(--accent);color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;background:rgba(37,99,235,.08)}
+.file-label:hover{background:rgba(37,99,235,.15)}
+.file-input{display:none}
+
+/* Import zone redesign */
+.import-tabs{display:flex;gap:4px;margin-bottom:10px}
+.imp-tab{padding:5px 14px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.imp-tab.on{background:rgba(37,99,235,.15);border-color:var(--accent);color:#60a5fa}
+.import-panel{display:none}
+.import-panel.on{display:block}
+.import-zone{background:var(--bg);border:2px dashed var(--border);border-radius:12px;padding:18px;text-align:center;margin-bottom:8px;transition:all .2s}
 .import-zone p{color:var(--text2);font-size:.8rem;margin-bottom:10px}
+.paste-area{width:100%;min-height:100px;max-height:200px;font-family:'JetBrains Mono',monospace;font-size:.73rem;background:var(--bg);border:1px solid var(--border);border-radius:9px;color:var(--text);padding:10px 12px;resize:vertical;margin-bottom:8px;line-height:1.5}
+.paste-area::placeholder{color:var(--text2)}
 details{background:var(--bg);border:1px solid var(--border);border-radius:10px;margin-top:10px;overflow:hidden}
 details summary{padding:9px 14px;cursor:pointer;font-size:.8rem;color:var(--text3);font-weight:600;user-select:none}
 details pre{padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:.73rem;color:var(--text2);line-height:1.65;overflow-x:auto;border-top:1px solid var(--border)}
@@ -129,7 +140,7 @@ details pre{padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:.
 .thin-fill{height:100%;border-radius:2px;transition:width .45s linear,background .3s}
 .cq-text{font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:10px}
 .cq-opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.cq-opt{padding:7px 10px;border-radius:9px;font-size:.82rem;border:1px solid;display:flex;gap:6px;align-items:center;transition:all .2s}
+.cq-opt{padding:7px 10px;border-radius:9px;font-size:.82rem;border:1px solid;display:flex;gap:6px;align-items:center}
 .cq-opt b{font-size:.88rem;flex-shrink:0}
 .cq-opt.A{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3)}.cq-opt.A b{color:#ef4444}
 .cq-opt.B{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.3)}.cq-opt.B b{color:#3b82f6}
@@ -141,7 +152,7 @@ details pre{padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:.
 /* Control buttons */
 .ctrl-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .cbtn{padding:14px;border-radius:11px;border:none;cursor:pointer;font-family:inherit;font-size:.85rem;font-weight:700;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
-.cbtn:disabled{opacity:.38;cursor:not-allowed;transform:none!important}
+.cbtn:disabled{opacity:.38;cursor:not-allowed}
 .cbtn:hover:not(:disabled){transform:translateY(-1px)}
 .cbtn.pulse{animation:rpulse 1s ease-in-out infinite}
 @keyframes rpulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.5)}50%{box-shadow:0 0 0 10px rgba(245,158,11,0)}}
@@ -196,7 +207,7 @@ details pre{padding:12px 14px;font-family:'JetBrains Mono',monospace;font-size:.
 /* Misc */
 .empty{text-align:center;padding:24px;color:var(--text2);font-size:.83rem}
 .empty-ico{font-size:1.8rem;margin-bottom:7px}
-.alert{padding:9px 14px;border-radius:9px;font-size:.8rem;margin-bottom:12px;display:none;align-items:center;gap:7px}
+.alert{padding:9px 14px;border-radius:9px;font-size:.8rem;margin-bottom:0;display:none;align-items:center;gap:7px}
 .alert.s{background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green)}
 .alert.e{background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
 .alert.i{background:rgba(37,99,235,.1);border:1px solid var(--accent);color:#60a5fa;display:flex}
@@ -244,26 +255,50 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
       <!-- QUESTIONS PANEL -->
       <div class="panel on" id="panel-q">
         <div class="panel-scroll">
-          <div class="s-tabs" id="s-tabs">
-            <button class="stab on" onclick="setEditSec(0)">Section 1 <span class="qb" id="qb0">0</span></button>
-            <button class="stab" onclick="setEditSec(1)">Section 2 <span class="qb" id="qb1">0</span></button>
-            <button class="stab" onclick="setEditSec(2)">Section 3 <span class="qb" id="qb2">0</span></button>
-          </div>
+          <!-- FIX: Section tabs rebuilt to avoid childNodes fragility -->
+          <div class="s-tabs" id="s-tabs"></div>
 
           <div class="card">
-            <div class="card-t">📥 Bulk Import — <span id="cur-sec-lbl">Section 1</span></div>
-            <div class="import-zone" onclick="document.getElementById('jfile').click()">
-              <p>📂 Click to select a JSON file — imports into the active section above</p>
-              <button class="btn-p btn-sm" onclick="event.stopPropagation();document.getElementById('jfile').click()">Choose JSON File</button>
-              <input type="file" id="jfile" style="display:none" accept=".json,application/json" onchange="importJSON(event)">
+            <div class="card-t">📥 Import Questions — <span id="cur-sec-lbl">Section 1</span></div>
+
+            <!-- FIX: Import mode tabs -->
+            <div class="import-tabs">
+              <button class="imp-tab on" onclick="switchImpTab('file')">📂 Upload File</button>
+              <button class="imp-tab" onclick="switchImpTab('paste')">📋 Paste JSON</button>
             </div>
-            <div class="row-btns">
+
+            <!-- File import -->
+            <div class="import-panel on" id="imp-file">
+              <div class="import-zone">
+                <p>Select a .json file to bulk import into the active section</p>
+                <!-- FIX: label-based file picker — no programmatic click needed -->
+                <label class="file-label" for="jfile">📂 Choose JSON File</label>
+                <input type="file" id="jfile" class="file-input" accept=".json,application/json" onchange="importFromFile(event)">
+              </div>
+            </div>
+
+            <!-- Paste import -->
+            <div class="import-panel" id="imp-paste">
+              <textarea class="paste-area" id="paste-json" placeholder='Paste your JSON array here:
+[
+  {
+    "text": "What is 7 × 8?",
+    "options": {"A":"54","B":"56","C":"64","D":"48"},
+    "answer": "B",
+    "timeLimit": 30
+  }
+]'></textarea>
+              <button class="btn-p btn-sm" onclick="importFromPaste()" style="width:100%">📋 Import Pasted JSON</button>
+            </div>
+
+            <div class="row-btns" style="margin-top:10px">
               <button class="btn-ghost btn-sm" onclick="exportSec()">📤 Export Section</button>
               <button class="btn-ghost btn-sm" onclick="exportAll()">📤 Export All</button>
               <button class="btn-ghost btn-sm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearSec()">🗑 Clear Section</button>
             </div>
+
             <details>
-              <summary>📋 JSON Format</summary>
+              <summary>📋 JSON Format Reference</summary>
               <pre>[
   {
     "text": "What is 7 × 8?",
@@ -278,9 +313,10 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
     "timeLimit": 25
   }
 ]
-/* answer must be A, B, C or D. timeLimit is seconds. */</pre>
+/* answer = A, B, C or D (uppercase). timeLimit in seconds. */</pre>
             </details>
-            <div id="import-msg" class="alert" style="margin-top:10px;margin-bottom:0"></div>
+
+            <div id="import-msg" class="alert" style="margin-top:10px"></div>
           </div>
 
           <div class="card">
@@ -306,8 +342,6 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
       <div class="panel" id="panel-c">
         <div class="ctrl-layout">
           <div class="ctrl-main">
-
-            <!-- Timer + current Q -->
             <div class="cq-card">
               <div class="cq-head">
                 <div class="cq-meta-txt" id="cq-meta">No active question<br><span style="color:var(--text2)">Launch a question to begin</span></div>
@@ -323,7 +357,6 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
               <div id="cq-display"><div class="empty" style="padding:10px">Use Launch buttons below to start a question.</div></div>
             </div>
 
-            <!-- Buttons -->
             <div class="card">
               <div class="card-t">🎮 Competition Controls</div>
               <div class="ctrl-btns">
@@ -334,22 +367,15 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
               </div>
               <hr>
               <div class="card-t" style="margin-bottom:10px">📂 Section Switching</div>
-              <div class="row-btns">
-                <button class="btn-p btn-sm" onclick="goSec(0)">▶ Section 1</button>
-                <button class="btn-p btn-sm" onclick="goSec(1)">▶ Section 2</button>
-                <button class="btn-p btn-sm" onclick="goSec(2)">▶ Section 3</button>
-                <button class="btn-ghost btn-sm" style="color:var(--purple);border-color:var(--purple)" onclick="secLB()">🏅 Section Leaderboard</button>
-              </div>
+              <div class="row-btns" id="sec-btns"></div>
             </div>
 
-            <!-- Q Navigator -->
             <div class="card">
               <div class="card-t">📋 Questions — <span id="ctrl-sec-name">Section 1</span></div>
               <div id="nav-q-list"></div>
             </div>
           </div>
 
-          <!-- Side -->
           <div class="ctrl-side">
             <div class="card-t">📊 Answers This Round</div>
             <div class="ans-hdr" id="ans-hdr">—</div>
@@ -368,7 +394,7 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
             <div style="font-weight:800;font-size:1.05rem">🏆 Live Scoreboard</div>
             <span id="sb-pcount" style="color:var(--text2);font-size:.8rem"></span>
           </div>
-          <div class="alert i" style="display:flex;margin-bottom:14px">Real-time — updates as players answer. Push to audience using the Leaderboard button in Controls.</div>
+          <div class="alert i" style="display:flex;margin-bottom:14px">Real-time — updates as players answer.</div>
           <table class="sb-table">
             <thead><tr><th>#</th><th>Player</th><th>S1</th><th>S2</th><th>S3</th><th style="text-align:right">Total</th></tr></thead>
             <tbody id="sb-body"><tr><td colspan="6" style="text-align:center;color:var(--text2)">No players yet</td></tr></tbody>
@@ -401,51 +427,108 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
                 <button class="btn-p btn-sm" onclick="saveSectionNames()">Save Names</button>
               </div>
               <div class="card">
-                <div class="card-t">🔒 DB Rules (Paste in Firebase console)</div>
+                <div class="card-t">🔒 DB Rules</div>
                 <pre>{"rules":{".read":true,".write":true}}</pre>
-                <p style="color:var(--text2);font-size:.72rem;margin-top:8px">Lock after the event.</p>
+                <p style="color:var(--text2);font-size:.72rem;margin-top:8px">Paste in Firebase → Realtime DB → Rules. Lock after event.</p>
               </div>
               <div class="card">
                 <div class="card-t">🔑 Password</div>
-                <pre>const PASS = "IJAadmin2024"; // change this</pre>
+                <pre>const PASS = "IJAadmin2024"; // change in &lt;script&gt;</pre>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-    </div><!-- /main -->
-  </div><!-- /body -->
-</div><!-- /app -->
+    </div>
+  </div>
+</div>
 
 <script>
 /* ═══════ CONFIG ═══════ */
 const PASS = "IJAadmin2024";
 const CIRC = 201.1;
 const OC = {A:'#ef4444',B:'#3b82f6',C:'#f59e0b',D:'#10b981'};
-const STATE_MAP = {
-  lobby:'Lobby',section_intro:'Section Intro',question_active:'Question Live',
-  time_up:'Time Up!',reveal:'Revealing',section_leaderboard:'Section Board',
-  leaderboard:'Leaderboard',ended:'Ended'
-};
+const STATE_MAP = {lobby:'Lobby',section_intro:'Section Intro',question_active:'Question Live',time_up:'Time Up!',reveal:'Revealing',section_leaderboard:'Section Board',leaderboard:'Leaderboard',ended:'Ended'};
 
 /* ═══════ STATE ═══════ */
 let db=null, timerInt=null, sbOpen=false;
 let editSec=0, liveSec=0;
-let sections=[{name:'Section 1',questions:[]},{name:'Section 2',questions:[]},{name:'Section 3',questions:[]}];
+// FIX: sections always initialised as proper array of objects
+let sections=[
+  {name:'Section 1',questions:[]},
+  {name:'Section 2',questions:[]},
+  {name:'Section 3',questions:[]}
+];
 let players={}, gs={state:'lobby',currentQIndex:-1,cq:null,roundAnswers:{}};
+
+/* ═══════ FIX: Firebase object → array ═══════ */
+function toArray(val){
+  if(!val) return [];
+  if(Array.isArray(val)) return val;
+  return Object.keys(val).sort((a,b)=>Number(a)-Number(b)).map(k=>val[k]);
+}
+function normSections(raw){
+  const arr=toArray(raw);
+  return [0,1,2].map(i=>({
+    name:(arr[i]?.name)||sections[i]?.name||'Section '+(i+1),
+    questions:toArray(arr[i]?.questions)||[]
+  }));
+}
 
 /* ═══════ LOGIN ═══════ */
 function doLogin(){
   if(gv('pass-inp')===PASS){
     document.getElementById('login').style.display='none';
     document.getElementById('app').classList.add('on');
-    loadCfgInputs(); loadSectionNames();
+    loadCfgInputs(); loadSectionNames(); buildSectionUI();
     const c=getCfg(); if(c) initFB(c);
-  } else { show('lerr'); }
+  } else { document.getElementById('lerr').style.display='block'; }
 }
 document.getElementById('pass-inp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-function show(id){document.getElementById(id).style.display='block';}
+
+/* ═══════ FIX: Build section UI programmatically (no childNodes fragility) ═══════ */
+function buildSectionUI(){
+  // Tabs
+  const tabs=document.getElementById('s-tabs');
+  tabs.innerHTML='';
+  sections.forEach((s,i)=>{
+    const btn=document.createElement('button');
+    btn.className='stab'+(i===0?' on':'');
+    btn.onclick=()=>setEditSec(i);
+    const lbl=document.createElement('span');
+    lbl.id='stab-lbl-'+i;
+    lbl.textContent=s.name;
+    const qb=document.createElement('span');
+    qb.className='qb';qb.id='qb'+i;qb.textContent='0';
+    btn.appendChild(lbl);btn.appendChild(document.createTextNode(' '));btn.appendChild(qb);
+    tabs.appendChild(btn);
+  });
+  // Section switch buttons in control panel
+  const secBtns=document.getElementById('sec-btns');
+  secBtns.innerHTML='';
+  sections.forEach((s,i)=>{
+    const btn=document.createElement('button');
+    btn.className='btn-p btn-sm';
+    btn.textContent='▶ '+s.name;
+    btn.onclick=()=>goSec(i);
+    secBtns.appendChild(btn);
+  });
+  const lb=document.createElement('button');
+  lb.className='btn-ghost btn-sm';
+  lb.style.cssText='color:var(--purple);border-color:var(--purple)';
+  lb.textContent='🏅 Section Leaderboard';
+  lb.onclick=secLB;
+  secBtns.appendChild(lb);
+}
+function updateTabLabels(){
+  sections.forEach((s,i)=>{
+    const lbl=document.getElementById('stab-lbl-'+i);
+    if(lbl) lbl.textContent=s.name;
+    const btn=document.querySelector(`#sec-btns button:nth-child(${i+1})`);
+    if(btn) btn.textContent='▶ '+s.name;
+  });
+}
 
 /* ═══════ SIDEBAR / PANELS ═══════ */
 const PANELS={q:'panel-q',c:'panel-c',s:'panel-s',x:'panel-x'};
@@ -460,22 +543,26 @@ function goPanel(k){
 }
 function toggleSB(){sbOpen=!sbOpen;document.getElementById('sidebar').classList.toggle('open',sbOpen);}
 
+/* ═══════ IMPORT TABS ═══════ */
+function switchImpTab(which){
+  document.querySelectorAll('.imp-tab').forEach((t,i)=>t.classList.toggle('on',i===(which==='file'?0:1)));
+  document.getElementById('imp-file').classList.toggle('on',which==='file');
+  document.getElementById('imp-paste').classList.toggle('on',which==='paste');
+}
+
 /* ═══════ SECTION NAMES ═══════ */
 function saveSectionNames(){
   [0,1,2].forEach(i=>{sections[i].name=gv('sn'+i)||'Section '+(i+1);});
   localStorage.setItem('ija_snames',JSON.stringify(sections.map(s=>s.name)));
-  updateTabLabels(); pushSections();
+  updateTabLabels();
+  document.getElementById('cur-sec-lbl').textContent=sections[editSec].name;
+  buildSectionUI();
+  pushSections();
   flashImport('Section names saved','s');
 }
 function loadSectionNames(){
   const saved=JSON.parse(localStorage.getItem('ija_snames')||'null');
   if(saved) [0,1,2].forEach(i=>{sections[i].name=saved[i]||sections[i].name; sv('sn'+i,sections[i].name);});
-  updateTabLabels();
-}
-function updateTabLabels(){
-  document.querySelectorAll('#s-tabs .stab').forEach((btn,i)=>{
-    const qb=btn.querySelector('.qb'); btn.childNodes[0].textContent=sections[i].name+' '; btn.appendChild(qb);
-  });
 }
 
 /* ═══════ EDIT SECTION ═══════ */
@@ -487,52 +574,61 @@ function setEditSec(i){
 }
 
 /* ═══════ JSON IMPORT ═══════ */
-function importJSON(ev){
+function importFromFile(ev){
   const file=ev.target.files[0]; if(!file)return;
   const reader=new FileReader();
-  reader.onload=e=>{
-    try{
-      let raw=JSON.parse(e.target.result);
-      // Support {sections:[...]}, {questions:[...]}, or bare array
-      if(!Array.isArray(raw)){
-        if(raw.sections&&Array.isArray(raw.sections)){
-          // multi-section import
-          raw.sections.forEach((s,i)=>{
-            if(i<3&&Array.isArray(s.questions)){
-              sections[i].questions=[...sections[i].questions,...s.questions.map(normalQ)];
-              if(s.name)sections[i].name=s.name;
-            }
-          });
-          pushSections(); renderQL(); flashImport('✓ Multi-section import done','s');
-          ev.target.value=''; return;
-        }
-        raw=raw.questions||Object.values(raw)[0]||[];
-      }
-      if(!Array.isArray(raw)) throw new Error('Expected JSON array');
-      const parsed=raw.map((q,i)=>{
-        const r=normalQ(q,i); return r;
-      });
-      sections[editSec].questions=[...sections[editSec].questions,...parsed];
-      pushSections(); renderQL();
-      flashImport(`✓ ${parsed.length} questions imported into ${sections[editSec].name}`,'s');
-    }catch(err){flashImport('Import error: '+err.message,'e');}
-    ev.target.value='';
-  };
+  reader.onload=e=>{ runImport(e.target.result); ev.target.value=''; };
   reader.readAsText(file);
 }
+function importFromPaste(){
+  const raw=document.getElementById('paste-json').value.trim();
+  if(!raw){flashImport('Paste your JSON above first','e');return;}
+  runImport(raw);
+  document.getElementById('paste-json').value='';
+}
+function runImport(text){
+  try{
+    let raw=JSON.parse(text);
+    // Handle multi-section format {sections:[...]}
+    if(!Array.isArray(raw)&&raw.sections&&Array.isArray(raw.sections)){
+      let total=0;
+      raw.sections.forEach((s,i)=>{
+        if(i<3&&Array.isArray(s.questions)){
+          const parsed=s.questions.map((q,qi)=>normalQ(q,qi));
+          sections[i].questions=[...sections[i].questions,...parsed];
+          if(s.name) sections[i].name=s.name;
+          total+=parsed.length;
+        }
+      });
+      buildSectionUI(); pushSections(); renderQL();
+      flashImport(`✓ Multi-section import: ${total} total questions`,'s'); return;
+    }
+    // Single array or {questions:[...]}
+    if(!Array.isArray(raw)) raw=raw.questions||raw.data||Object.values(raw).find(v=>Array.isArray(v))||[];
+    if(!Array.isArray(raw)) throw new Error('Expected a JSON array of questions');
+    const parsed=raw.map((q,i)=>normalQ(q,i));
+    sections[editSec].questions=[...sections[editSec].questions,...parsed];
+    pushSections(); renderQL();
+    flashImport(`✓ ${parsed.length} questions → ${sections[editSec].name}`,'s');
+  }catch(err){
+    flashImport('Import error: '+err.message,'e');
+  }
+}
 function normalQ(q,i=0){
-  const text=q.text||q.question||q.q||'';
-  const options=q.options||{A:q.a||q.A||'',B:q.b||q.B||'',C:q.c||q.C||'',D:q.d||q.D||''};
-  const answer=(q.answer||q.ans||q.correct||'A').toString().toUpperCase().trim();
+  const text=(q.text||q.question||q.q||'').trim();
+  const options=q.options||{A:(q.a||q.A||'').trim(),B:(q.b||q.B||'').trim(),C:(q.c||q.C||'').trim(),D:(q.d||q.D||'').trim()};
+  const answer=(q.answer||q.ans||q.correct||'A').toString().toUpperCase().trim().charAt(0);
   const timeLimit=parseInt(q.timeLimit||q.time||q.timer||30);
-  if(!text) throw new Error(`Item ${i+1} missing "text"`);
-  if(!['A','B','C','D'].includes(answer)) throw new Error(`Item ${i+1} answer must be A/B/C/D`);
-  return {text,options,answer,timeLimit};
+  if(!text) throw new Error(`Question ${i+1} missing "text"`);
+  if(!['A','B','C','D'].includes(answer)) throw new Error(`Question ${i+1}: answer must be A/B/C/D, got "${answer}"`);
+  if(!options.A&&!options.B) throw new Error(`Question ${i+1}: options missing`);
+  return {text,options,answer,timeLimit:isNaN(timeLimit)?30:timeLimit};
 }
 function flashImport(msg,type){
   const el=document.getElementById('import-msg');
   el.className='alert '+type; el.textContent=msg; el.style.display='flex';
-  setTimeout(()=>{el.style.display='none';},4500);
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>{el.style.display='none';},5000);
 }
 function exportSec(){
   dl(sections[editSec].name.replace(/\s+/g,'-')+'.json', JSON.stringify(sections[editSec].questions,null,2));
@@ -547,17 +643,17 @@ function clearSec(){
 function dl(name,data){
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));
-  a.download=name; a.click();
+  a.download=name; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
 }
 
-/* ═══════ ADD/DELETE QUESTION ═══════ */
+/* ═══════ ADD / DELETE QUESTION ═══════ */
 function addQ(){
   const text=gv('nq-text'),a=gv('nq-a'),b=gv('nq-b'),c=gv('nq-c'),d=gv('nq-d'),ans=gv('nq-ans'),t=parseInt(gv('nq-time'))||30;
   if(!text||!a||!b||!c||!d){alert('Fill in question and all 4 options.');return;}
   sections[editSec].questions.push({text,options:{A:a,B:b,C:c,D:d},answer:ans,timeLimit:t});
   pushSections();
-  ['nq-text','nq-a','nq-b','nq-c','nq-d'].forEach(id=>sv(id,''));
-  sv('nq-time','30');
+  ['nq-text','nq-a','nq-b','nq-c','nq-d'].forEach(id=>sv(id,''));sv('nq-time','30');
+  document.getElementById('nq-text').focus();
 }
 function delQ(si,qi){
   if(!confirm('Remove this question?'))return;
@@ -566,7 +662,7 @@ function delQ(si,qi){
 
 /* ═══════ RENDER Q LIST ═══════ */
 function renderQL(){
-  [0,1,2].forEach(i=>document.getElementById('qb'+i).textContent=sections[i].questions.length);
+  [0,1,2].forEach(i=>{const el=document.getElementById('qb'+i);if(el)el.textContent=sections[i].questions.length;});
   const qs=sections[editSec].questions;
   document.getElementById('q-count').textContent=qs.length+' question'+(qs.length!==1?'s':'');
   const el=document.getElementById('q-list');
@@ -577,14 +673,14 @@ function renderQL(){
       <div class="qi-opts">
         ${['A','B','C','D'].map(o=>`<div class="qi-opt ${q.answer===o?'ok':''}"><b style="color:${OC[o]}">${o}</b>${esc(q.options[o])}</div>`).join('')}
       </div>
-      <div class="qi-meta"><span class="qi-time-tag">⏱ ${q.timeLimit}s</span><button class="btn-ghost btn-sm" style="margin-left:auto;color:var(--red);border-color:rgba(239,68,68,.3);padding:3px 8px;font-size:11px" onclick="delQ(${editSec},${i})">✕</button></div>
+      <div class="qi-meta"><span class="qi-time-tag">⏱ ${q.timeLimit}s</span><button class="btn-ghost btn-sm" style="margin-left:auto;color:var(--red);border-color:rgba(239,68,68,.3);padding:3px 8px;font-size:11px" onclick="delQ(${editSec},${i})">✕ Remove</button></div>
     </div>`).join('');
 }
 
 /* ═══════ PUSH TO FIREBASE ═══════ */
 function pushSections(){
   renderQL(); renderNavQ();
-  if(!db)return;
+  if(!db) return;
   db.ref('quiz/sections').set(sections);
 }
 
@@ -601,15 +697,14 @@ function loadCfgInputs(){
 }
 function testConn(){
   if(!db){cfgBox('Not connected','e');return;}
-  db.ref('.info/connected').once('value').then(s=>cfgBox(s.val()?'✓ Connected!':'Offline',s.val()?'ok':'err'));
+  db.ref('.info/connected').once('value').then(s=>cfgBox(s.val()?'✓ Connected!':'Offline — check your config',s.val()?'ok':'err'));
 }
-function cfgBox(msg,t){
-  const el=document.getElementById('cfg-box');
-  el.className='cfg-box '+(t==='ok'?'cfg-ok':'cfg-err');
-  el.textContent=msg; el.style.display='block';
-}
+function cfgBox(msg,t){const el=document.getElementById('cfg-box');el.className='cfg-box '+(t==='ok'?'cfg-ok':'cfg-err');el.textContent=msg;el.style.display='block';}
 function initFB(cfg){
-  try{if(firebase.apps.length)firebase.app().delete().then(()=>startFB(cfg));else startFB(cfg);}catch(e){startFB(cfg);}
+  try{
+    if(firebase.apps.length){firebase.app().delete().then(()=>startFB(cfg)).catch(()=>startFB(cfg));}
+    else startFB(cfg);
+  }catch(e){startFB(cfg);}
 }
 function startFB(cfg){
   try{firebase.initializeApp(cfg);db=firebase.database();cfgBox('✓ Connected!','ok');setupListeners();}
@@ -628,17 +723,22 @@ function setupListeners(){
   });
   db.ref('quiz/currentQIndex').on('value',s=>{gs.currentQIndex=s.val()??-1;renderNavQ();});
   db.ref('quiz/currentQuestion').on('value',s=>{
-    gs.cq=s.val();
-    renderCQ();
+    gs.cq=s.val(); renderCQ();
     if(gs.cq&&gs.state==='question_active') startLocalTimer(gs.cq.timeLimit,gs.cq.startTime);
   });
-  db.ref('quiz/sections').on('value',s=>{if(s.val()){sections=s.val();renderQL();renderNavQ();updateTabLabels();}});
+  // FIX: reconstruct proper array when sections come from Firebase
+  db.ref('quiz/sections').on('value',s=>{
+    if(s.val()){
+      sections=normSections(s.val());
+      renderQL();renderNavQ();updateTabLabels();buildSectionUI();
+    }
+  });
   db.ref('quiz/players').on('value',s=>{
     players=s.val()||{};
     const n=Object.keys(players).length;
     document.getElementById('tb-pcount').textContent=n;
     document.getElementById('side-pcount').textContent=n;
-    renderPlayers(); renderAnsBars(); renderSB();
+    renderPlayers();renderAnsBars();renderSB();
   });
   db.ref('quiz/roundAnswers').on('value',s=>{gs.roundAnswers=s.val()||{};renderAnsBars();});
 }
@@ -652,7 +752,7 @@ function updateBadge(){
 /* ═══════ GAME CONTROLS ═══════ */
 function startComp(){
   if(!db){alert('Not connected to Firebase. Open the Setup tab first.');return;}
-  const total=sections.reduce((a,s)=>a+s.questions.length,0);
+  const total=sections.reduce((a,s)=>a+(s.questions?.length||0),0);
   if(!total){alert('Add questions to at least one section first.');return;}
   if(!confirm('Reset all scores and start the competition?'))return;
   const upd={};
@@ -671,7 +771,7 @@ function startComp(){
 
 function goSec(idx){
   if(!db)return;
-  if(!sections[idx]?.questions?.length){alert(`No questions in ${sections[idx]?.name||'Section '+(idx+1)}.`);return;}
+  if(!(sections[idx]?.questions?.length)){alert(`No questions in ${sections[idx]?.name||'Section '+(idx+1)}.`);return;}
   clearTimer();
   const upd={};
   Object.keys(players).forEach(pid=>{
@@ -691,7 +791,7 @@ function goSec(idx){
 
 function launchQ(qIdx){
   if(!db)return;
-  const q=sections[liveSec]?.questions[qIdx]; if(!q)return;
+  const q=sections[liveSec]?.questions?.[qIdx]; if(!q){alert('Question not found.');return;}
   clearTimer();
   const now=Date.now(), upd={};
   Object.keys(players).forEach(pid=>{
@@ -705,15 +805,15 @@ function launchQ(qIdx){
   upd['quiz/state']='question_active';
   upd['quiz/currentQIndex']=qIdx;
   upd['quiz/currentQuestion']={
-    index:qIdx,sectionIndex:liveSec,text:q.text,options:q.options,
-    answer:q.answer,timeLimit:q.timeLimit,startTime:now,
+    index:qIdx, sectionIndex:liveSec, text:q.text, options:q.options,
+    answer:q.answer, timeLimit:q.timeLimit, startTime:now,
     total:sections[liveSec].questions.length
   };
   db.ref().update(upd);
 }
 
 function revealAns(){
-  if(!db||!gs.cq){alert('No active question.');return;}
+  if(!db||!gs.cq){alert('No active question to reveal.');return;}
   clearTimer();
   const correct=gs.cq.answer, tl=gs.cq.timeLimit||30, upd={};
   Object.keys(players).forEach(pid=>{
@@ -722,7 +822,7 @@ function revealAns(){
       const tt=ra?.timeTaken||tl;
       const pts=calcPts(tl,tt);
       upd[`quiz/players/${pid}/score`]=(p.score||0)+pts;
-      upd[`quiz/players/${pid}/sectionScores/${liveSec}`]=(p.sectionScores?.[liveSec]||0)+pts;
+      upd[`quiz/players/${pid}/sectionScores/${liveSec}`]=((p.sectionScores?.[liveSec])||0)+pts;
       upd[`quiz/players/${pid}/lastCorrect`]=true;
       upd[`quiz/players/${pid}/pointsEarned`]=pts;
     } else {
@@ -748,47 +848,38 @@ function calcPts(tl,tt){return Math.round(1000-Math.min(tt/tl,1)*500);}
 /* ═══════ AUTO TIMER ═══════ */
 function startLocalTimer(limit,startTime){
   clearTimer();
-  const ring=document.getElementById('ctrl-ring');
-  const bar=document.getElementById('ctrl-bar');
-  const num=document.getElementById('ctrl-timer');
+  const ring=document.getElementById('ctrl-ring'),bar=document.getElementById('ctrl-bar'),num=document.getElementById('ctrl-timer');
   function tick(){
-    const elapsed=(Date.now()-startTime)/1000;
-    const left=Math.max(0,limit-elapsed);
-    const pct=left/limit;
+    const elapsed=(Date.now()-startTime)/1000,left=Math.max(0,limit-elapsed),pct=left/limit;
     ring.style.strokeDashoffset=(1-pct)*CIRC;
     bar.style.width=(pct*100)+'%';
     const low=left<=8;
     const col=low?'#ef4444':'#f59e0b';
-    ring.style.stroke=col; bar.style.background=col; num.style.color=col;
+    ring.style.stroke=col;bar.style.background=col;num.style.color=col;
     num.textContent=Math.ceil(left);
     if(left<=0){
-      clearTimer(); num.textContent='0';
+      clearTimer();num.textContent='0';
       if(gs.state==='question_active'&&db) db.ref('quiz/state').set('time_up');
       document.getElementById('rev-btn').classList.add('pulse');
     }
   }
-  tick(); timerInt=setInterval(tick,250);
+  tick();timerInt=setInterval(tick,250);
 }
 function clearTimer(){
-  clearInterval(timerInt); timerInt=null;
+  clearInterval(timerInt);timerInt=null;
   document.getElementById('rev-btn').classList.remove('pulse');
-  document.getElementById('ctrl-ring').style.strokeDashoffset='0';
-  document.getElementById('ctrl-bar').style.width='100%';
-  document.getElementById('ctrl-timer').textContent='—';
-  document.getElementById('ctrl-timer').style.color='var(--gold)';
-  document.getElementById('ctrl-ring').style.stroke='var(--gold)';
-  document.getElementById('ctrl-bar').style.background='var(--gold)';
+  const ring=document.getElementById('ctrl-ring'),bar=document.getElementById('ctrl-bar'),num=document.getElementById('ctrl-timer');
+  ring.style.strokeDashoffset='0';bar.style.width='100%';num.textContent='—';
+  num.style.color='var(--gold)';ring.style.stroke='var(--gold)';bar.style.background='var(--gold)';
 }
 
 /* ═══════ RENDER CURRENT Q ═══════ */
 function renderCQ(){
-  const el=document.getElementById('cq-display');
-  const meta=document.getElementById('cq-meta');
-  const q=gs.cq;
+  const el=document.getElementById('cq-display'),meta=document.getElementById('cq-meta'),q=gs.cq;
   if(!q){
     el.innerHTML='<div class="empty" style="padding:10px">No question active.</div>';
     meta.innerHTML='No active question<br><span style="color:var(--text2)">Launch a question to begin</span>';
-    clearTimer(); return;
+    clearTimer();return;
   }
   meta.innerHTML=`Q${q.index+1} of ${q.total||'?'} &nbsp;·&nbsp; ${sections[q.sectionIndex||0]?.name||''}<br><span style="color:var(--text2)">${q.timeLimit}s time limit</span>`;
   const rev=gs.state==='reveal'||gs.state==='time_up';
