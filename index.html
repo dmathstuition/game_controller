@@ -8,23 +8,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#060c18;--surface:#0b1425;--card:#0f1d35;--border:#162340;
-  --accent:#2563eb;--gold:#f59e0b;--text:#dde8ff;--text2:#4d6990;--text3:#8faac8;
-  --green:#10b981;--red:#ef4444;--purple:#7c3aed;--orange:#f97316;
-  --team0:#e8192f;--team1:#2563eb;
-}
+:root{--bg:#060c18;--surface:#0b1425;--card:#0f1d35;--border:#162340;--accent:#2563eb;--gold:#f59e0b;--text:#dde8ff;--text2:#4d6990;--text3:#8faac8;--green:#10b981;--red:#ef4444;--purple:#7c3aed;--orange:#f97316;}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:13px}
-
-/* LOGIN */
 #login{display:flex;align-items:center;justify-content:center;height:100vh;background:radial-gradient(ellipse 80% 60% at 50% -10%,#0e2050,var(--bg))}
 .lcard{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:48px 40px;width:390px;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.5)}
 .lico{font-size:3.5rem;display:block;margin-bottom:16px;animation:flt 4s ease-in-out infinite}
 @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 .lcard h1{color:var(--gold);font-size:1.5rem;font-weight:800;margin-bottom:4px}
 .lcard p{color:var(--text2);font-size:.82rem;margin-bottom:28px}
-
-input,select,textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:border-color .15s,box-shadow .15s;margin-bottom:8px}
+input,select,textarea{width:100%;padding:11px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:13px;outline:none;transition:border-color .15s;margin-bottom:8px}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
 textarea{resize:vertical;min-height:72px;margin-bottom:0}
 button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;transition:all .15s}
@@ -37,39 +29,23 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .bgh{background:transparent;border:1px solid var(--border);color:var(--text3)}.bgh:hover{border-color:var(--accent);color:var(--text)}
 .bsm{padding:5px 11px;font-size:12px;border-radius:7px}
 .err{color:var(--red);font-size:.8rem;margin-top:6px;display:none}
-
-/* SHELL */
 #app{display:none;height:100vh;flex-direction:column}
 #app.on{display:flex}
-
-/* TOPBAR */
 .topbar{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0;z-index:50}
 .tb-brand{font-weight:800;font-size:.9rem;color:var(--gold);margin-right:4px}
-.mode-badge{padding:4px 12px;border-radius:20px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:all .15s}
-.mode-badge.standard{background:rgba(37,99,235,.2);color:#60a5fa;border:1px solid var(--accent)}
-.mode-badge.team{background:rgba(232,25,47,.2);color:#ff8080;border:1px solid #e8192f}
-.mode-badge.speed{background:rgba(249,115,22,.2);color:#fb923c;border:1px solid var(--orange)}
+.mode-grp{display:flex;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:3px}
+.msw{padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:700;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s}
+.msw.on{font-weight:800;color:#fff}
+.msw.standard.on{background:var(--accent)}.msw.team.on{background:#e8192f}.msw.speed.on{background:var(--orange)}
 .state-badge{padding:3px 10px;border-radius:20px;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace}
 .sb-lobby{background:rgba(37,99,235,.18);color:#60a5fa;border:1px solid var(--accent)}
 .sb-active{background:rgba(16,185,129,.18);color:#34d399;border:1px solid var(--green);animation:blnk .8s step-end infinite}
-.sb-timeup{background:rgba(239,68,68,.18);color:#fca5a5;border:1px solid var(--red);animation:blnk .5s step-end infinite}
-.sb-reveal{background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid var(--gold)}
 .sb-bonus{background:rgba(249,115,22,.18);color:#fb923c;border:1px solid var(--orange);animation:blnk .8s step-end infinite}
+.sb-reveal,.sb-done{background:rgba(245,158,11,.18);color:#fbbf24;border:1px solid var(--gold)}
 .sb-ended{background:rgba(239,68,68,.15);color:#f87171;border:1px solid var(--red)}
 @keyframes blnk{50%{opacity:.4}}
 .tb-right{margin-left:auto;display:flex;align-items:center;gap:7px}
-.tb-pcount{font-size:.75rem;color:var(--text2)}
-.tb-pcount b{color:var(--green);font-family:'JetBrains Mono',monospace}
-
-/* MODE SWITCHER in topbar */
-.mode-switch-group{display:flex;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:3px}
-.msw{padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:700;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s}
-.msw.on{font-weight:800;color:#fff}
-.msw.standard.on{background:var(--accent)}
-.msw.team.on{background:#e8192f}
-.msw.speed.on{background:var(--orange)}
-
-/* BODY */
+.tb-pi{font-size:.75rem;color:var(--text2)}.tb-pi b{color:var(--green);font-family:'JetBrains Mono',monospace}
 .body{display:flex;flex:1;overflow:hidden}
 .sidebar{width:52px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:8px 0;gap:2px;flex-shrink:0;transition:width .2s}
 .sidebar.open{width:185px}
@@ -77,33 +53,23 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .sidebar.open .nav-btn{width:calc(100% - 12px);justify-content:flex-start;padding:0 10px;gap:9px;font-size:.9rem}
 .nav-btn:hover{background:var(--card);color:var(--text)}
 .nav-btn.on{background:rgba(37,99,235,.15);color:var(--accent)}
-.nav-btn.mode-team{color:#ff8080}.nav-btn.mode-team.on{background:rgba(232,25,47,.15);color:#ff8080}
-.nav-btn.mode-speed{color:#fb923c}.nav-btn.mode-speed.on{background:rgba(249,115,22,.15);color:#fb923c}
 .nav-lbl{display:none;font-size:.78rem;font-weight:700}
 .sidebar.open .nav-lbl{display:block}
 .sb-tog{margin-top:auto;width:32px;height:32px;border-radius:7px;border:1px solid var(--border);cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.9rem;transition:all .15s}
 .sb-tog:hover{background:var(--card)}
-
-/* PANELS */
 .main{flex:1;overflow:hidden;display:flex;flex-direction:column}
 .panel{display:none;flex:1;overflow:hidden;flex-direction:column}
 .panel.on{display:flex}
 .pscroll{flex:1;overflow-y:auto;padding:16px}
-
-/* Inner sub-tabs */
 .itabs{display:flex;gap:5px;margin-bottom:14px}
 .itab{padding:6px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s}
 .itab:hover{border-color:var(--text3)}
 .itab.on{background:rgba(37,99,235,.15);border-color:var(--accent);color:#60a5fa}
 .ipanel{display:none}.ipanel.on{display:block}
-
-/* Section tabs (standard mode) */
 .stabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
 .stab{padding:6px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;position:relative}
 .stab.on{background:rgba(37,99,235,.15);border-color:var(--accent);color:#60a5fa}
 .stab .qb{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;background:var(--accent);color:#fff;border-radius:9px;font-size:.62rem;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;padding:0 3px}
-
-/* Cards */
 .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
 .ct{font-size:.67rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:12px;font-family:'JetBrains Mono',monospace}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
@@ -111,8 +77,6 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .fg label{display:block;font-size:.7rem;color:var(--text2);margin-bottom:3px;font-weight:600}
 .fg input,.fg select,.fg textarea{margin-bottom:0}
 .rbtns{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-
-/* File import */
 .file-lbl{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:7px;border:1px solid var(--accent);color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;background:rgba(37,99,235,.08);transition:all .15s}
 .file-lbl:hover{background:rgba(37,99,235,.18)}
 .file-inp{display:none}
@@ -124,28 +88,22 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 details{background:var(--bg);border:1px solid var(--border);border-radius:9px;margin-top:9px;overflow:hidden}
 details summary{padding:8px 13px;cursor:pointer;font-size:.78rem;color:var(--text3);font-weight:600;user-select:none}
 details pre{padding:11px 13px;font-family:'JetBrains Mono',monospace;font-size:.71rem;color:var(--text2);line-height:1.6;overflow-x:auto;border-top:1px solid var(--border)}
-
-/* Q items */
 .qi{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:11px;margin-bottom:6px}
 .qi:hover{border-color:var(--text3)}
 .qi-head{display:flex;align-items:flex-start;gap:7px;margin-bottom:7px}
 .qi-num{background:var(--card);border:1px solid var(--border);border-radius:5px;padding:1px 7px;font-size:.66rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text2);flex-shrink:0}
 .qi-txt{font-weight:700;font-size:.86rem;flex:1;line-height:1.4}
-.qi-used{opacity:.35}
-.qi-used-tag{font-size:.67rem;color:var(--text2);font-family:'JetBrains Mono',monospace;padding:2px 7px;background:var(--card);border:1px solid var(--border);border-radius:5px}
+.qi-used{opacity:.38}
 .qi-opts{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:6px}
 .qi-opt{padding:3px 7px;border-radius:5px;font-size:.74rem;background:var(--card);border:1px solid var(--border);display:flex;gap:4px}
 .qi-opt.ok{background:rgba(16,185,129,.12);border-color:var(--green)}
 .qi-opt b{font-weight:800}
 .qi-meta{display:flex;align-items:center;gap:7px}
 .qi-time{font-size:.68rem;color:var(--text2);font-family:'JetBrains Mono',monospace}
-
-/* Control layout */
+.used-tag{font-size:.67rem;font-family:'JetBrains Mono',monospace;padding:2px 7px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:5px;color:#ff8080}
 .ctrl-wrap{display:grid;grid-template-columns:1fr 260px;height:100%;overflow:hidden}
 .ctrl-main{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px}
 .ctrl-side{overflow-y:auto;padding:12px;border-left:1px solid var(--border);display:flex;flex-direction:column;gap:9px}
-
-/* Timer ring */
 .cq-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
 .cq-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .cq-meta{font-size:.69rem;color:var(--text2);font-family:'JetBrains Mono',monospace;line-height:1.6}
@@ -166,23 +124,17 @@ details pre{padding:11px 13px;font-family:'JetBrains Mono',monospace;font-size:.
 .cq-opt.D{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3)}.cq-opt.D b{color:#10b981}
 .cq-opt.rv-ok{background:rgba(16,185,129,.2);border-color:var(--green)}
 .cq-opt.rv-no{opacity:.28}
-
-/* Control buttons */
 .cbgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .cbtn{padding:13px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:700;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
-.cbtn:disabled{opacity:.35;cursor:not-allowed;transform:none!important}
+.cbtn:disabled{opacity:.35;cursor:not-allowed}
 .cbtn:hover:not(:disabled){transform:translateY(-1px)}
 .cbtn.pulse{animation:rpu 1s ease-in-out infinite}
 @keyframes rpu{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.5)}50%{box-shadow:0 0 0 10px rgba(245,158,11,0)}}
-
-/* Nav Q */
 .nav-q{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:4px;transition:all .15s}
 .nav-q.live{border-color:var(--green);background:rgba(16,185,129,.07)}
 .nav-q-num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text2);width:22px;flex-shrink:0}
 .nav-q-txt{flex:1;font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .live-tag{font-size:.67rem;padding:2px 7px;border-radius:20px;background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green);flex-shrink:0}
-
-/* Stats bars */
 .stat-item{margin-bottom:8px}
 .stat-row{display:flex;align-items:center;gap:6px}
 .stat-lbl{font-weight:800;font-size:.78rem;width:14px}
@@ -193,38 +145,29 @@ details pre{padding:11px 13px;font-family:'JetBrains Mono',monospace;font-size:.
 .stat-item.B .stat-lbl{color:#3b82f6}.stat-item.B .stat-fill{background:#3b82f6}
 .stat-item.C .stat-lbl{color:#f59e0b}.stat-item.C .stat-fill{background:#f59e0b}
 .stat-item.D .stat-lbl{color:#10b981}.stat-item.D .stat-fill{background:#10b981}
-
-/* Players */
 .pl-item{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:7px;background:var(--bg);border:1px solid var(--border);margin-bottom:4px}
 .pl-dot{width:6px;height:6px;border-radius:50%;background:var(--border)}
 .pl-dot.ans{background:var(--green)}
 .pl-name{flex:1;font-weight:600;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pl-score{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--gold);font-size:.8rem}
-
-/* Team Battle specific */
 .team-score-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.team-score-card{border-radius:12px;padding:14px;text-align:center;border:2px solid}
-.team-score-card.t0{background:rgba(232,25,47,.1);border-color:rgba(232,25,47,.4)}
-.team-score-card.t1{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.4)}
-.team-score-card.active{box-shadow:0 0 20px rgba(245,158,11,.3);border-color:var(--gold)}
+.tsc{border-radius:12px;padding:14px;text-align:center;border:2px solid;transition:all .2s}
+.tsc.t0{background:rgba(232,25,47,.1);border-color:rgba(232,25,47,.4)}
+.tsc.t1{background:rgba(37,99,235,.1);border-color:rgba(37,99,235,.4)}
+.tsc.active{box-shadow:0 0 20px rgba(245,158,11,.3);border-color:var(--gold)}
 .tsc-name{font-weight:800;font-size:.88rem;margin-bottom:4px}
 .tsc-score{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:900;color:var(--gold)}
-.tsc-label{font-size:.68rem;color:var(--text2)}
 .bonus-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(249,115,22,.15);border:1px solid var(--orange);border-radius:8px;padding:4px 12px;font-size:.78rem;font-weight:700;color:var(--orange);margin-bottom:10px}
 .lock-card{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.3);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:.82rem}
 .lock-card b{color:var(--green)}
-
-/* Speed battle */
-.speed-player-row{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:9px;background:var(--bg);border:1px solid var(--border);margin-bottom:5px}
-.speed-player-row.active-runner{border-color:var(--orange);background:rgba(249,115,22,.08)}
+.sp-runner-row{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;background:var(--bg);border:1px solid var(--border);margin-bottom:5px}
+.sp-runner-row.active-now{border-color:var(--orange);background:rgba(249,115,22,.08)}
 .spr-name{flex:1;font-weight:700;font-size:.85rem}
-.spr-score{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--gold);font-size:.85rem}
+.spr-score{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--gold);font-size:.82rem}
 .spr-badge{font-size:.67rem;padding:2px 8px;border-radius:20px;font-weight:700}
-.spr-badge.waiting{background:rgba(37,99,235,.15);color:#60a5fa;border:1px solid var(--accent)}
-.spr-badge.running{background:rgba(249,115,22,.15);color:var(--orange);border:1px solid var(--orange);animation:blnk .7s step-end infinite}
+.spr-badge.wait{background:rgba(37,99,235,.15);color:#60a5fa;border:1px solid var(--accent)}
+.spr-badge.run{background:rgba(249,115,22,.15);color:var(--orange);border:1px solid var(--orange);animation:blnk .7s step-end infinite}
 .spr-badge.done{background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green)}
-
-/* Scoreboard */
 .sb-table{width:100%;border-collapse:separate;border-spacing:0 4px}
 .sb-table th{font-size:.66rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px;padding:3px 11px;font-family:'JetBrains Mono',monospace;font-weight:700;text-align:left}
 .sb-table td{padding:8px 11px;background:var(--card);border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:.83rem}
@@ -234,30 +177,21 @@ details pre{padding:11px 13px;font-family:'JetBrains Mono',monospace;font-size:.
 .r1{color:#f59e0b!important;font-size:.95rem}.r2{color:#94a3b8!important}.r3{color:#cd7f32!important}
 .sb-score-cell{font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--gold);text-align:right}
 .top-row td{border-color:rgba(245,158,11,.22)!important;background:rgba(245,158,11,.06)!important}
-
-/* Setup */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .cfg-box{padding:7px 11px;border-radius:8px;font-size:.79rem;margin-top:7px;display:none}
 .cfg-ok{background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green)}
 .cfg-err{background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
-
-/* Misc */
 .empty{text-align:center;padding:22px;color:var(--text2);font-size:.82rem}
-.empty-ico{font-size:1.8rem;margin-bottom:6px}
 .flash{padding:8px 13px;border-radius:8px;font-size:.79rem;margin-top:9px;display:none;align-items:center;gap:6px}
 .flash.s{background:rgba(16,185,129,.1);border:1px solid var(--green);color:var(--green)}
 .flash.e{background:rgba(239,68,68,.1);border:1px solid var(--red);color:var(--red)}
 .flash.i{background:rgba(37,99,235,.1);border:1px solid var(--accent);color:#60a5fa;display:flex}
 hr{border:none;border-top:1px solid var(--border);margin:10px 0}
 pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text2);line-height:1.6;overflow-x:auto}
-.color-swatch{width:28px;height:28px;border-radius:6px;border:2px solid var(--border);cursor:pointer;flex-shrink:0}
-input[type="color"]{padding:2px;height:32px;cursor:pointer}
-.used-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:5px;padding:2px 7px;font-size:.68rem;font-weight:700;color:#ff8080;font-family:'JetBrains Mono',monospace}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login">
   <div class="lcard">
     <span class="lico">🏆</span>
@@ -269,18 +203,17 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div class="topbar">
     <div class="tb-brand">🏆 IJA</div>
-    <div class="mode-switch-group">
+    <div class="mode-grp">
       <button class="msw standard on" onclick="switchMode('standard')">📝 Standard</button>
       <button class="msw team" onclick="switchMode('team')">⚔️ Team Battle</button>
       <button class="msw speed" onclick="switchMode('speed')">⚡ Speed Battle</button>
     </div>
     <span id="state-badge" class="state-badge sb-lobby">Lobby</span>
     <div class="tb-right">
-      <div class="tb-pcount">Players: <b id="tb-pc">0</b></div>
+      <div class="tb-pi">Players: <b id="tb-pc">0</b></div>
       <button class="bgh bsm" onclick="resetAll()">↺ Reset</button>
     </div>
   </div>
@@ -289,8 +222,8 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
     <div class="sidebar" id="sidebar">
       <button class="nav-btn on" id="nb-q" onclick="nav('q')">📝<span class="nav-lbl">Questions</span></button>
       <button class="nav-btn" id="nb-c" onclick="nav('c')">🎮<span class="nav-lbl">Control</span></button>
-      <button class="nav-btn mode-team" id="nb-t" onclick="nav('t')">⚔️<span class="nav-lbl">Team Battle</span></button>
-      <button class="nav-btn mode-speed" id="nb-sp" onclick="nav('sp')">⚡<span class="nav-lbl">Speed Battle</span></button>
+      <button class="nav-btn" id="nb-t" onclick="nav('t')">⚔️<span class="nav-lbl">Team Battle</span></button>
+      <button class="nav-btn" id="nb-sp" onclick="nav('sp')">⚡<span class="nav-lbl">Speed Battle</span></button>
       <button class="nav-btn" id="nb-s" onclick="nav('s')">📊<span class="nav-lbl">Scoreboard</span></button>
       <button class="nav-btn" id="nb-x" onclick="nav('x')">⚙️<span class="nav-lbl">Setup</span></button>
       <button class="sb-tog" onclick="toggleSB()">☰</button>
@@ -298,7 +231,7 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
 
     <div class="main">
 
-    <!-- ══ STANDARD QUESTIONS ══ -->
+    <!-- STANDARD QUESTIONS -->
     <div class="panel on" id="panel-q">
       <div class="pscroll">
         <div class="stabs" id="s-tabs"></div>
@@ -306,32 +239,24 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
           <div class="ct">📥 Import — <span id="cur-sec-lbl">Section 1</span></div>
           <div class="imp-tabs">
             <button class="imptab on" onclick="switchImpTab('std','file')">📂 File</button>
-            <button class="imptab" onclick="switchImpTab('std','paste')">📋 Paste</button>
+            <button class="imptab" onclick="switchImpTab('std','paste')">📋 Paste JSON</button>
           </div>
-          <div id="std-imp-file">
-            <label class="file-lbl" for="std-jfile">📂 Choose JSON File</label>
-            <input type="file" id="std-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'std')">
-          </div>
-          <div id="std-imp-paste" style="display:none">
-            <textarea class="paste-box" id="std-paste-json" placeholder='[{"text":"Question?","options":{"A":"...","B":"...","C":"...","D":"..."},"answer":"A","timeLimit":30}]'></textarea>
-            <button class="bp bsm" onclick="importPaste('std')" style="width:100%">Import Pasted JSON</button>
-          </div>
+          <div id="std-imp-file"><label class="file-lbl" for="std-jfile">📂 Choose JSON File</label><input type="file" id="std-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'std')"></div>
+          <div id="std-imp-paste" style="display:none"><textarea class="paste-box" id="std-paste-json" placeholder='[{"text":"Question?","options":{"A":"","B":"","C":"","D":""},"answer":"A","timeLimit":30}]'></textarea><button class="bp bsm" onclick="importPaste('std')" style="width:100%">Import Pasted JSON</button></div>
           <div class="rbtns" style="margin-top:9px">
             <button class="bgh bsm" onclick="exportSec()">📤 Export Section</button>
             <button class="bgh bsm" onclick="exportAll()">📤 Export All</button>
             <button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearSec()">🗑 Clear</button>
           </div>
-          <details><summary>JSON Format</summary><pre>[{"text":"What is 3²?","options":{"A":"6","B":"9","C":"8","D":"12"},"answer":"B","timeLimit":30}]</pre></details>
+          <details><summary>JSON Format</summary><pre>[{"text":"Q?","options":{"A":"","B":"","C":"","D":""},"answer":"A","timeLimit":30}]</pre></details>
           <div id="std-flash" class="flash" style="margin-bottom:0"></div>
         </div>
         <div class="card">
           <div class="ct">➕ Add Single Question</div>
           <div class="fg"><label>Question</label><textarea id="nq-text" placeholder="Question text…"></textarea></div>
           <div class="g2">
-            <div class="fg"><label>A</label><input id="nq-a"/></div>
-            <div class="fg"><label>B</label><input id="nq-b"/></div>
-            <div class="fg"><label>C</label><input id="nq-c"/></div>
-            <div class="fg"><label>D</label><input id="nq-d"/></div>
+            <div class="fg"><label>A</label><input id="nq-a"/></div><div class="fg"><label>B</label><input id="nq-b"/></div>
+            <div class="fg"><label>C</label><input id="nq-c"/></div><div class="fg"><label>D</label><input id="nq-d"/></div>
             <div class="fg"><label>Correct</label><select id="nq-ans"><option>A</option><option>B</option><option>C</option><option>D</option></select></div>
             <div class="fg"><label>Time (s)</label><input id="nq-time" type="number" value="30" min="5" max="120"/></div>
           </div>
@@ -342,28 +267,22 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
       </div>
     </div>
 
-    <!-- ══ STANDARD CONTROL ══ -->
+    <!-- STANDARD CONTROL -->
     <div class="panel" id="panel-c">
       <div class="ctrl-wrap">
         <div class="ctrl-main">
           <div class="cq-card">
             <div class="cq-head">
               <div class="cq-meta" id="std-cq-meta">No active question</div>
-              <div class="tring">
-                <svg viewBox="0 0 72 72" width="72" height="72">
-                  <circle class="tr-bg" cx="36" cy="36" r="30"/>
-                  <circle class="tr-pr" id="std-ring" cx="36" cy="36" r="30" stroke="var(--gold)" stroke-dasharray="188.5" stroke-dashoffset="0"/>
-                </svg>
-                <div class="tr-num" id="std-timer" style="color:var(--gold)">—</div>
-              </div>
+              <div class="tring"><svg viewBox="0 0 72 72" width="72" height="72"><circle class="tr-bg" cx="36" cy="36" r="30"/><circle class="tr-pr" id="std-ring" cx="36" cy="36" r="30" stroke="var(--gold)" stroke-dasharray="188.5" stroke-dashoffset="0"/></svg><div class="tr-num" id="std-timer" style="color:var(--gold)">—</div></div>
             </div>
             <div class="tbar"><div class="tbar-f" id="std-bar" style="width:100%;background:var(--gold)"></div></div>
             <div id="std-cq-display"><div class="empty" style="padding:8px">Launch a question to start.</div></div>
           </div>
           <div class="card">
-            <div class="ct">🎮 Controls</div>
+            <div class="ct">🎮 Standard Controls</div>
             <div class="cbgrid">
-              <button class="cbtn bgrn" onclick="startComp()">▶ Start Competition</button>
+              <button class="cbtn bgrn" onclick="startComp()">▶ Start</button>
               <button class="cbtn bpu" onclick="showLB('leaderboard')">🏆 Leaderboard</button>
               <button class="cbtn bg" id="std-rev-btn" onclick="revealAns()">👁 Reveal</button>
               <button class="cbtn br" onclick="endComp()">⏹ End</button>
@@ -379,16 +298,16 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
         </div>
         <div class="ctrl-side">
           <div class="ct">📊 Answers</div>
-          <div class="ans-hdr" id="std-ans-hdr" style="font-size:.78rem;color:var(--text2);margin-bottom:8px">—</div>
+          <div id="std-ans-hdr" style="font-size:.78rem;color:var(--text2);margin-bottom:8px">—</div>
           <div id="std-ans-bars"></div>
           <hr>
-          <div class="ct">👥 Players</div>
+          <div class="ct">👥 Players <b id="side-pc" style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.85rem">0</b></div>
           <div id="std-players"></div>
         </div>
       </div>
     </div>
 
-    <!-- ══ TEAM BATTLE ══ -->
+    <!-- TEAM BATTLE -->
     <div class="panel" id="panel-t">
       <div class="pscroll">
         <div class="itabs">
@@ -396,89 +315,60 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
           <button class="itab" onclick="itab('team','questions')">📝 Questions</button>
           <button class="itab" onclick="itab('team','control')">🎮 Control</button>
         </div>
-
-        <!-- Team Setup -->
         <div class="ipanel on" id="team-setup">
           <div class="card">
             <div class="ct">⚔️ Team Configuration</div>
             <div class="g2">
-              <div class="fg">
-                <label style="color:#ff8080">Team 1 Name</label>
-                <input id="team0-name" value="Red Eagles" style="border-color:rgba(232,25,47,.4)"/>
-              </div>
-              <div class="fg">
-                <label style="color:#60a5fa">Team 2 Name</label>
-                <input id="team1-name" value="Blue Lions" style="border-color:rgba(37,99,235,.4)"/>
-              </div>
+              <div class="fg"><label style="color:#ff8080">Team 1 Name</label><input id="team0-name" value="Red Eagles" style="border-color:rgba(232,25,47,.4)"/></div>
+              <div class="fg"><label style="color:#60a5fa">Team 2 Name</label><input id="team1-name" value="Blue Lions" style="border-color:rgba(37,99,235,.4)"/></div>
             </div>
             <div class="rbtns">
-              <button class="bp bsm" onclick="saveTeamSetup()">Save Team Names</button>
+              <button class="bp bsm" onclick="saveTeamSetup()">Save Names</button>
               <button class="bgrn bsm" onclick="startTeamBattle()">▶ Start Team Battle</button>
-              <button class="br bsm" onclick="resetTeamBattle()">↺ Reset</button>
+              <button class="br bsm" onclick="resetTeamBattle()">↺ Reset Scores</button>
             </div>
           </div>
           <div class="card">
-            <div class="ct">📖 How Team Battle Works</div>
+            <div class="ct">📖 Team Battle Rules</div>
             <div style="color:var(--text2);font-size:.82rem;line-height:1.7">
-              <b style="color:var(--text)">✅ Normal Round:</b> A question is assigned to the active team. Any member who answers correctly earns <b style="color:var(--gold)">5 marks</b> for their team.<br><br>
-              <b style="color:var(--text)">⚡ Bonus Round:</b> If the active team runs out of time or answers incorrectly, the question automatically shifts to the other team as a bonus. Correct answer = <b style="color:var(--orange)">2 marks</b>.<br><br>
-              <b style="color:var(--text)">🔒 Used Questions:</b> Questions don't repeat once answered. Click <b style="color:var(--text)">Revalidate</b> to restore all questions.
+              <b style="color:var(--text)">Normal Round:</b> Question goes to active team. Correct answer = <b style="color:var(--gold)">5 marks</b> for the team.<br><br>
+              <b style="color:var(--text)">Bonus Round:</b> If active team times out or gets it wrong, question shifts to the other team. Correct = <b style="color:var(--orange)">2 marks</b>.<br><br>
+              <b style="color:var(--text)">Used Questions:</b> Once answered, a question is locked. Click <b style="color:var(--orange)">Revalidate</b> to unlock all questions.
             </div>
           </div>
         </div>
-
-        <!-- Team Questions -->
         <div class="ipanel" id="team-questions">
           <div class="card">
-            <div class="ct">📥 Team Battle Question Bank <span id="tb-q-count" style="color:var(--text);font-weight:400;font-size:.75rem"></span></div>
+            <div class="ct">📥 Team Battle Questions</div>
             <div class="imp-tabs">
               <button class="imptab on" onclick="switchImpTab('tb','file')">📂 File</button>
-              <button class="imptab" onclick="switchImpTab('tb','paste')">📋 Paste</button>
+              <button class="imptab" onclick="switchImpTab('tb','paste')">📋 Paste JSON</button>
             </div>
-            <div id="tb-imp-file">
-              <label class="file-lbl" for="tb-jfile">📂 Choose JSON File</label>
-              <input type="file" id="tb-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'tb')">
-            </div>
-            <div id="tb-imp-paste" style="display:none">
-              <textarea class="paste-box" id="tb-paste-json" placeholder='[{"text":"Question?","options":{"A":"","B":"","C":"","D":""},"answer":"A","timeLimit":30}]'></textarea>
-              <button class="bp bsm" onclick="importPaste('tb')" style="width:100%">Import Pasted JSON</button>
-            </div>
+            <div id="tb-imp-file"><label class="file-lbl" for="tb-jfile">📂 Choose JSON File</label><input type="file" id="tb-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'tb')"></div>
+            <div id="tb-imp-paste" style="display:none"><textarea class="paste-box" id="tb-paste-json" placeholder='[{"text":"Q?","options":{"A":"","B":"","C":"","D":""},"answer":"A","timeLimit":30}]'></textarea><button class="bp bsm" onclick="importPaste('tb')" style="width:100%">Import</button></div>
             <div class="rbtns" style="margin-top:9px">
-              <button class="bgh bsm" style="color:var(--orange);border-color:var(--orange)" onclick="revalidateQuestions()">🔄 Revalidate Questions</button>
-              <button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearTBQ()">🗑 Clear Bank</button>
+              <button class="bgh bsm" style="color:var(--orange);border-color:var(--orange)" onclick="revalidateQ()">🔄 Revalidate Questions</button>
+              <button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearTBQ()">🗑 Clear</button>
             </div>
             <div id="tb-flash" class="flash" style="margin-bottom:0"></div>
           </div>
-          <div style="font-weight:700;font-size:.84rem;margin-bottom:9px;color:var(--text3)">
-            Question Bank <span id="tb-bank-count" style="color:var(--text2);font-weight:400"></span>
-            <span id="tb-used-count" class="used-badge" style="margin-left:8px"></span>
-          </div>
+          <div style="font-weight:700;font-size:.84rem;margin-bottom:9px;color:var(--text3)">Bank <span id="tb-bank-count" style="color:var(--text2);font-weight:400"></span></div>
           <div id="tb-q-list"></div>
         </div>
-
-        <!-- Team Control -->
         <div class="ipanel" id="team-control">
           <div class="team-score-cards" id="team-score-cards"></div>
-          <div id="tb-bonus-indicator"></div>
+          <div id="tb-bonus-tag"></div>
           <div id="tb-lock-display"></div>
-
           <div class="cq-card" style="margin-bottom:11px">
             <div class="cq-head">
               <div class="cq-meta" id="tb-cq-meta">No active question</div>
-              <div class="tring">
-                <svg viewBox="0 0 72 72" width="72" height="72">
-                  <circle class="tr-bg" cx="36" cy="36" r="30"/>
-                  <circle class="tr-pr" id="tb-ring" cx="36" cy="36" r="30" stroke="var(--gold)" stroke-dasharray="188.5" stroke-dashoffset="0"/>
-                </svg>
-                <div class="tr-num" id="tb-timer" style="color:var(--gold)">—</div>
-              </div>
+              <div class="tring"><svg viewBox="0 0 72 72" width="72" height="72"><circle class="tr-bg" cx="36" cy="36" r="30"/><circle class="tr-pr" id="tb-ring" cx="36" cy="36" r="30" stroke="var(--gold)" stroke-dasharray="188.5" stroke-dashoffset="0"/></svg><div class="tr-num" id="tb-timer" style="color:var(--gold)">—</div></div>
             </div>
             <div class="tbar"><div class="tbar-f" id="tb-bar" style="width:100%;background:var(--gold)"></div></div>
-            <div id="tb-cq-display"><div class="empty" style="padding:8px">Launch a question to start.</div></div>
+            <div id="tb-cq-display"><div class="empty" style="padding:8px">Launch for a team below.</div></div>
           </div>
-
           <div class="card">
-            <div class="ct">🎮 Team Battle Controls</div>
+            <div class="ct">🎮 Team Controls</div>
             <div class="cbgrid">
               <button class="cbtn bg" id="tb-rev-btn" onclick="tbReveal()">👁 Reveal Answer</button>
               <button class="cbtn bpu" onclick="showLB('section_leaderboard')">🏅 Show Scores</button>
@@ -486,95 +376,80 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
               <button class="cbtn br" onclick="endComp()">⏹ End</button>
             </div>
             <hr>
-            <div class="ct" style="margin-bottom:8px">🎯 Launch Next Question — Assign to Team</div>
-            <div class="rbtns" id="tb-team-launch-btns"></div>
+            <div class="ct" style="margin-bottom:8px">🎯 Launch for Team</div>
+            <div class="rbtns" id="tb-team-launch"></div>
             <hr>
             <div class="ct" style="margin-bottom:8px">🔄 Switch Active Team</div>
-            <div class="rbtns" id="tb-team-switch-btns"></div>
+            <div class="rbtns" id="tb-team-switch"></div>
           </div>
-
           <div class="card">
-            <div class="ct">📋 Unused Questions</div>
+            <div class="ct">📋 Available Questions</div>
             <div id="tb-nav-q"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ══ SPEED BATTLE ══ -->
+    <!-- SPEED BATTLE -->
     <div class="panel" id="panel-sp">
       <div class="pscroll">
         <div class="itabs">
           <button class="itab on" onclick="itab('speed','questions')">📝 Questions</button>
           <button class="itab" onclick="itab('speed','control')">🎮 Control</button>
         </div>
-
-        <!-- Speed Questions -->
         <div class="ipanel on" id="speed-questions">
           <div class="card">
-            <div class="ct">⚡ Speed Battle Question Bank <span style="color:var(--text2);font-size:.75rem">(20 questions per session)</span></div>
+            <div class="ct">⚡ Speed Battle Questions <span style="color:var(--text2);font-size:.75rem">(15s each, up to 20 per session)</span></div>
             <div class="imp-tabs">
               <button class="imptab on" onclick="switchImpTab('sp','file')">📂 File</button>
-              <button class="imptab" onclick="switchImpTab('sp','paste')">📋 Paste</button>
+              <button class="imptab" onclick="switchImpTab('sp','paste')">📋 Paste JSON</button>
             </div>
-            <div id="sp-imp-file">
-              <label class="file-lbl" for="sp-jfile">📂 Choose JSON File</label>
-              <input type="file" id="sp-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'sp')">
-            </div>
-            <div id="sp-imp-paste" style="display:none">
-              <textarea class="paste-box" id="sp-paste-json" placeholder='[{"text":"12 × 8 = ?","options":{"A":"84","B":"96","C":"102","D":"88"},"answer":"B","timeLimit":15}]'></textarea>
-              <button class="bp bsm" onclick="importPaste('sp')" style="width:100%">Import Pasted JSON</button>
-            </div>
-            <div class="rbtns" style="margin-top:9px">
-              <button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearSPQ()">🗑 Clear Bank</button>
-            </div>
+            <div id="sp-imp-file"><label class="file-lbl" for="sp-jfile">📂 Choose JSON File</label><input type="file" id="sp-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'sp')"></div>
+            <div id="sp-imp-paste" style="display:none"><textarea class="paste-box" id="sp-paste-json" placeholder='[{"text":"12 × 8 = ?","options":{"A":"84","B":"96","C":"102","D":"88"},"answer":"B"}]'></textarea><button class="bp bsm" onclick="importPaste('sp')" style="width:100%">Import</button></div>
+            <div class="rbtns" style="margin-top:9px"><button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearSPQ()">🗑 Clear</button></div>
             <div id="sp-flash" class="flash" style="margin-bottom:0"></div>
           </div>
           <div style="font-weight:700;font-size:.84rem;margin-bottom:9px;color:var(--text3)">Questions <span id="sp-q-count" style="color:var(--text2);font-weight:400"></span></div>
           <div id="sp-q-list"></div>
         </div>
-
-        <!-- Speed Control -->
         <div class="ipanel" id="speed-control">
           <div class="card">
-            <div class="ct">⚡ Speed Battle — Current Runner</div>
-            <div id="sp-current-display">
-              <div class="empty" style="padding:10px">No active speed battle session.</div>
-            </div>
+            <div class="ct">⚡ Current Runner</div>
+            <div id="sp-current-display"><div class="empty" style="padding:8px">No active session.</div></div>
           </div>
           <div class="card">
-            <div class="ct">🎮 Controls</div>
+            <div class="ct">🎮 Speed Controls</div>
             <div class="cbgrid">
-              <button class="cbtn bor" onclick="startSpeedBattle()">▶ Start Speed Battle</button>
-              <button class="cbtn br" onclick="stopSpeedBattle()">⏹ Stop Session</button>
+              <button class="cbtn bor" onclick="stopSpeedSession()">⏹ Stop Session</button>
+              <button class="cbtn bpu" onclick="showLB('leaderboard')">🏆 Leaderboard</button>
             </div>
             <hr>
-            <div class="ct" style="margin-bottom:8px">👥 Waiting Players — Select to Run</div>
-            <div id="sp-player-list"><div class="empty" style="padding:8px">No speed battle players joined.</div></div>
+            <div class="ct" style="margin-bottom:8px">👥 Players — Click to Launch</div>
+            <div id="sp-player-list"><div class="empty" style="padding:8px">No players yet.</div></div>
           </div>
           <div class="card">
-            <div class="ct">🏆 Speed Battle Leaderboard</div>
-            <div id="sp-leaderboard"><div style="color:var(--text2);font-size:.8rem">No sessions completed yet.</div></div>
+            <div class="ct">🏆 Speed Battle Results</div>
+            <div id="sp-results"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ══ SCOREBOARD ══ -->
+    <!-- SCOREBOARD -->
     <div class="panel" id="panel-s">
       <div class="pscroll">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div style="font-weight:800;font-size:1rem">📊 Live Scoreboard</div>
+          <div style="font-weight:800;font-size:1rem">📊 Scoreboard</div>
           <span id="sb-mode-tag" style="font-size:.75rem;color:var(--text2)"></span>
         </div>
         <table class="sb-table">
-          <thead><tr><th>#</th><th>Player / Team</th><th>Mode</th><th style="text-align:right">Score</th></tr></thead>
-          <tbody id="sb-body"><tr><td colspan="4" style="text-align:center;color:var(--text2)">No data yet</td></tr></tbody>
+          <thead><tr><th>#</th><th>Player</th><th>Mode</th><th style="text-align:right">Score</th></tr></thead>
+          <tbody id="sb-body"><tr><td colspan="4" style="text-align:center;color:var(--text2)">No data</td></tr></tbody>
         </table>
       </div>
     </div>
 
-    <!-- ══ SETUP ══ -->
+    <!-- SETUP -->
     <div class="panel" id="panel-x">
       <div class="pscroll">
         <div class="two-col">
@@ -585,16 +460,13 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
               <div class="fg"><label>Database URL</label><input id="cfg-db" placeholder="https://project-rtdb.firebaseio.com"/></div>
               <div class="fg"><label>Project ID</label><input id="cfg-pid" placeholder="your-project-id"/></div>
               <div class="fg"><label>Auth Domain</label><input id="cfg-auth" placeholder="project.firebaseapp.com"/></div>
-              <div class="rbtns">
-                <button class="bp bsm" onclick="saveConfig()">Save & Connect</button>
-                <button class="bgh bsm" onclick="testConn()">Test</button>
-              </div>
+              <div class="rbtns"><button class="bp bsm" onclick="saveConfig()">Save & Connect</button><button class="bgh bsm" onclick="testConn()">Test</button></div>
               <div id="cfg-box" class="cfg-box"></div>
             </div>
           </div>
           <div>
             <div class="card">
-              <div class="ct">📋 Section Names (Standard Mode)</div>
+              <div class="ct">📋 Section Names (Standard)</div>
               <div class="fg"><label>Section 1</label><input id="sn0" value="Section 1"/></div>
               <div class="fg"><label>Section 2</label><input id="sn1" value="Section 2"/></div>
               <div class="fg"><label>Section 3</label><input id="sn2" value="Section 3"/></div>
@@ -609,154 +481,114 @@ input[type="color"]{padding:2px;height:32px;cursor:pointer}
       </div>
     </div>
 
-    </div><!-- /main -->
-  </div><!-- /body -->
+    </div>
+  </div>
 </div>
 
 <script>
-/* ═══ CONFIG ═══ */
-const PASS = "IJAadmin2024";
-const CIRC = 188.5;
-const OC = {A:'#ef4444',B:'#3b82f6',C:'#f59e0b',D:'#10b981'};
-
-/* ═══ STATE ═══ */
-let db=null, timerInt=null, sbOpen=false;
-let mode='standard';
-let editSec=0, liveSec=0;
+const PASS="IJAadmin2024";
+const CIRC=188.5;
+const OC={A:'#ef4444',B:'#3b82f6',C:'#f59e0b',D:'#10b981'};
+let db=null,timerInt=null,tbTimerInt=null,sbOpen=false;
+let mode='standard',editSec=0,liveSec=0;
 let sections=[{name:'Section 1',questions:[]},{name:'Section 2',questions:[]},{name:'Section 3',questions:[]}];
-let players={}, gs={state:'lobby',currentQIndex:-1,cq:null,roundAnswers:{}};
+let players={},gs={state:'lobby',currentQIndex:-1,cq:null,roundAnswers:{}};
+let tb={state:'lobby',teams:[{name:'Red Eagles',score:0},{name:'Blue Lions',score:0}],bank:[],used:[],activeTeam:0,isBonus:false,cq:null,lock:null,members:{}};
+let sp={state:'lobby',bank:[],players:{},activePid:null,session:null};
 
-// Team battle
-let tb={
-  state:'lobby', teams:[{name:'Red Eagles',score:0},{name:'Blue Lions',score:0}],
-  bank:[], used:[], activeTeam:0, isBonus:false, cq:null, lock:null, members:{}
-};
-// Speed battle
-let sp={state:'lobby', bank:[], players:{}, activePid:null, session:null, leaderboard:[]};
-
-/* ═══ LOGIN ═══ */
+/* LOGIN */
 function doLogin(){
   if(gv('pass-inp')===PASS){
     document.getElementById('login').style.display='none';
     document.getElementById('app').classList.add('on');
-    loadCfgInputs(); loadSectionNames(); buildSectionUI();
-    const c=getCfg(); if(c) initFB(c);
-  } else { document.getElementById('lerr').style.display='block'; }
+    loadCfgInputs();loadSectionNames();buildSectionUI();
+    const c=getCfg();if(c)initFB(c);
+  }else{document.getElementById('lerr').style.display='block';}
 }
 document.getElementById('pass-inp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
-/* ═══ MODE SWITCH ═══ */
+/* MODE */
 function switchMode(m){
   mode=m;
   document.querySelectorAll('.msw').forEach(b=>b.classList.toggle('on',b.classList.contains(m)));
-  if(db) db.ref('quiz/mode').set(m);
-  updateStateBadge();
+  if(db)db.ref('quiz/mode').set(m);
+  updateBadge();
 }
 
-/* ═══ NAVIGATION ═══ */
+/* NAV */
 const PANELS={q:'panel-q',c:'panel-c',t:'panel-t',sp:'panel-sp',s:'panel-s',x:'panel-x'};
 const NAVS={q:'nb-q',c:'nb-c',t:'nb-t',sp:'nb-sp',s:'nb-s',x:'nb-x'};
 function nav(k){
-  Object.keys(PANELS).forEach(p=>{
-    document.getElementById(PANELS[p]).classList.toggle('on',p===k);
-    document.getElementById(NAVS[p]).classList.toggle('on',p===k);
-  });
+  Object.keys(PANELS).forEach(p=>{document.getElementById(PANELS[p]).classList.toggle('on',p===k);document.getElementById(NAVS[p]).classList.toggle('on',p===k);});
   if(k==='c'){renderStdNavQ();renderStdCQ();}
   if(k==='s')renderSB();
-  if(k==='t'&&document.getElementById('team-control').classList.contains('on')) renderTBControl();
-  if(k==='sp'&&document.getElementById('speed-control').classList.contains('on')) renderSPControl();
+  if(k==='t'&&document.getElementById('team-control').classList.contains('on'))renderTBControl();
+  if(k==='sp'&&document.getElementById('speed-control').classList.contains('on'))renderSPControl();
 }
 function toggleSB(){sbOpen=!sbOpen;document.getElementById('sidebar').classList.toggle('open',sbOpen);}
 
-/* ═══ INNER TABS ═══ */
+/* INNER TABS */
 function itab(group,tab){
+  const map={team:['setup','questions','control'],speed:['questions','control']};
   const prefix=group==='team'?'team':'speed';
-  const panels={team:['setup','questions','control'],speed:['questions','control']};
-  panels[group].forEach(p=>{
-    document.getElementById(prefix+'-'+p).classList.toggle('on',p===tab);
-  });
+  map[group].forEach(p=>{document.getElementById(prefix+'-'+p).classList.toggle('on',p===tab);});
   const tabs=document.querySelectorAll(`#panel-${group==='team'?'t':'sp'} .itab`);
-  const idx=panels[group].indexOf(tab);
+  const idx=map[group].indexOf(tab);
   tabs.forEach((t,i)=>t.classList.toggle('on',i===idx));
-  if(group==='team'&&tab==='control') renderTBControl();
-  if(group==='speed'&&tab==='control') renderSPControl();
+  if(group==='team'&&tab==='control')renderTBControl();
+  if(group==='speed'&&tab==='control')renderSPControl();
 }
 
-/* ═══ IMPORT TABS ═══ */
+/* IMPORT TABS */
 function switchImpTab(bank,which){
-  const fileEl=document.getElementById(bank+'-imp-file');
-  const pasteEl=document.getElementById(bank+'-imp-paste');
-  const tabs=fileEl.previousElementSibling.querySelectorAll('.imptab');
-  tabs[0].classList.toggle('on',which==='file');
-  tabs[1].classList.toggle('on',which==='paste');
-  fileEl.style.display=which==='file'?'block':'none';
-  pasteEl.style.display=which==='paste'?'block':'none';
+  const fe=document.getElementById(bank+'-imp-file'),pe=document.getElementById(bank+'-imp-paste');
+  const tabs=fe.previousElementSibling.querySelectorAll('.imptab');
+  tabs[0].classList.toggle('on',which==='file');tabs[1].classList.toggle('on',which==='paste');
+  fe.style.display=which==='file'?'block':'none';pe.style.display=which==='paste'?'block':'none';
 }
 
-/* ═══ SECTION NAMES ═══ */
+/* SECTION NAMES */
 function saveSectionNames(){
   [0,1,2].forEach(i=>{sections[i].name=gv('sn'+i)||'Section '+(i+1);});
   localStorage.setItem('ija_snames',JSON.stringify(sections.map(s=>s.name)));
-  buildSectionUI(); pushStdSections(); flashMsg('std','Section names saved','s');
+  buildSectionUI();pushStd();flashMsg('std','Section names saved','s');
 }
 function loadSectionNames(){
   const s=JSON.parse(localStorage.getItem('ija_snames')||'null');
-  if(s) [0,1,2].forEach(i=>{sections[i].name=s[i]||sections[i].name;sv('sn'+i,sections[i].name);});
+  if(s)[0,1,2].forEach(i=>{sections[i].name=s[i]||sections[i].name;sv('sn'+i,sections[i].name);});
 }
 function buildSectionUI(){
-  const tabs=document.getElementById('s-tabs'); tabs.innerHTML='';
+  const tabs=document.getElementById('s-tabs');tabs.innerHTML='';
   sections.forEach((s,i)=>{
-    const btn=document.createElement('button');btn.className='stab'+(i===editSec?' on':'');
-    btn.onclick=()=>setEditSec(i);
-    const nm=document.createTextNode(s.name+' ');
-    const qb=document.createElement('span');qb.className='qb';qb.id='qb'+i;qb.textContent='0';
+    const btn=document.createElement('button');btn.className='stab'+(i===editSec?' on':'');btn.onclick=()=>setEditSec(i);
+    const nm=document.createTextNode(s.name+' ');const qb=document.createElement('span');qb.className='qb';qb.id='qb'+i;qb.textContent='0';
     btn.appendChild(nm);btn.appendChild(qb);tabs.appendChild(btn);
   });
-  // Section control buttons
   const secCtrl=document.getElementById('sec-ctrl-btns');secCtrl.innerHTML='';
-  sections.forEach((s,i)=>{
-    const b=document.createElement('button');b.className='bp bsm';b.textContent='▶ '+s.name;
-    b.onclick=()=>goStdSec(i);secCtrl.appendChild(b);
-  });
-  const slb=document.createElement('button');slb.className='bpu bsm';slb.textContent='🏅 Section LB';
-  slb.onclick=()=>showLB('section_leaderboard');secCtrl.appendChild(slb);
+  sections.forEach((s,i)=>{const b=document.createElement('button');b.className='bp bsm';b.textContent='▶ '+s.name;b.onclick=()=>goStdSec(i);secCtrl.appendChild(b);});
+  const slb=document.createElement('button');slb.className='bpu bsm';slb.textContent='🏅 Section LB';slb.onclick=()=>showLB('section_leaderboard');secCtrl.appendChild(slb);
+  buildTBTeamBtns();
 }
 function setEditSec(i){
-  editSec=i;
-  document.querySelectorAll('#s-tabs .stab').forEach((b,j)=>b.classList.toggle('on',j===i));
-  document.getElementById('cur-sec-lbl').textContent=sections[i].name;
-  renderStdQL();
+  editSec=i;document.querySelectorAll('#s-tabs .stab').forEach((b,j)=>b.classList.toggle('on',j===i));
+  document.getElementById('cur-sec-lbl').textContent=sections[i].name;renderStdQL();
 }
 
-/* ═══ JSON IMPORT (shared) ═══ */
-function importJSON(ev,bank){
-  const file=ev.target.files[0];if(!file)return;
-  const r=new FileReader();r.onload=e=>{runImport(e.target.result,bank);ev.target.value='';};r.readAsText(file);
-}
-function importPaste(bank){
-  const el=document.getElementById(bank+'-paste-json');
-  runImport(el.value.trim(),bank);el.value='';
-}
+/* JSON IMPORT */
+function importJSON(ev,bank){const file=ev.target.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{runImport(e.target.result,bank);ev.target.value='';};r.readAsText(file);}
+function importPaste(bank){const el=document.getElementById(bank+'-paste-json');runImport(el.value.trim(),bank);el.value='';}
 function runImport(text,bank){
   try{
     let raw=JSON.parse(text);
     if(!Array.isArray(raw)){
-      if(bank==='std'&&raw.sections){
-        let tot=0;
-        toArray(raw.sections).forEach((s,i)=>{if(i<3&&s.questions){const p=toArray(s.questions).map(normalQ);sections[i].questions=[...sections[i].questions,...p];tot+=p.length;}});
-        buildSectionUI();pushStdSections();renderStdQL();flashMsg('std',`✓ ${tot} questions imported`,'s');return;
-      }
+      if(bank==='std'&&raw.sections){let tot=0;toArray(raw.sections).forEach((s,i)=>{if(i<3&&s.questions){const p=toArray(s.questions).map(normalQ);sections[i].questions=[...sections[i].questions,...p];tot+=p.length;}});buildSectionUI();pushStd();renderStdQL();flashMsg('std',`✓ ${tot} questions`,'s');return;}
       raw=raw.questions||Object.values(raw).find(v=>Array.isArray(v))||[];
     }
+    if(!Array.isArray(raw))throw new Error('Expected JSON array');
     const parsed=raw.map((q,i)=>normalQ(q,i));
-    if(bank==='std'){
-      sections[editSec].questions=[...sections[editSec].questions,...parsed];
-      pushStdSections();renderStdQL();flashMsg('std',`✓ ${parsed.length} → ${sections[editSec].name}`,'s');
-    } else if(bank==='tb'){
-      tb.bank=[...tb.bank,...parsed];pushTBBank();renderTBQL();flashMsg('tb',`✓ ${parsed.length} questions added`,'s');
-    } else if(bank==='sp'){
-      sp.bank=[...sp.bank,...parsed];pushSPBank();renderSPQL();flashMsg('sp',`✓ ${parsed.length} questions added`,'s');
-    }
+    if(bank==='std'){sections[editSec].questions=[...sections[editSec].questions,...parsed];pushStd();renderStdQL();flashMsg('std',`✓ ${parsed.length} → ${sections[editSec].name}`,'s');}
+    else if(bank==='tb'){tb.bank=[...tb.bank,...parsed];pushTBBank();renderTBQL();flashMsg('tb',`✓ ${parsed.length} questions`,'s');}
+    else if(bank==='sp'){sp.bank=[...sp.bank,...parsed];pushSPBank();renderSPQL();flashMsg('sp',`✓ ${parsed.length} questions`,'s');}
   }catch(e){flashMsg(bank,'Error: '+e.message,'e');}
 }
 function normalQ(q,i=0){
@@ -774,201 +606,133 @@ function flashMsg(bank,msg,type){
   el.className='flash '+type;el.textContent=msg;el.style.display='flex';
   clearTimeout(el._t);el._t=setTimeout(()=>{el.style.display='none';},5000);
 }
-function toArray(val){
-  if(!val)return[];if(Array.isArray(val))return val;
-  return Object.keys(val).sort((a,b)=>Number(a)-Number(b)).map(k=>val[k]);
-}
+function toArray(val){if(!val)return[];if(Array.isArray(val))return val;return Object.keys(val).sort((a,b)=>Number(a)-Number(b)).map(k=>val[k]);}
 
-/* ═══ STANDARD QUESTIONS ═══ */
+/* STANDARD */
 function addQ(){
   const text=gv('nq-text'),a=gv('nq-a'),b=gv('nq-b'),c=gv('nq-c'),d=gv('nq-d'),ans=gv('nq-ans'),t=parseInt(gv('nq-time'))||30;
   if(!text||!a||!b||!c||!d){alert('Fill all fields.');return;}
   sections[editSec].questions.push({text,options:{A:a,B:b,C:c,D:d},answer:ans,timeLimit:t});
-  pushStdSections();['nq-text','nq-a','nq-b','nq-c','nq-d'].forEach(id=>sv(id,''));sv('nq-time','30');
+  pushStd();['nq-text','nq-a','nq-b','nq-c','nq-d'].forEach(id=>sv(id,''));sv('nq-time','30');
 }
-function delQ(si,qi){if(!confirm('Remove?'))return;sections[si].questions.splice(qi,1);pushStdSections();}
+function delQ(si,qi){if(!confirm('Remove?'))return;sections[si].questions.splice(qi,1);pushStd();}
 function exportSec(){dl(sections[editSec].name+'.json',JSON.stringify(sections[editSec].questions,null,2));}
 function exportAll(){dl('all-sections.json',JSON.stringify({sections:sections.map(s=>({name:s.name,questions:s.questions}))},null,2));}
-function clearSec(){if(!confirm(`Clear ${sections[editSec].name}?`))return;sections[editSec].questions=[];pushStdSections();}
-function pushStdSections(){renderStdQL();renderStdNavQ();if(db)db.ref('quiz/sections').set(sections);}
+function clearSec(){if(!confirm(`Clear ${sections[editSec].name}?`))return;sections[editSec].questions=[];pushStd();}
+function pushStd(){renderStdQL();renderStdNavQ();if(db)db.ref('quiz/sections').set(sections);}
 function renderStdQL(){
   [0,1,2].forEach(i=>{const el=document.getElementById('qb'+i);if(el)el.textContent=sections[i].questions.length;});
   const qs=sections[editSec].questions;
   document.getElementById('q-count').textContent=qs.length+' question'+(qs.length!==1?'s':'');
   const el=document.getElementById('q-list');
-  if(!qs.length){el.innerHTML='<div class="empty"><div class="empty-ico">📋</div>No questions yet.</div>';return;}
-  el.innerHTML=qs.map((q,i)=>`
-    <div class="qi">
-      <div class="qi-head"><span class="qi-num">Q${i+1}</span><div class="qi-txt">${esc(q.text)}</div></div>
-      <div class="qi-opts">${['A','B','C','D'].map(o=>`<div class="qi-opt ${q.answer===o?'ok':''}"><b style="color:${OC[o]}">${o}</b>${esc(q.options[o])}</div>`).join('')}</div>
-      <div class="qi-meta"><span class="qi-time">⏱ ${q.timeLimit}s</span><button class="bgh bsm" style="margin-left:auto;color:var(--red);border-color:rgba(239,68,68,.3);padding:2px 8px;font-size:11px" onclick="delQ(${editSec},${i})">✕</button></div>
-    </div>`).join('');
+  if(!qs.length){el.innerHTML='<div class="empty">No questions yet.</div>';return;}
+  el.innerHTML=qs.map((q,i)=>`<div class="qi"><div class="qi-head"><span class="qi-num">Q${i+1}</span><div class="qi-txt">${esc(q.text)}</div></div><div class="qi-opts">${['A','B','C','D'].map(o=>`<div class="qi-opt ${q.answer===o?'ok':''}"><b style="color:${OC[o]}">${o}</b>${esc(q.options[o])}</div>`).join('')}</div><div class="qi-meta"><span class="qi-time">⏱ ${q.timeLimit}s</span><button class="bgh bsm" style="margin-left:auto;color:var(--red);border-color:rgba(239,68,68,.3);padding:2px 8px;font-size:11px" onclick="delQ(${editSec},${i})">✕</button></div></div>`).join('');
 }
 
-/* ═══ STANDARD GAME CONTROLS ═══ */
+/* STANDARD GAME */
 function startComp(){
   if(!db){alert('Not connected.');return;}
-  const total=sections.reduce((a,s)=>a+(s.questions?.length||0),0);
-  if(!total){alert('Add questions first.');return;}
+  if(!sections.reduce((a,s)=>a+(s.questions?.length||0),0)){alert('Add questions first.');return;}
   if(!confirm('Reset all scores and start?'))return;
-  const upd={};
-  Object.keys(players).forEach(pid=>{
-    upd[`quiz/players/${pid}/score`]=0;upd[`quiz/players/${pid}/answered`]=false;
-    upd[`quiz/players/${pid}/lastAnswer`]=null;upd[`quiz/players/${pid}/lastCorrect`]=null;
-    upd[`quiz/players/${pid}/sectionScores`]={0:0,1:0,2:0};
-  });
-  upd['quiz/mode']='standard';upd['quiz/state']='lobby';upd['quiz/currentSection']=0;
-  upd['quiz/currentQIndex']=-1;upd['quiz/currentQuestion']=null;
-  upd['quiz/revealAnswer']=null;upd['quiz/roundAnswers']=null;upd['quiz/sections']=sections;
+  const upd={};Object.keys(players).forEach(pid=>{upd[`quiz/players/${pid}/score`]=0;upd[`quiz/players/${pid}/answered`]=false;upd[`quiz/players/${pid}/lastAnswer`]=null;upd[`quiz/players/${pid}/lastCorrect`]=null;upd[`quiz/players/${pid}/sectionScores`]={0:0,1:0,2:0};});
+  upd['quiz/mode']='standard';upd['quiz/state']='lobby';upd['quiz/currentSection']=0;upd['quiz/currentQIndex']=-1;upd['quiz/currentQuestion']=null;upd['quiz/revealAnswer']=null;upd['quiz/roundAnswers']=null;upd['quiz/sections']=sections;
   db.ref().update(upd);
 }
 function goStdSec(idx){
-  if(!db)return;
-  if(!(sections[idx]?.questions?.length)){alert(`No questions in ${sections[idx]?.name}.`);return;}
-  clearTimer();
-  const upd={};
+  if(!db||!(sections[idx]?.questions?.length)){alert('No questions in this section.');return;}
+  clearStdTimer();const upd={};
   Object.keys(players).forEach(pid=>{upd[`quiz/players/${pid}/answered`]=false;upd[`quiz/players/${pid}/lastAnswer`]=null;upd[`quiz/players/${pid}/lastCorrect`]=null;});
-  upd['quiz/roundAnswers']=null;upd['quiz/currentSection']=idx;upd['quiz/currentQIndex']=-1;
-  upd['quiz/currentQuestion']=null;upd['quiz/revealAnswer']=null;
-  upd['quiz/state']='section_intro';upd['quiz/sectionIntro']={sectionIndex:idx,name:sections[idx].name,totalQ:sections[idx].questions.length};
+  upd['quiz/roundAnswers']=null;upd['quiz/currentSection']=idx;upd['quiz/currentQIndex']=-1;upd['quiz/currentQuestion']=null;upd['quiz/revealAnswer']=null;upd['quiz/state']='section_intro';upd['quiz/sectionIntro']={sectionIndex:idx,name:sections[idx].name,totalQ:sections[idx].questions.length};
   db.ref().update(upd);
 }
 function launchStdQ(qIdx){
-  if(!db)return;
-  const q=sections[liveSec]?.questions?.[qIdx];if(!q){alert('Question not found.');return;}
-  clearTimer();const now=Date.now(),upd={};
+  if(!db)return;const q=sections[liveSec]?.questions?.[qIdx];if(!q)return;
+  clearStdTimer();const now=Date.now(),upd={};
   Object.keys(players).forEach(pid=>{upd[`quiz/players/${pid}/answered`]=false;upd[`quiz/players/${pid}/lastAnswer`]=null;upd[`quiz/players/${pid}/lastCorrect`]=null;upd[`quiz/players/${pid}/pointsEarned`]=null;});
-  upd['quiz/roundAnswers']=null;upd['quiz/revealAnswer']=null;upd['quiz/state']='question_active';
-  upd['quiz/currentQIndex']=qIdx;upd['quiz/currentQuestion']={index:qIdx,sectionIndex:liveSec,text:q.text,options:q.options,answer:q.answer,timeLimit:q.timeLimit,startTime:now,total:sections[liveSec].questions.length};
+  upd['quiz/roundAnswers']=null;upd['quiz/revealAnswer']=null;upd['quiz/state']='question_active';upd['quiz/currentQIndex']=qIdx;
+  upd['quiz/currentQuestion']={index:qIdx,sectionIndex:liveSec,text:q.text,options:q.options,answer:q.answer,timeLimit:q.timeLimit,startTime:now,total:sections[liveSec].questions.length};
   db.ref().update(upd);
 }
 function revealAns(){
-  if(!db||!gs.cq){alert('No active question.');return;}
-  clearTimer();
+  if(!db||!gs.cq){alert('No active question.');return;}clearStdTimer();
   const correct=gs.cq.answer,tl=gs.cq.timeLimit||30,upd={};
-  Object.keys(players).forEach(pid=>{
-    const p=players[pid],ra=(gs.roundAnswers||{})[pid];
-    if(p.lastAnswer===correct){const tt=ra?.timeTaken||tl,pts=Math.round(1000-Math.min(tt/tl,1)*500);upd[`quiz/players/${pid}/score`]=(p.score||0)+pts;upd[`quiz/players/${pid}/sectionScores/${liveSec}`]=((p.sectionScores?.[liveSec])||0)+pts;upd[`quiz/players/${pid}/lastCorrect`]=true;upd[`quiz/players/${pid}/pointsEarned`]=pts;}
-    else{upd[`quiz/players/${pid}/lastCorrect`]=false;upd[`quiz/players/${pid}/pointsEarned`]=0;}
-  });
+  Object.keys(players).forEach(pid=>{const p=players[pid],ra=(gs.roundAnswers||{})[pid];if(p.lastAnswer===correct){const tt=ra?.timeTaken||tl,pts=Math.round(1000-Math.min(tt/tl,1)*500);upd[`quiz/players/${pid}/score`]=(p.score||0)+pts;upd[`quiz/players/${pid}/sectionScores/${liveSec}`]=((p.sectionScores?.[liveSec])||0)+pts;upd[`quiz/players/${pid}/lastCorrect`]=true;upd[`quiz/players/${pid}/pointsEarned`]=pts;}else{upd[`quiz/players/${pid}/lastCorrect`]=false;upd[`quiz/players/${pid}/pointsEarned`]=0;}});
   upd['quiz/state']='reveal';upd['quiz/revealAnswer']=correct;db.ref().update(upd);
 }
-function showLB(type){if(!db)return;clearTimer();db.ref('quiz/state').set(type);}
-function endComp(){if(!db||!confirm('End competition?'))return;clearTimer();db.ref('quiz/state').set('ended');}
+function showLB(type){if(!db)return;clearStdTimer();db.ref('quiz/state').set(type);}
+function endComp(){if(!db||!confirm('End competition?'))return;clearStdTimer();db.ref('quiz/state').set('ended');}
 function resetAll(){
-  if(!db||!confirm('Reset EVERYTHING?'))return;clearTimer();
-  db.ref('quiz').set({mode,state:'lobby',currentSection:0,currentQIndex:-1,sections,players:null,roundAnswers:null,currentQuestion:null,revealAnswer:null,tb:{state:'lobby',teams:tb.teams,bank:tb.bank,used:[],activeTeam:0,isBonus:false,cq:null,lock:null,members:{}},sp:{state:'lobby',bank:sp.bank,players:{},activePid:null,session:null,leaderboard:[]}});
+  if(!db||!confirm('Reset EVERYTHING?'))return;clearStdTimer();clearTBTimer();
+  db.ref('quiz').set({mode,state:'lobby',currentSection:0,currentQIndex:-1,sections,players:null,roundAnswers:null,currentQuestion:null,revealAnswer:null,tb:{state:'lobby',teams:tb.teams,bank:tb.bank,used:[],activeTeam:0,isBonus:false,cq:null,lock:null,members:{}},sp:{state:'lobby',bank:sp.bank,players:{},activePid:null,session:null}});
 }
 
-/* ═══ STANDARD TIMER ═══ */
+/* STANDARD TIMER */
 function startStdTimer(limit,startTime){
-  clearTimer();
+  clearStdTimer();
   const ring=document.getElementById('std-ring'),bar=document.getElementById('std-bar'),num=document.getElementById('std-timer');
   function tick(){
     const left=Math.max(0,limit-(Date.now()-startTime)/1000),pct=left/limit;
     ring.style.strokeDashoffset=(1-pct)*CIRC;bar.style.width=(pct*100)+'%';
-    const low=left<=8,col=low?'#ef4444':'#f59e0b';
-    ring.style.stroke=col;bar.style.background=col;num.style.color=col;num.textContent=Math.ceil(left);
-    if(left<=0){clearTimer();num.textContent='0';if(gs.state==='question_active'&&db)db.ref('quiz/state').set('time_up');document.getElementById('std-rev-btn').classList.add('pulse');}
+    const low=left<=8,col=low?'#ef4444':'#f59e0b';ring.style.stroke=col;bar.style.background=col;num.style.color=col;num.textContent=Math.ceil(left);
+    if(left<=0){clearStdTimer();num.textContent='0';if(gs.state==='question_active'&&db)db.ref('quiz/state').set('time_up');document.getElementById('std-rev-btn').classList.add('pulse');}
   }
   tick();timerInt=setInterval(tick,250);
 }
-let tbTimerInt=null;
-function startTBTimer(limit,startTime,isBonus){
-  clearTBTimer();
-  const ring=document.getElementById('tb-ring'),bar=document.getElementById('tb-bar'),num=document.getElementById('tb-timer');
-  const bonusCol='#f97316';
-  function tick(){
-    const left=Math.max(0,limit-(Date.now()-startTime)/1000),pct=left/limit;
-    ring.style.strokeDashoffset=(1-pct)*CIRC;bar.style.width=(pct*100)+'%';
-    const low=left<=5,col=low?'#ef4444':isBonus?bonusCol:'#f59e0b';
-    ring.style.stroke=col;bar.style.background=col;num.style.color=col;num.textContent=Math.ceil(left);
-    if(left<=0){clearTBTimer();num.textContent='0';if(db)tbTimeUp();}
-  }
-  tick();tbTimerInt=setInterval(tick,250);
-}
-function clearTBTimer(){clearInterval(tbTimerInt);tbTimerInt=null;}
-function clearTimer(){
-  clearInterval(timerInt);timerInt=null;
-  document.getElementById('std-rev-btn').classList.remove('pulse');
-  const ring=document.getElementById('std-ring'),bar=document.getElementById('std-bar'),num=document.getElementById('std-timer');
-  ring.style.strokeDashoffset='0';bar.style.width='100%';num.textContent='—';num.style.color='var(--gold)';ring.style.stroke='var(--gold)';bar.style.background='var(--gold)';
-}
+function clearStdTimer(){clearInterval(timerInt);timerInt=null;document.getElementById('std-rev-btn').classList.remove('pulse');const r=document.getElementById('std-ring'),b=document.getElementById('std-bar'),n=document.getElementById('std-timer');r.style.strokeDashoffset='0';b.style.width='100%';n.textContent='—';n.style.color='var(--gold)';r.style.stroke='var(--gold)';b.style.background='var(--gold)';}
 
-/* ═══ STANDARD RENDER ═══ */
+/* STANDARD RENDER */
 function renderStdCQ(){
   const el=document.getElementById('std-cq-display'),meta=document.getElementById('std-cq-meta'),q=gs.cq;
-  if(!q){el.innerHTML='<div class="empty" style="padding:8px">No question active.</div>';meta.innerHTML='No active question';clearTimer();return;}
+  if(!q){el.innerHTML='<div class="empty" style="padding:8px">No question active.</div>';meta.innerHTML='No active question';clearStdTimer();return;}
   meta.innerHTML=`Q${q.index+1}/${q.total||'?'} · ${sections[q.sectionIndex||0]?.name||''} · ${q.timeLimit}s`;
   const rev=gs.state==='reveal'||gs.state==='time_up';
   el.innerHTML=`<div class="cq-txt">${esc(q.text)}</div><div class="cq-opts">${['A','B','C','D'].map(o=>`<div class="cq-opt ${o} ${rev?(o===q.answer?'rv-ok':'rv-no'):''}"><b>${o}</b>${esc(q.options[o])}</div>`).join('')}</div>`;
   if(gs.state==='question_active')startStdTimer(q.timeLimit,q.startTime);
-  if(rev){clearTimer();document.getElementById('std-timer').textContent='✓';document.getElementById('std-timer').style.color='var(--green)';document.getElementById('std-ring').style.stroke='var(--green)';}
+  if(rev){clearStdTimer();document.getElementById('std-timer').textContent='✓';document.getElementById('std-timer').style.color='var(--green)';document.getElementById('std-ring').style.stroke='var(--green)';}
 }
 function renderStdNavQ(){
   const el=document.getElementById('std-nav-q'),qs=sections[liveSec]?.questions||[];
-  if(!qs.length){el.innerHTML='<div class="empty" style="padding:8px">No questions in this section.</div>';return;}
-  el.innerHTML=qs.map((q,i)=>{
-    const live=i===gs.currentQIndex,done=live&&(gs.state==='reveal'||gs.state==='time_up');
-    return `<div class="nav-q ${live?'live':''}"><span class="nav-q-num">Q${i+1}</span><span class="nav-q-txt">${esc(q.text)}</span>${live?`<span class="live-tag">${done?'✓':'●'}</span>`:`<button class="bp bsm" onclick="launchStdQ(${i})">Launch</button>`}</div>`;
-  }).join('');
+  if(!qs.length){el.innerHTML='<div class="empty" style="padding:8px">No questions.</div>';return;}
+  el.innerHTML=qs.map((q,i)=>{const live=i===gs.currentQIndex,done=live&&(gs.state==='reveal'||gs.state==='time_up');return `<div class="nav-q ${live?'live':''}"><span class="nav-q-num">Q${i+1}</span><span class="nav-q-txt">${esc(q.text)}</span>${live?`<span class="live-tag">${done?'✓':'●'}</span>`:`<button class="bp bsm" onclick="launchStdQ(${i})">Launch</button>`}</div>`;}).join('');
 }
 function renderStdPlayers(){
-  const el=document.getElementById('std-players');
-  const arr=Object.values(players).sort((a,b)=>(b.score||0)-(a.score||0));
+  const el=document.getElementById('std-players');const arr=Object.values(players).sort((a,b)=>(b.score||0)-(a.score||0));
   if(!arr.length){el.innerHTML='<div style="color:var(--text2);font-size:.78rem;padding:5px 0">No players.</div>';return;}
   el.innerHTML=arr.map(p=>`<div class="pl-item"><div class="pl-dot ${p.answered?'ans':''}"></div><div class="pl-name">${esc(p.name||'?')}</div>${p.lastCorrect===true?`<span style="font-size:.68rem;color:var(--green);font-family:'JetBrains Mono',monospace">+${p.pointsEarned||0}</span>`:''}<div class="pl-score">${p.score||0}</div></div>`).join('');
 }
 function renderStdAnsBars(){
-  const counts={A:0,B:0,C:0,D:0};
-  Object.values(players).forEach(p=>{if(p.lastAnswer&&counts[p.lastAnswer]!==undefined)counts[p.lastAnswer]++;});
-  const total=Object.values(counts).reduce((a,b)=>a+b,0);
-  const answered=Object.values(players).filter(p=>p.answered).length,tp=Object.keys(players).length;
+  const counts={A:0,B:0,C:0,D:0};Object.values(players).forEach(p=>{if(p.lastAnswer&&counts[p.lastAnswer]!==undefined)counts[p.lastAnswer]++;});
+  const total=Object.values(counts).reduce((a,b)=>a+b,0);const answered=Object.values(players).filter(p=>p.answered).length,tp=Object.keys(players).length;
   document.getElementById('std-ans-hdr').innerHTML=`<b style="color:var(--green);font-family:'JetBrains Mono',monospace">${answered}</b> / <b>${tp}</b> answered`;
   document.getElementById('std-ans-bars').innerHTML=['A','B','C','D'].map(o=>`<div class="stat-item ${o}"><div class="stat-row"><span class="stat-lbl">${o}</span><div class="stat-bg"><div class="stat-fill" style="width:${total?Math.round(counts[o]/total*100):0}%"></div></div><span class="stat-cnt">${counts[o]}</span></div></div>`).join('');
 }
 
-/* ═══ TEAM BATTLE LOGIC ═══ */
-function saveTeamSetup(){
-  tb.teams[0].name=gv('team0-name')||'Red Eagles';
-  tb.teams[1].name=gv('team1-name')||'Blue Lions';
-  if(db)db.ref('quiz/tb/teams').set(tb.teams);
-  renderTBControl(); renderTBTeamBtns(); alert('Team names saved!');
+/* TEAM BATTLE */
+function saveTeamSetup(){tb.teams[0].name=gv('team0-name')||'Red Eagles';tb.teams[1].name=gv('team1-name')||'Blue Lions';if(db)db.ref('quiz/tb/teams').set(tb.teams);buildTBTeamBtns();}
+function buildTBTeamBtns(){
+  const launch=document.getElementById('tb-team-launch');const sw=document.getElementById('tb-team-switch');
+  if(!launch||!sw)return;
+  launch.innerHTML=tb.teams.map((t,i)=>`<button class="bsm" style="background:${i===0?'#e8192f':'#2563eb'};color:#fff;border:none;border-radius:7px;padding:5px 12px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700" onclick="tbLaunch(${i})">🎯 ${esc(t.name)}'s Turn</button>`).join('');
+  sw.innerHTML=tb.teams.map((t,i)=>`<button class="bgh bsm" onclick="setActiveTeam(${i})">Switch to ${esc(t.name)}</button>`).join('');
 }
 function startTeamBattle(){
   if(!db){alert('Not connected.');return;}
   if(!tb.bank.length){alert('Add team battle questions first.');return;}
   if(!confirm('Start Team Battle? Resets all team scores.'))return;
   const upd={};
-  upd['quiz/mode']='team';upd['quiz/tb/state']='lobby';
-  upd['quiz/tb/teams']=tb.teams;upd['quiz/tb/bank']=tb.bank;
-  upd['quiz/tb/used']=[];upd['quiz/tb/activeTeam']=0;upd['quiz/tb/isBonus']=false;
-  upd['quiz/tb/cq']=null;upd['quiz/tb/lock']=null;
-  // Reset member scores
+  upd['quiz/mode']='team';upd['quiz/tb/state']='lobby';upd['quiz/tb/teams']=tb.teams;upd['quiz/tb/bank']=tb.bank;upd['quiz/tb/used']=[];upd['quiz/tb/activeTeam']=0;upd['quiz/tb/isBonus']=false;upd['quiz/tb/cq']=null;upd['quiz/tb/lock']=null;
   Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/score`]=0;});
-  db.ref().update(upd);
-  switchMode('team');
+  db.ref().update(upd);switchMode('team');
 }
 function pushTBBank(){if(db)db.ref('quiz/tb/bank').set(tb.bank);}
-function clearTBQ(){if(!confirm('Clear all team battle questions?'))return;tb.bank=[];tb.used=[];pushTBBank();if(db)db.ref('quiz/tb/used').set([]);renderTBQL();}
-function revalidateQuestions(){
-  if(!db||!confirm('Restore all used questions to the pool?'))return;
-  tb.used=[];db.ref('quiz/tb/used').set([]);
-  renderTBQL();flashMsg('tb','✓ All questions revalidated','s');
-}
-
-function tbLaunchForTeam(teamIdx){
+function clearTBQ(){if(!confirm('Clear team battle questions?'))return;tb.bank=[];tb.used=[];pushTBBank();if(db)db.ref('quiz/tb/used').set([]);renderTBQL();}
+function revalidateQ(){if(!db||!confirm('Restore all used questions?'))return;tb.used=[];db.ref('quiz/tb/used').set([]);renderTBQL();flashMsg('tb','✓ All questions revalidated','s');}
+function tbLaunch(teamIdx){
   if(!db)return;
-  // Find next unused question
-  const available=tb.bank.map((q,i)=>i).filter(i=>!tb.used.includes(i));
-  if(!available.length){alert('No more unused questions! Click Revalidate to reset.');return;}
-  // Pick first available (or could be random)
-  const qIdx=available[0];
-  const q=tb.bank[qIdx];
-  const isBonus=false,now=Date.now();
-  clearTBTimer();
-  const upd={};
-  // Reset member answered states
+  const available=tb.bank.map((_,i)=>i).filter(i=>!(tb.used||[]).includes(i));
+  if(!available.length){alert('No unused questions! Click Revalidate.');return;}
+  const qIdx=available[0];const q=tb.bank[qIdx];
+  clearTBTimer();const now=Date.now(),upd={};
   Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/answered`]=false;upd[`quiz/tb/members/${pid}/lastAnswer`]=null;});
   upd['quiz/tb/lock']=null;upd['quiz/tb/activeTeam']=teamIdx;upd['quiz/tb/isBonus']=false;
   upd['quiz/tb/cq']={qIdx,text:q.text,options:q.options,answer:q.answer,timeLimit:q.timeLimit,startTime:now,isBonus:false,activeTeam:teamIdx};
@@ -976,277 +740,190 @@ function tbLaunchForTeam(teamIdx){
   db.ref().update(upd);
 }
 function tbReveal(){
-  if(!db||!tb.cq){alert('No active question.');return;}
-  clearTBTimer();
+  if(!db||!tb.cq){alert('No active question.');return;}clearTBTimer();
   const correct=tb.cq.answer,isBonus=tb.cq.isBonus,marks=isBonus?2:5,upd={};
-  // Check if locked answer is correct
   const lock=tb.lock;
   if(lock&&lock.answer===correct){
     const pid=lock.pid,p=tb.members[pid]||{};
-    const newScore=(p.score||0)+marks;
-    upd[`quiz/tb/members/${pid}/score`]=newScore;
-    // Add to team score
-    const teamIdx=lock.teamIdx;
-    upd[`quiz/tb/teams/${teamIdx}/score`]=(tb.teams[teamIdx]?.score||0)+marks;
+    upd[`quiz/tb/members/${pid}/score`]=(p.score||0)+marks;
+    const tIdx=lock.teamIdx;upd[`quiz/tb/teams/${tIdx}/score`]=(tb.teams[tIdx]?.score||0)+marks;
   }
-  // Mark question as used
-  const used=[...(tb.used||[])];
-  if(tb.cq.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);
-  upd['quiz/tb/used']=used;
-  upd['quiz/tb/state']='reveal';upd['quiz/tb/revealAnswer']=correct;
+  const used=[...(tb.used||[])];if(tb.cq.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);
+  upd['quiz/tb/used']=used;upd['quiz/tb/state']='reveal';upd['quiz/tb/revealAnswer']=correct;
   db.ref().update(upd);
 }
 function tbTimeUp(){
-  if(!db||!tb.cq)return;
-  clearTBTimer();
+  if(!db||!tb.cq)return;clearTBTimer();
   if(!tb.cq.isBonus){
-    // Shift to bonus for other team
-    const otherTeam=tb.cq.activeTeam===0?1:0;
-    const bonusTime=Math.ceil((tb.cq.timeLimit||30)/2);
-    const now=Date.now();const upd={};
+    const other=tb.cq.activeTeam===0?1:0;const bonusTime=Math.max(10,Math.ceil((tb.cq.timeLimit||30)/2));const now=Date.now();const upd={};
     Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/answered`]=false;upd[`quiz/tb/members/${pid}/lastAnswer`]=null;});
-    upd['quiz/tb/lock']=null;upd['quiz/tb/isBonus']=true;upd['quiz/tb/activeTeam']=otherTeam;
-    upd['quiz/tb/cq']={...tb.cq,isBonus:true,activeTeam:otherTeam,timeLimit:bonusTime,startTime:now};
-    upd['quiz/tb/state']='bonus';
+    upd['quiz/tb/lock']=null;upd['quiz/tb/isBonus']=true;upd['quiz/tb/activeTeam']=other;upd['quiz/tb/cq']={...tb.cq,isBonus:true,activeTeam:other,timeLimit:bonusTime,startTime:now};upd['quiz/tb/state']='bonus';
     db.ref().update(upd);
-  } else {
-    // Bonus also expired → mark used, move on
-    const used=[...(tb.used||[])];
-    if(tb.cq.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);
+  }else{
+    const used=[...(tb.used||[])];if(tb.cq.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);
     db.ref().update({'quiz/tb/used':used,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false});
   }
 }
 function tbSkip(){
-  if(!db||!confirm('Skip this question? It will be marked as used.'))return;
-  clearTBTimer();
-  const used=[...(tb.used||[])];
-  if(tb.cq?.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);
+  if(!db||!confirm('Skip and mark as used?'))return;clearTBTimer();
+  const used=[...(tb.used||[])];if(tb.cq?.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);
   db.ref().update({'quiz/tb/used':used,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false});
 }
 function resetTeamBattle(){
-  if(!db||!confirm('Reset team battle (scores + used questions)?'))return;
-  clearTBTimer();
+  if(!db||!confirm('Reset team scores?'))return;clearTBTimer();
   const upd={'quiz/tb/state':'lobby','quiz/tb/used':[],'quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false};
-  tb.teams.forEach((t,i)=>{upd[`quiz/tb/teams/${i}/score`]=0;});
-  Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/score`]=0;});
+  tb.teams.forEach((_,i)=>{upd[`quiz/tb/teams/${i}/score`]=0;});Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/score`]=0;});
   db.ref().update(upd);
 }
-
-function renderTBControl(){
-  // Team score cards
-  const sc=document.getElementById('team-score-cards');
-  sc.innerHTML=tb.teams.map((t,i)=>`
-    <div class="team-score-card t${i} ${tb.cq?.activeTeam===i&&(tb.state==='active'||tb.state==='bonus')?'active':''}">
-      <div class="tsc-name">${esc(t.name)}</div>
-      <div class="tsc-score">${t.score||0}</div>
-      <div class="tsc-label">marks</div>
-    </div>`).join('');
-  // Bonus indicator
-  document.getElementById('tb-bonus-indicator').innerHTML=tb.cq?.isBonus?`<div class="bonus-tag">⚡ BONUS ROUND — ${esc(tb.teams[tb.cq.activeTeam]?.name||'?')} answering for 2 marks</div>`:'';
-  // Lock display
-  const lock=tb.lock;
-  document.getElementById('tb-lock-display').innerHTML=lock?`<div class="lock-card">🔒 <b>${esc(tb.members[lock.pid]?.name||'?')}</b> answered <b>${lock.answer}</b> for ${esc(tb.teams[lock.teamIdx]?.name||'?')}</div>`:'';
-  // CQ display
-  renderTBCQ();
-  // Nav
-  renderTBNavQ();
-  // Team launch buttons
-  renderTBTeamBtns();
-}
-function renderTBTeamBtns(){
-  const launch=document.getElementById('tb-team-launch-btns');
-  const sw=document.getElementById('tb-team-switch-btns');
-  launch.innerHTML=tb.teams.map((t,i)=>`<button class="bp bsm" style="background:${i===0?'#e8192f':'#2563eb'}" onclick="tbLaunchForTeam(${i})">🎯 ${esc(t.name)}'s Turn</button>`).join('');
-  sw.innerHTML=tb.teams.map((t,i)=>`<button class="bgh bsm" onclick="setActiveTeam(${i})">Switch to ${esc(t.name)}</button>`).join('');
-}
 function setActiveTeam(idx){if(db)db.ref('quiz/tb/activeTeam').set(idx);}
+function renderTBControl(){
+  document.getElementById('team-score-cards').innerHTML=tb.teams.map((t,i)=>`<div class="tsc t${i} ${(tb.state==='active'||tb.state==='bonus')&&tb.cq?.activeTeam===i?'active':''}"><div class="tsc-name">${esc(t.name)}</div><div class="tsc-score">${t.score||0}</div><div style="font-size:.68rem;color:var(--text2)">marks</div></div>`).join('');
+  document.getElementById('tb-bonus-tag').innerHTML=tb.cq?.isBonus?`<div class="bonus-tag">⚡ BONUS — ${esc(tb.teams[tb.cq.activeTeam]?.name||'?')} for 2 marks</div>`:'';
+  const lock=tb.lock;document.getElementById('tb-lock-display').innerHTML=lock?`<div class="lock-card">🔒 <b>${esc(tb.members[lock.pid]?.name||'?')}</b> answered <b>${lock.answer}</b> for ${esc(tb.teams[lock.teamIdx]?.name||'?')}</div>`:'';
+  renderTBCQ();renderTBNavQ();
+}
+function startTBTimer(limit,startTime,isBonus){
+  clearTBTimer();
+  const ring=document.getElementById('tb-ring'),bar=document.getElementById('tb-bar'),num=document.getElementById('tb-timer');
+  const bc=isBonus?'#f97316':'#f59e0b';
+  function tick(){
+    const left=Math.max(0,limit-(Date.now()-startTime)/1000),pct=left/limit;
+    ring.style.strokeDashoffset=(1-pct)*CIRC;bar.style.width=(pct*100)+'%';
+    const low=left<=5,col=low?'#ef4444':bc;ring.style.stroke=col;bar.style.background=col;num.style.color=col;num.textContent=Math.ceil(left);
+    if(left<=0){clearTBTimer();num.textContent='0';tbTimeUp();}
+  }
+  tick();tbTimerInt=setInterval(tick,250);
+}
+function clearTBTimer(){clearInterval(tbTimerInt);tbTimerInt=null;}
 function renderTBCQ(){
   const el=document.getElementById('tb-cq-display'),meta=document.getElementById('tb-cq-meta'),q=tb.cq;
   if(!q){el.innerHTML='<div class="empty" style="padding:8px">No active question.</div>';meta.innerHTML='No active question';clearTBTimer();return;}
-  const teamName=tb.teams[q.activeTeam]?.name||'?';
-  const marksLabel=q.isBonus?'2 marks (bonus)':'5 marks';
-  meta.innerHTML=`${esc(teamName)} · ${marksLabel} · ${q.timeLimit}s`;
-  const rev=tb.state==='reveal';
-  el.innerHTML=`<div class="cq-txt">${esc(q.text)}</div><div class="cq-opts">${['A','B','C','D'].map(o=>`<div class="cq-opt ${o} ${rev?(o===q.answer?'rv-ok':'rv-no'):''}"><b>${o}</b>${esc(q.options[o])}</div>`).join('')}</div>`;
+  meta.innerHTML=`${esc(tb.teams[q.activeTeam]?.name||'?')} · ${q.isBonus?'2 marks (bonus)':'5 marks'} · ${q.timeLimit}s`;
+  const rev=tb.state==='reveal';el.innerHTML=`<div class="cq-txt">${esc(q.text)}</div><div class="cq-opts">${['A','B','C','D'].map(o=>`<div class="cq-opt ${o} ${rev?(o===q.answer?'rv-ok':'rv-no'):''}"><b>${o}</b>${esc(q.options[o])}</div>`).join('')}</div>`;
   if(tb.state==='active'||tb.state==='bonus')startTBTimer(q.timeLimit,q.startTime,q.isBonus);
   if(rev){clearTBTimer();document.getElementById('tb-timer').textContent='✓';document.getElementById('tb-timer').style.color='var(--green)';document.getElementById('tb-ring').style.stroke='var(--green)';}
 }
 function renderTBNavQ(){
   const el=document.getElementById('tb-nav-q');
-  const available=tb.bank.filter((q,i)=>!tb.used.includes(i));
+  const available=tb.bank.filter((_,i)=>!(tb.used||[]).includes(i));
   if(!available.length){el.innerHTML='<div class="empty" style="padding:8px">No unused questions. Click Revalidate.</div>';return;}
-  el.innerHTML=tb.bank.map((q,i)=>{
-    const used=tb.used.includes(i),live=tb.cq?.qIdx===i;
-    return `<div class="nav-q ${live?'live':''} ${used?'qi-used':''}">
-      <span class="nav-q-num">${used?'✓':i+1}</span>
-      <span class="nav-q-txt">${esc(q.text)}</span>
-      ${used?`<span class="qi-used-tag">used</span>`:live?`<span class="live-tag">●</span>`:''}
-    </div>`;
-  }).join('');
+  el.innerHTML=tb.bank.map((q,i)=>{const used=(tb.used||[]).includes(i),live=tb.cq?.qIdx===i;return `<div class="nav-q ${live?'live':''}" style="${used?'opacity:.35':''}"><span class="nav-q-num">${used?'✓':i+1}</span><span class="nav-q-txt">${esc(q.text)}</span>${used?`<span class="used-tag">used</span>`:live?`<span class="live-tag">●</span>`:''}</div>`;}).join('');
 }
 function renderTBQL(){
-  const qs=tb.bank;
-  document.getElementById('tb-bank-count').textContent=qs.length+' questions';
-  const usedCount=(tb.used||[]).length;
-  const uc=document.getElementById('tb-used-count');
-  uc.textContent=usedCount?`${usedCount} used`:'';uc.style.display=usedCount?'inline-flex':'none';
+  const qs=tb.bank;document.getElementById('tb-bank-count').textContent=qs.length+' questions, '+(qs.length-(tb.used?.length||0))+' unused';
   const el=document.getElementById('tb-q-list');
-  if(!qs.length){el.innerHTML='<div class="empty"><div class="empty-ico">⚔️</div>No team battle questions yet.</div>';return;}
-  el.innerHTML=qs.map((q,i)=>{
-    const used=(tb.used||[]).includes(i);
-    return `<div class="qi ${used?'qi-used':''}">
-      <div class="qi-head"><span class="qi-num">Q${i+1}</span><div class="qi-txt">${esc(q.text)}</div>${used?'<span class="qi-used-tag">used</span>':''}</div>
-      <div class="qi-opts">${['A','B','C','D'].map(o=>`<div class="qi-opt ${q.answer===o?'ok':''}"><b style="color:${OC[o]}">${o}</b>${esc(q.options[o])}</div>`).join('')}</div>
-      <div class="qi-meta"><span class="qi-time">⏱ ${q.timeLimit}s</span><button class="bgh bsm" style="margin-left:auto;color:var(--red);border-color:rgba(239,68,68,.3);padding:2px 8px;font-size:11px" onclick="delTBQ(${i})">✕</button></div>
-    </div>`;
-  }).join('');
+  if(!qs.length){el.innerHTML='<div class="empty">No questions yet.</div>';return;}
+  el.innerHTML=qs.map((q,i)=>{const used=(tb.used||[]).includes(i);return `<div class="qi ${used?'qi-used':''}"><div class="qi-head"><span class="qi-num">Q${i+1}</span><div class="qi-txt">${esc(q.text)}</div>${used?`<span class="used-tag">used</span>`:''}</div><div class="qi-opts">${['A','B','C','D'].map(o=>`<div class="qi-opt ${q.answer===o?'ok':''}"><b style="color:${OC[o]}">${o}</b>${esc(q.options[o])}</div>`).join('')}</div><div class="qi-meta"><span class="qi-time">⏱ ${q.timeLimit}s</span><button class="bgh bsm" style="margin-left:auto;color:var(--red);border-color:rgba(239,68,68,.3);padding:2px 8px;font-size:11px" onclick="delTBQ(${i})">✕</button></div></div>`;}).join('');
 }
 function delTBQ(i){if(!confirm('Remove?'))return;tb.bank.splice(i,1);const used=tb.used.filter(u=>u!==i).map(u=>u>i?u-1:u);tb.used=used;pushTBBank();if(db)db.ref('quiz/tb/used').set(used);renderTBQL();}
 
-/* ═══ SPEED BATTLE LOGIC ═══ */
+/* ═══ SPEED BATTLE — Fixed Launch ═══ */
 function pushSPBank(){if(db)db.ref('quiz/sp/bank').set(sp.bank);}
-function clearSPQ(){if(!confirm('Clear all speed battle questions?'))return;sp.bank=[];pushSPBank();renderSPQL();}
+function clearSPQ(){if(!confirm('Clear speed questions?'))return;sp.bank=[];pushSPBank();renderSPQL();}
 function renderSPQL(){
-  const qs=sp.bank;
-  document.getElementById('sp-q-count').textContent=qs.length+' questions (15s each)';
+  const qs=sp.bank;document.getElementById('sp-q-count').textContent=qs.length+' questions';
   const el=document.getElementById('sp-q-list');
-  if(!qs.length){el.innerHTML='<div class="empty"><div class="empty-ico">⚡</div>No speed battle questions yet.</div>';return;}
-  el.innerHTML=qs.map((q,i)=>`
-    <div class="qi">
-      <div class="qi-head"><span class="qi-num">Q${i+1}</span><div class="qi-txt">${esc(q.text)}</div></div>
-      <div class="qi-opts">${['A','B','C','D'].map(o=>`<div class="qi-opt ${q.answer===o?'ok':''}"><b style="color:${OC[o]}">${o}</b>${esc(q.options[o])}</div>`).join('')}</div>
-      <div class="qi-meta"><span class="qi-time">⏱ 15s</span><button class="bgh bsm" style="margin-left:auto;color:var(--red);border-color:rgba(239,68,68,.3);padding:2px 8px;font-size:11px" onclick="delSPQ(${i})">✕</button></div>
-    </div>`).join('');
+  if(!qs.length){el.innerHTML='<div class="empty">No questions yet.</div>';return;}
+  el.innerHTML=qs.map((q,i)=>`<div class="qi"><div class="qi-head"><span class="qi-num">Q${i+1}</span><div class="qi-txt">${esc(q.text)}</div></div><div class="qi-opts">${['A','B','C','D'].map(o=>`<div class="qi-opt ${q.answer===o?'ok':''}"><b style="color:${OC[o]}">${o}</b>${esc(q.options[o])}</div>`).join('')}</div><div class="qi-meta"><span class="qi-time">⏱ 15s</span><button class="bgh bsm" style="margin-left:auto;color:var(--red);border-color:rgba(239,68,68,.3);padding:2px 8px;font-size:11px" onclick="delSPQ(${i})">✕</button></div></div>`).join('');
 }
 function delSPQ(i){if(!confirm('Remove?'))return;sp.bank.splice(i,1);pushSPBank();renderSPQL();}
 
-function startSpeedBattle(){if(db)db.ref('quiz/sp/state').set('lobby');}
-function stopSpeedBattle(){
-  if(!db||!confirm('Stop current speed battle session?'))return;
-  db.ref('quiz/sp').update({state:'lobby',activePid:null,session:null});
-}
+/* ══ FIXED: launchSpeedPlayer ══
+   Problem was: mode wasn't being set to 'speed' on Firebase before session,
+   session.state wasn't being set, and competitor had a stale spSessionRunning flag.
+   Fix: write everything atomically, include a unique sessionId so competitor
+   can detect a NEW session even for the same player. */
 function launchSpeedPlayer(pid){
   if(!db)return;
-  if(sp.bank.length<1){alert('Add speed battle questions first.');return;}
-  if(!confirm(`Launch speed battle for ${sp.players[pid]?.name}?`))return;
-  // Pick up to 20 questions
-  const qs=sp.bank.slice(0,20);
-  const session={playerName:sp.players[pid]?.name,currentQ:0,score:0,answers:[],startTime:Date.now(),state:'active',total:qs.length,questions:qs};
-  db.ref().update({'quiz/sp/activePid':pid,'quiz/sp/session':session,'quiz/sp/state':'running','quiz/mode':'speed'});
+  if(!sp.bank.length){alert('Add speed battle questions first.');return;}
+  if(sp.activePid&&sp.activePid!==pid){if(!confirm(`Stop ${sp.players[sp.activePid]?.name||'current'}'s session and start ${sp.players[pid]?.name||'new player'}?`))return;}
+  const qs=sp.bank.slice(0,20).map(q=>({text:q.text,options:q.options,answer:q.answer})); // strip timeLimit; speed always 15s
+  const sessionId='s_'+Date.now();
+  const session={sessionId,playerName:sp.players[pid]?.name||myId,pid,currentQ:0,score:0,total:qs.length,questions:qs,startTime:Date.now(),state:'active'};
+  const upd={};
+  upd['quiz/mode']='speed';
+  upd['quiz/sp/state']='running';
+  upd['quiz/sp/activePid']=pid;
+  upd['quiz/sp/session']=session;
+  upd[`quiz/sp/players/${pid}/state`]='running';
+  upd[`quiz/sp/players/${pid}/score`]=0;
+  db.ref().update(upd);
   switchMode('speed');
 }
+function stopSpeedSession(){
+  if(!db||!confirm('Stop current session?'))return;
+  const upd={'quiz/sp/state':'lobby','quiz/sp/activePid':null,'quiz/sp/session':null,'quiz/mode':'speed'};
+  if(sp.activePid)upd[`quiz/sp/players/${sp.activePid}/state`]='waiting';
+  db.ref().update(upd);
+}
 function renderSPControl(){
-  // Current runner
   const cd=document.getElementById('sp-current-display');
-  if(sp.activePid&&sp.session){
+  if(sp.activePid&&sp.session&&sp.state==='running'){
     const s=sp.session;
-    cd.innerHTML=`
-      <div style="text-align:center">
-        <div style="font-size:.75rem;color:var(--text2);margin-bottom:4px">Currently Running</div>
-        <div style="font-size:1.3rem;font-weight:800;color:var(--orange);margin-bottom:6px">⚡ ${esc(s.playerName||'?')}</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text2)">Q${(s.currentQ||0)+1} / ${s.total||20} &nbsp;·&nbsp; Score: <b style="color:var(--gold)">${s.score||0}</b></div>
-      </div>`;
-  } else {
-    cd.innerHTML='<div class="empty" style="padding:8px">No active session.</div>';
-  }
-  // Player list
+    cd.innerHTML=`<div style="text-align:center"><div style="font-size:.75rem;color:var(--text2);margin-bottom:4px">Running</div><div style="font-size:1.3rem;font-weight:800;color:var(--orange);margin-bottom:6px">⚡ ${esc(s.playerName||'?')}</div><div style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text2)">Q${(s.currentQ||0)+1} / ${s.total||20} &nbsp;·&nbsp; Score: <b style="color:var(--gold)">${s.score||0}</b></div></div>`;
+  }else{cd.innerHTML='<div class="empty" style="padding:8px">No active session.</div>';}
   const el=document.getElementById('sp-player-list');
   const arr=Object.entries(sp.players||{});
-  if(!arr.length){el.innerHTML='<div class="empty" style="padding:8px">No speed battle players joined.</div>';return;}
-  el.innerHTML=arr.map(([pid,p])=>{
-    const isActive=pid===sp.activePid;
-    const isDone=p.state==='complete';
-    return `<div class="speed-player-row ${isActive?'active-runner':''}">
-      <div class="spr-name">${esc(p.name||'?')}</div>
-      <div class="spr-score">${p.score||0}</div>
-      <span class="spr-badge ${isActive?'running':isDone?'done':'waiting'}">${isActive?'● Running':isDone?'Done':'Waiting'}</span>
-      ${!isActive&&!isDone?`<button class="bor bsm" onclick="launchSpeedPlayer('${pid}')">▶ Launch</button>`:''}
-    </div>`;
-  }).join('');
-  // Leaderboard
-  const lb=document.getElementById('sp-leaderboard');
-  const done=arr.filter(([pid,p])=>p.state==='complete').sort((a,b)=>(b[1].score||0)-(a[1].score||0));
-  if(!done.length){lb.innerHTML='<div style="color:var(--text2);font-size:.8rem">No sessions completed yet.</div>';return;}
-  lb.innerHTML=done.map(([pid,p],i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:4px">
-      <span style="font-family:'JetBrains Mono',monospace;font-weight:800;color:${i===0?'var(--gold)':'var(--text2)'};width:22px">${['🥇','🥈','🥉'][i]||i+1}</span>
-      <span style="flex:1;font-weight:700;font-size:.85rem">${esc(p.name||'?')}</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--gold)">${p.score||0}/${p.total||20}</span>
-    </div>`).join('');
+  if(!arr.length){el.innerHTML='<div class="empty" style="padding:8px">No players joined.</div>';return;}
+  el.innerHTML=arr.map(([pid,p])=>{const isActive=pid===sp.activePid,isDone=p.state==='done';return `<div class="sp-runner-row ${isActive?'active-now':''}"><div class="spr-name">${esc(p.name||'?')}</div><div class="spr-score">${p.score||0}</div><span class="spr-badge ${isActive?'run':isDone?'done':'wait'}">${isActive?'● Running':isDone?'✓ Done':'Waiting'}</span>${!isActive?`<button class="bor bsm" onclick="launchSpeedPlayer('${pid}')">▶ Launch</button>`:''}</div>`;}).join('');
+  const results=document.getElementById('sp-results');
+  const done=arr.filter(([,p])=>p.state==='done').sort((a,b)=>(b[1].score||0)-(a[1].score||0));
+  if(!done.length){results.innerHTML='<div style="color:var(--text2);font-size:.8rem">No sessions done yet.</div>';return;}
+  results.innerHTML=done.map(([,p],i)=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:4px"><span style="font-family:'JetBrains Mono',monospace;font-weight:800;color:${i===0?'var(--gold)':'var(--text2)'};width:22px">${['🥇','🥈','🥉'][i]||i+1}</span><span style="flex:1;font-weight:700;font-size:.85rem">${esc(p.name||'?')}</span><span style="font-family:'JetBrains Mono',monospace;font-weight:800;color:var(--gold)">${p.score||0}/${p.total||20}</span></div>`).join('');
 }
 
-/* ═══ SCOREBOARD ═══ */
+/* SCOREBOARD */
 function renderSB(){
-  const medals=['🥇','🥈','🥉'];
-  let rows=[];
-  if(mode==='standard'){
-    rows=Object.values(players).sort((a,b)=>(b.score||0)-(a.score||0)).map((p,i)=>({rank:medals[i]||i+1,name:p.name||'?',mode:'Standard',score:p.score||0,cls:i===0?'top-row':''}));
-  } else if(mode==='team'){
-    rows=tb.teams.map((t,i)=>({rank:i===0?'🏅':'🏅',name:t.name,mode:'Team',score:t.score||0,cls:''})).sort((a,b)=>b.score-a.score);
-  } else if(mode==='speed'){
-    rows=Object.values(sp.players||{}).sort((a,b)=>(b.score||0)-(a.score||0)).map((p,i)=>({rank:medals[i]||i+1,name:p.name||'?',mode:'Speed',score:p.score||0,cls:i===0?'top-row':''}));
-  }
+  const medals=['🥇','🥈','🥉'];let rows=[];
+  if(mode==='standard')rows=Object.values(players).sort((a,b)=>(b.score||0)-(a.score||0)).map((p,i)=>({rank:medals[i]||i+1,name:p.name||'?',mode:'Standard',score:p.score||0,cls:i===0?'top-row':''}));
+  else if(mode==='team')rows=[...tb.teams].sort((a,b)=>(b.score||0)-(a.score||0)).map((t,i)=>({rank:medals[i]||i+1,name:t.name,mode:'Team',score:t.score||0,cls:i===0?'top-row':''}));
+  else if(mode==='speed')rows=Object.values(sp.players||{}).sort((a,b)=>(b.score||0)-(a.score||0)).map((p,i)=>({rank:medals[i]||i+1,name:p.name||'?',mode:'Speed',score:p.score||0,cls:i===0?'top-row':''}));
   document.getElementById('sb-body').innerHTML=rows.length?rows.map(r=>`<tr class="${r.cls}"><td class="sb-rank">${r.rank}</td><td style="font-weight:700">${esc(String(r.name))}</td><td style="color:var(--text2);font-size:.8rem">${r.mode}</td><td class="sb-score-cell">${r.score}</td></tr>`).join(''):`<tr><td colspan="4" style="text-align:center;color:var(--text2)">No data</td></tr>`;
 }
 
-/* ═══ FIREBASE ═══ */
+/* FIREBASE */
 function getCfg(){return JSON.parse(localStorage.getItem('ija_cfg')||'null');}
-function saveConfig(){
-  const c={apiKey:gv('cfg-key'),databaseURL:gv('cfg-db'),projectId:gv('cfg-pid'),authDomain:gv('cfg-auth')};
-  if(!c.apiKey||!c.databaseURL){cfgBox('Fill API Key and DB URL','e');return;}
-  localStorage.setItem('ija_cfg',JSON.stringify(c));initFB(c);
-}
+function saveConfig(){const c={apiKey:gv('cfg-key'),databaseURL:gv('cfg-db'),projectId:gv('cfg-pid'),authDomain:gv('cfg-auth')};if(!c.apiKey||!c.databaseURL){cfgBox('Fill API Key and DB URL','e');return;}localStorage.setItem('ija_cfg',JSON.stringify(c));initFB(c);}
 function loadCfgInputs(){const c=getCfg();if(!c)return;sv('cfg-key',c.apiKey||'');sv('cfg-db',c.databaseURL||'');sv('cfg-pid',c.projectId||'');sv('cfg-auth',c.authDomain||'');}
 function testConn(){if(!db){cfgBox('Not connected','e');return;}db.ref('.info/connected').once('value').then(s=>cfgBox(s.val()?'✓ Connected!':'Offline',s.val()?'ok':'err'));}
 function cfgBox(msg,t){const el=document.getElementById('cfg-box');el.className='cfg-box '+(t==='ok'?'cfg-ok':'cfg-err');el.textContent=msg;el.style.display='block';}
 function initFB(cfg){try{if(firebase.apps.length)firebase.app().delete().then(()=>startFB(cfg)).catch(()=>startFB(cfg));else startFB(cfg);}catch(e){startFB(cfg);}}
 function startFB(cfg){try{firebase.initializeApp(cfg);db=firebase.database();cfgBox('✓ Connected!','ok');setupListeners();}catch(e){cfgBox('Error: '+e.message,'err');}}
 
-/* ═══ LISTENERS ═══ */
+/* LISTENERS */
 function setupListeners(){
-  db.ref('quiz/mode').on('value',s=>{const m=s.val()||'standard';mode=m;document.querySelectorAll('.msw').forEach(b=>b.classList.toggle('on',b.classList.contains(m)));});
-  db.ref('quiz/state').on('value',s=>{gs.state=s.val()||'lobby';updateStateBadge();});
+  db.ref('quiz/mode').on('value',s=>{const m=s.val()||'standard';mode=m;document.querySelectorAll('.msw').forEach(b=>b.classList.toggle('on',b.classList.contains(m)));updateBadge();});
+  db.ref('quiz/state').on('value',s=>{gs.state=s.val()||'lobby';updateBadge();});
   db.ref('quiz/currentSection').on('value',s=>{liveSec=s.val()??0;document.getElementById('std-sec-name').textContent=sections[liveSec]?.name||'Section '+(liveSec+1);renderStdNavQ();});
   db.ref('quiz/currentQIndex').on('value',s=>{gs.currentQIndex=s.val()??-1;renderStdNavQ();});
   db.ref('quiz/currentQuestion').on('value',s=>{gs.cq=s.val();renderStdCQ();if(gs.cq&&gs.state==='question_active')startStdTimer(gs.cq.timeLimit,gs.cq.startTime);});
   db.ref('quiz/sections').on('value',s=>{if(s.val()){sections=normSections(s.val());renderStdQL();renderStdNavQ();buildSectionUI();}});
-  db.ref('quiz/players').on('value',s=>{players=s.val()||{};const n=Object.keys(players).length;document.getElementById('tb-pc').textContent=n;renderStdPlayers();renderStdAnsBars();});
+  db.ref('quiz/players').on('value',s=>{players=s.val()||{};const n=Object.keys(players).length;document.getElementById('tb-pc').textContent=n;document.getElementById('side-pc').textContent=n;renderStdPlayers();renderStdAnsBars();});
   db.ref('quiz/roundAnswers').on('value',s=>{gs.roundAnswers=s.val()||{};renderStdAnsBars();});
-  // Team battle
   db.ref('quiz/tb').on('value',s=>{
     const d=s.val();if(!d)return;
     tb.state=d.state||'lobby';tb.teams=toArray(d.teams)||tb.teams;tb.bank=toArray(d.bank)||[];
-    tb.used=toArray(d.used)||[];tb.activeTeam=d.activeTeam??0;tb.isBonus=!!d.isBonus;
-    tb.cq=d.cq||null;tb.lock=d.lock||null;tb.members=d.members||{};
-    renderTBQL();
-    if(document.getElementById('team-control').classList.contains('on'))renderTBControl();
-    if(document.getElementById('panel-t').classList.contains('on')&&!document.getElementById('team-control').classList.contains('on')){}
-    // Auto-start timer if active
-    if((tb.state==='active'||tb.state==='bonus')&&tb.cq) startTBTimer(tb.cq.timeLimit,tb.cq.startTime,tb.cq.isBonus);
-    updateStateBadge();
+    tb.used=toArray(d.used)||[];tb.activeTeam=d.activeTeam??0;tb.isBonus=!!d.isBonus;tb.cq=d.cq||null;tb.lock=d.lock||null;tb.members=d.members||{};
+    renderTBQL();if(document.getElementById('team-control').classList.contains('on'))renderTBControl();
+    if((tb.state==='active'||tb.state==='bonus')&&tb.cq)startTBTimer(tb.cq.timeLimit,tb.cq.startTime,tb.cq.isBonus);
+    updateBadge();
   });
-  // Speed battle
   db.ref('quiz/sp').on('value',s=>{
     const d=s.val();if(!d)return;
-    sp.state=d.state||'lobby';sp.bank=toArray(d.bank)||[];sp.players=d.players||{};
-    sp.activePid=d.activePid||null;sp.session=d.session||null;sp.leaderboard=toArray(d.leaderboard)||[];
-    renderSPQL();
-    if(document.getElementById('speed-control').classList.contains('on'))renderSPControl();
-    updateStateBadge();
+    sp.state=d.state||'lobby';sp.bank=toArray(d.bank)||[];sp.players=d.players||{};sp.activePid=d.activePid||null;sp.session=d.session||null;
+    renderSPQL();if(document.getElementById('speed-control').classList.contains('on'))renderSPControl();
+    updateBadge();
   });
 }
 
-function updateStateBadge(){
-  const b=document.getElementById('state-badge');
-  let stateStr='lobby',cls='sb-lobby';
-  if(mode==='standard'){stateStr=gs.state;cls=({lobby:'sb-lobby',question_active:'sb-active',time_up:'sb-timeup',reveal:'sb-reveal',ended:'sb-ended'})[gs.state]||'sb-lobby';}
-  else if(mode==='team'){stateStr=tb.state;cls=({lobby:'sb-lobby',active:'sb-active',bonus:'sb-bonus',reveal:'sb-reveal',idle:'sb-lobby',ended:'sb-ended'})[tb.state]||'sb-lobby';}
-  else if(mode==='speed'){stateStr=sp.state;cls=({lobby:'sb-lobby',running:'sb-active',ended:'sb-ended'})[sp.state]||'sb-lobby';}
-  b.className='state-badge '+cls;
-  b.textContent=stateStr.replace(/_/g,' ').toUpperCase();
+function updateBadge(){
+  const b=document.getElementById('state-badge');let cls='sb-lobby',txt='Lobby';
+  if(mode==='standard'){const map={lobby:'sb-lobby lobby',question_active:'sb-active Question Live',time_up:'sb-active Time Up',reveal:'sb-reveal Revealing',ended:'sb-ended Ended'};const p=(map[gs.state]||'sb-lobby Lobby').split(' ');cls=p[0];txt=p.slice(1).join(' ');}
+  else if(mode==='team'){const map={lobby:'sb-lobby Lobby',active:'sb-active Active',bonus:'sb-bonus Bonus!',reveal:'sb-reveal Reveal',idle:'sb-lobby Ready',ended:'sb-ended Ended'};const p=(map[tb.state]||'sb-lobby Lobby').split(' ');cls=p[0];txt=p.slice(1).join(' ');}
+  else if(mode==='speed'){cls=sp.state==='running'?'sb-active':'sb-lobby';txt=sp.state==='running'?'Speed Running':'Speed Lobby';}
+  b.className='state-badge '+cls;b.textContent=txt;
 }
 
-/* ═══ UTILS ═══ */
 function normSections(raw){const arr=toArray(raw);return[0,1,2].map(i=>({name:(arr[i]?.name)||sections[i]?.name||'Section '+(i+1),questions:toArray(arr[i]?.questions)||[]}));}
 function gv(id){return document.getElementById(id)?.value?.trim()||'';}
 function sv(id,v){const el=document.getElementById(id);if(el)el.value=v;}
@@ -1254,4 +931,4 @@ function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 function dl(name,data){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
 </script>
 </body>
-</html>
+</html> 
