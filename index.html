@@ -5,6 +5,7 @@
 <title>IJA Quiz — Organiser</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -197,7 +198,8 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
   <div class="lcard">
     <span class="lico">🏆</span>
     <h1>IJA Quiz Organiser</h1>
-    <p>Control Panel — Enter password to continue</p>
+    <p>Control Panel — Sign in to continue</p>
+    <input type="email" id="login-email" placeholder="Organiser email…"/>
     <input type="password" id="pass-inp" placeholder="Password…"/>
     <button class="bp" style="width:100%;padding:12px;font-size:14px;margin-top:2px" onclick="doLogin()">Unlock</button>
     <div class="err" id="lerr">Incorrect password.</div>
@@ -499,18 +501,33 @@ let tb={state:'lobby',teams:[{name:'Red Eagles',score:0},{name:'Blue Lions',scor
 let sp={state:'lobby',bank:[],players:{},activePid:null,session:null};
 
 /* ═══ LOGIN ═══ */
+let serverOffset = 0;
+function initServerOffset(){firebase.database().ref('/.info/serverTimeOffset').on('value',snap=>{serverOffset=snap.val()||0;});}
+function serverNow(){return serverNow()+serverOffset;}
+
 function doLogin(){
-  if(gv('pass-inp')===PASS){
-    document.getElementById('login').style.display='none';
-    document.getElementById('app').classList.add('on');
-    loadCfgInputs();loadSectionNames();buildSectionUI();
-    const c=getCfg();if(c)initFB(c);
-  }else{document.getElementById('lerr').style.display='block';}
+  const email = gv('login-email');
+  const pass = gv('pass-inp');
+  firebase.auth().signInWithEmailAndPassword(email, pass)
+    .then(cred => {
+      organiserUid = cred.user.uid;
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('app').classList.add('on');
+      loadCfgInputs();
+      loadSectionNames();
+      buildSectionUI();
+      const c = getCfg();
+      if (c) initFB(c);
+    })
+    .catch(err => {
+      document.getElementById('lerr').textContent = err.message;
+      document.getElementById('lerr').style.display = 'block';
+    });
 }
 document.getElementById('pass-inp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
 /* ═══ TOKEN — used to force-logout all competitors ═══ */
-function newSessionToken(){return 'tok_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);}
+function newSessionToken(){return 'tok_'+serverNow()+'_'+Math.random().toString(36).slice(2,6);}
 
 /* ═══ MODE ═══ */
 function switchMode(m){
@@ -628,7 +645,8 @@ function startComp(){
   upd['quiz/revealAnswer']=null;
   upd['quiz/roundAnswers']=null;
   upd['quiz/sections']=sections;
-  db.ref().update(upd);
+  upd['quiz/admin/spAnswerKey']=sp.bank.slice(0,20).map(q=>q.answer);
+db.ref().update(upd);
 }
 
 function goStdSec(idx){
@@ -640,17 +658,18 @@ function goStdSec(idx){
 }
 function launchStdQ(qIdx){
   if(!db)return;const q=sections[liveSec]?.questions?.[qIdx];if(!q)return;
-  clearStdTimer();const now=Date.now(),upd={};
+  clearStdTimer();const now=serverNow(),upd={};
   Object.keys(players).forEach(pid=>{upd[`quiz/players/${pid}/answered`]=false;upd[`quiz/players/${pid}/lastAnswer`]=null;upd[`quiz/players/${pid}/lastCorrect`]=null;upd[`quiz/players/${pid}/pointsEarned`]=null;});
   upd['quiz/roundAnswers']=null;upd['quiz/revealAnswer']=null;upd['quiz/state']='question_active';upd['quiz/currentQIndex']=qIdx;
-  upd['quiz/currentQuestion']={index:qIdx,sectionIndex:liveSec,text:q.text,options:q.options,answer:q.answer,timeLimit:q.timeLimit,startTime:now,total:sections[liveSec].questions.length};
+  upd['quiz/currentQuestion']={index:qIdx,sectionIndex:liveSec,text:q.text,options:q.options,timeLimit:q.timeLimit,startTime:now,total:sections[liveSec].questions.length};
   db.ref().update(upd);
 }
 function revealAns(){
   if(!db||!gs.cq){alert('No active question.');return;}clearStdTimer();
   const correct=gs.cq.answer,tl=gs.cq.timeLimit||30,upd={};
   Object.keys(players).forEach(pid=>{const p=players[pid],ra=(gs.roundAnswers||{})[pid];if(p.lastAnswer===correct){const tt=ra?.timeTaken||tl,pts=Math.round(1000-Math.min(tt/tl,1)*500);upd[`quiz/players/${pid}/score`]=(p.score||0)+pts;upd[`quiz/players/${pid}/sectionScores/${liveSec}`]=((p.sectionScores?.[liveSec])||0)+pts;upd[`quiz/players/${pid}/lastCorrect`]=true;upd[`quiz/players/${pid}/pointsEarned`]=pts;}else{upd[`quiz/players/${pid}/lastCorrect`]=false;upd[`quiz/players/${pid}/pointsEarned`]=0;}});
-  upd['quiz/state']='reveal';upd['quiz/revealAnswer']=correct;db.ref().update(upd);
+  upd['quiz/state']='reveal';
+upd['quiz/revealAnswer']=correct;upd['quiz/revealAnswer']=correct;db.ref().update(upd);
 }
 function showLB(type){if(!db)return;clearStdTimer();db.ref('quiz/state').set(type);}
 
@@ -700,7 +719,7 @@ function calcPts(tl,tt){return Math.round(1000-Math.min(tt/tl,1)*500);}
 /* ═══ STANDARD TIMER ═══ */
 function startStdTimer(limit,startTime){
   clearStdTimer();const ring=document.getElementById('std-ring'),bar=document.getElementById('std-bar'),num=document.getElementById('std-timer');
-  function tick(){const left=Math.max(0,limit-(Date.now()-startTime)/1000),pct=left/limit;ring.style.strokeDashoffset=(1-pct)*CIRC;bar.style.width=(pct*100)+'%';const low=left<=8,col=low?'#ef4444':'#f59e0b';ring.style.stroke=col;bar.style.background=col;num.style.color=col;num.textContent=Math.ceil(left);if(left<=0){clearStdTimer();num.textContent='0';if(gs.state==='question_active'&&db)db.ref('quiz/state').set('time_up');document.getElementById('std-rev-btn').classList.add('pulse');}}
+  function tick(){const left=Math.max(0,limit-(serverNow()-startTime)/1000),pct=left/limit;ring.style.strokeDashoffset=(1-pct)*CIRC;bar.style.width=(pct*100)+'%';const low=left<=8,col=low?'#ef4444':'#f59e0b';ring.style.stroke=col;bar.style.background=col;num.style.color=col;num.textContent=Math.ceil(left);if(left<=0){clearStdTimer();num.textContent='0';if(gs.state==='question_active'&&db)db.ref('quiz/state').set('time_up');document.getElementById('std-rev-btn').classList.add('pulse');}}
   tick();timerInt=setInterval(tick,250);
 }
 function clearStdTimer(){clearInterval(timerInt);timerInt=null;document.getElementById('std-rev-btn').classList.remove('pulse');const r=document.getElementById('std-ring'),b=document.getElementById('std-bar'),n=document.getElementById('std-timer');r.style.strokeDashoffset='0';b.style.width='100%';n.textContent='—';n.style.color='var(--gold)';r.style.stroke='var(--gold)';b.style.background='var(--gold)';}
@@ -718,14 +737,14 @@ function startTeamBattle(){if(!db){alert('Not connected.');return;}if(!tb.bank.l
 function pushTBBank(){if(db)db.ref('quiz/tb/bank').set(tb.bank);}
 function clearTBQ(){if(!confirm('Clear team battle questions?'))return;tb.bank=[];tb.used=[];pushTBBank();if(db)db.ref('quiz/tb/used').set([]);renderTBQL();}
 function revalidateQ(){if(!db||!confirm('Restore all used questions?'))return;tb.used=[];db.ref('quiz/tb/used').set([]);renderTBQL();flashMsg('tb','✓ All questions revalidated','s');}
-function tbLaunch(teamIdx){if(!db)return;const available=tb.bank.map((_,i)=>i).filter(i=>!(tb.used||[]).includes(i));if(!available.length){alert('No unused questions! Click Revalidate.');return;}const qIdx=available[0],q=tb.bank[qIdx];clearTBTimer();const now=Date.now(),upd={};Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/answered`]=false;upd[`quiz/tb/members/${pid}/lastAnswer`]=null;});upd['quiz/tb/lock']=null;upd['quiz/tb/activeTeam']=teamIdx;upd['quiz/tb/isBonus']=false;upd['quiz/tb/cq']={qIdx,text:q.text,options:q.options,answer:q.answer,timeLimit:q.timeLimit,startTime:now,isBonus:false,activeTeam:teamIdx};upd['quiz/tb/state']='active';db.ref().update(upd);}
+function tbLaunch(teamIdx){if(!db)return;const available=tb.bank.map((_,i)=>i).filter(i=>!(tb.used||[]).includes(i));if(!available.length){alert('No unused questions! Click Revalidate.');return;}const qIdx=available[0],q=tb.bank[qIdx];clearTBTimer();const now=serverNow(),upd={};Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/answered`]=false;upd[`quiz/tb/members/${pid}/lastAnswer`]=null;});upd['quiz/tb/lock']=null;upd['quiz/tb/activeTeam']=teamIdx;upd['quiz/tb/isBonus']=false;upd['quiz/tb/cq']={qIdx,text:q.text,options:q.options,timeLimit:q.timeLimit,startTime:now,isBonus:false,activeTeam:teamIdx};upd['quiz/tb/state']='active';db.ref().update(upd);}
 function tbReveal(){if(!db||!tb.cq){alert('No active question.');return;}clearTBTimer();const correct=tb.cq.answer,isBonus=tb.cq.isBonus,marks=isBonus?2:5,upd={};const lock=tb.lock;if(lock&&lock.answer===correct){const pid=lock.pid,p=tb.members[pid]||{};upd[`quiz/tb/members/${pid}/score`]=(p.score||0)+marks;const tIdx=lock.teamIdx;upd[`quiz/tb/teams/${tIdx}/score`]=(tb.teams[tIdx]?.score||0)+marks;}const used=[...(tb.used||[])];if(tb.cq.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);upd['quiz/tb/used']=used;upd['quiz/tb/state']='reveal';upd['quiz/tb/revealAnswer']=correct;db.ref().update(upd);}
-function tbTimeUp(){if(!db||!tb.cq)return;clearTBTimer();if(!tb.cq.isBonus){const other=tb.cq.activeTeam===0?1:0,bonusTime=Math.max(10,Math.ceil((tb.cq.timeLimit||30)/2)),now=Date.now(),upd={};Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/answered`]=false;upd[`quiz/tb/members/${pid}/lastAnswer`]=null;});upd['quiz/tb/lock']=null;upd['quiz/tb/isBonus']=true;upd['quiz/tb/activeTeam']=other;upd['quiz/tb/cq']={...tb.cq,isBonus:true,activeTeam:other,timeLimit:bonusTime,startTime:now};upd['quiz/tb/state']='bonus';db.ref().update(upd);}else{const used=[...(tb.used||[])];if(tb.cq.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);db.ref().update({'quiz/tb/used':used,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false});}}
+function tbTimeUp(){if(!db||!tb.cq)return;clearTBTimer();if(!tb.cq.isBonus){const other=tb.cq.activeTeam===0?1:0,bonusTime=Math.max(10,Math.ceil((tb.cq.timeLimit||30)/2)),now=serverNow(),upd={};Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/answered`]=false;upd[`quiz/tb/members/${pid}/lastAnswer`]=null;});upd['quiz/tb/lock']=null;upd['quiz/tb/isBonus']=true;upd['quiz/tb/activeTeam']=other;upd['quiz/tb/cq']={...tb.cq,isBonus:true,activeTeam:other,timeLimit:bonusTime,startTime:now};upd['quiz/tb/state']='bonus';db.ref().update(upd);}else{const used=[...(tb.used||[])];if(tb.cq.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);db.ref().update({'quiz/tb/used':used,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false});}}
 function tbSkip(){if(!db||!confirm('Skip?'))return;clearTBTimer();const used=[...(tb.used||[])];if(tb.cq?.qIdx!==undefined&&!used.includes(tb.cq.qIdx))used.push(tb.cq.qIdx);db.ref().update({'quiz/tb/used':used,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false});}
 function resetTeamBattle(){if(!db||!confirm('Reset team scores?'))return;clearTBTimer();const upd={'quiz/tb/state':'lobby','quiz/tb/used':[],'quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false};tb.teams.forEach((_,i)=>{upd[`quiz/tb/teams/${i}/score`]=0;});Object.keys(tb.members).forEach(pid=>{upd[`quiz/tb/members/${pid}/score`]=0;});db.ref().update(upd);}
 function setActiveTeam(idx){if(db)db.ref('quiz/tb/activeTeam').set(idx);}
 function renderTBControl(){document.getElementById('team-score-cards').innerHTML=tb.teams.map((t,i)=>`<div class="tsc t${i} ${(tb.state==='active'||tb.state==='bonus')&&tb.cq?.activeTeam===i?'active':''}"><div class="tsc-name">${esc(t.name)}</div><div class="tsc-score">${t.score||0}</div><div style="font-size:.68rem;color:var(--text2)">marks</div></div>`).join('');document.getElementById('tb-bonus-tag').innerHTML=tb.cq?.isBonus?`<div class="bonus-tag">⚡ BONUS — ${esc(tb.teams[tb.cq.activeTeam]?.name||'?')} for 2 marks</div>`:'';const lock=tb.lock;document.getElementById('tb-lock-display').innerHTML=lock?`<div class="lock-card">🔒 <b>${esc(tb.members[lock.pid]?.name||'?')}</b> answered <b>${lock.answer}</b> for ${esc(tb.teams[lock.teamIdx]?.name||'?')}</div>`:'';renderTBCQ();renderTBNavQ();}
-function startTBTimer(limit,startTime,isBonus){clearTBTimer();const ring=document.getElementById('tb-ring'),bar=document.getElementById('tb-bar'),num=document.getElementById('tb-timer'),bc=isBonus?'#f97316':'#f59e0b';function tick(){const left=Math.max(0,limit-(Date.now()-startTime)/1000),pct=left/limit;ring.style.strokeDashoffset=(1-pct)*CIRC;bar.style.width=(pct*100)+'%';const low=left<=5,col=low?'#ef4444':bc;ring.style.stroke=col;bar.style.background=col;num.style.color=col;num.textContent=Math.ceil(left);if(left<=0){clearTBTimer();num.textContent='0';tbTimeUp();}}tick();tbTimerInt=setInterval(tick,250);}
+function startTBTimer(limit,startTime,isBonus){clearTBTimer();const ring=document.getElementById('tb-ring'),bar=document.getElementById('tb-bar'),num=document.getElementById('tb-timer'),bc=isBonus?'#f97316':'#f59e0b';function tick(){const left=Math.max(0,limit-(serverNow()-startTime)/1000),pct=left/limit;ring.style.strokeDashoffset=(1-pct)*CIRC;bar.style.width=(pct*100)+'%';const low=left<=5,col=low?'#ef4444':bc;ring.style.stroke=col;bar.style.background=col;num.style.color=col;num.textContent=Math.ceil(left);if(left<=0){clearTBTimer();num.textContent='0';tbTimeUp();}}tick();tbTimerInt=setInterval(tick,250);}
 function clearTBTimer(){clearInterval(tbTimerInt);tbTimerInt=null;}
 function renderTBCQ(){const el=document.getElementById('tb-cq-display'),meta=document.getElementById('tb-cq-meta'),q=tb.cq;if(!q){el.innerHTML='<div class="empty" style="padding:8px">No active question.</div>';meta.innerHTML='No active question';clearTBTimer();return;}meta.innerHTML=`${esc(tb.teams[q.activeTeam]?.name||'?')} · ${q.isBonus?'2 marks (bonus)':'5 marks'} · ${q.timeLimit}s`;const rev=tb.state==='reveal';el.innerHTML=`<div class="cq-txt">${esc(q.text)}</div><div class="cq-opts">${['A','B','C','D'].map(o=>`<div class="cq-opt ${o} ${rev?(o===q.answer?'rv-ok':'rv-no'):''}"><b>${o}</b>${esc(q.options[o])}</div>`).join('')}</div>`;if(tb.state==='active'||tb.state==='bonus')startTBTimer(q.timeLimit,q.startTime,q.isBonus);if(rev){clearTBTimer();document.getElementById('tb-timer').textContent='✓';document.getElementById('tb-timer').style.color='var(--green)';document.getElementById('tb-ring').style.stroke='var(--green)';}}
 function renderTBNavQ(){const el=document.getElementById('tb-nav-q');if(!tb.bank.length){el.innerHTML='<div class="empty" style="padding:8px">No questions yet.</div>';return;}el.innerHTML=tb.bank.map((q,i)=>{const used=(tb.used||[]).includes(i),live=tb.cq?.qIdx===i;return `<div class="nav-q ${live?'live':''}" style="${used?'opacity:.35':''}"><span class="nav-q-num">${used?'✓':i+1}</span><span class="nav-q-txt">${esc(q.text)}</span>${used?`<span class="used-tag">used</span>`:live?`<span class="live-tag">●</span>`:''}</div>`;}).join('');}
@@ -743,8 +762,8 @@ function launchSpeedPlayer(pid){
   if(!sp.bank.length){alert('Add speed battle questions first.');return;}
   if(sp.activePid&&sp.activePid!==pid){if(!confirm(`Stop ${sp.players[sp.activePid]?.name||'current player'}\'s session and start ${sp.players[pid]?.name||'new player'}?`))return;}
   const qs=sp.bank.slice(0,20).map(q=>({text:q.text,options:q.options,answer:q.answer}));
-  const sessionId='s_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
-  const session={sessionId,playerName:sp.players[pid]?.name||'?',pid,currentQ:0,score:0,total:qs.length,questions:qs,startTime:Date.now(),state:'active'};
+  const sessionId='s_'+serverNow()+'_'+Math.random().toString(36).slice(2,5);
+  const session={sessionId,playerName:sp.players[pid]?.name||'?',pid,currentQ:0,score:0,total:qs.length,questions:qs,startTime:serverNow(),state:'active'};
   const upd={};
   upd['quiz/mode']='speed';
   upd['quiz/sp/state']='running';
@@ -801,7 +820,7 @@ function loadCfgInputs(){const c=getCfg();if(!c)return;sv('cfg-key',c.apiKey||''
 function testConn(){if(!db){cfgBox('Not connected','e');return;}db.ref('.info/connected').once('value').then(s=>cfgBox(s.val()?'✓ Connected!':'Offline',s.val()?'ok':'err'));}
 function cfgBox(msg,t){const el=document.getElementById('cfg-box');el.className='cfg-box '+(t==='ok'?'cfg-ok':'cfg-err');el.textContent=msg;el.style.display='block';}
 function initFB(cfg){try{if(firebase.apps.length)firebase.app().delete().then(()=>startFB(cfg)).catch(()=>startFB(cfg));else startFB(cfg);}catch(e){startFB(cfg);}}
-function startFB(cfg){try{firebase.initializeApp(cfg);db=firebase.database();cfgBox('✓ Connected!','ok');setupListeners();}catch(e){cfgBox('Error: '+e.message,'err');}}
+function startFB(cfg){try{firebase.initializeApp(cfg);db=firebase.database();initServerOffset();cfgBox('✓ Connected!','ok');setupListeners();}catch(e){cfgBox('Error: '+e.message,'err');}}
 
 /* ═══ LISTENERS ═══ */
 function setupListeners(){
