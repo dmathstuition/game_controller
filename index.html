@@ -823,10 +823,10 @@ function startComp(){
 }
 
 function goStdSec(idx){
-  if(!db || !(sections[idx]?.questions?.length)){ alert('No questions in this section.'); return; }
+  if(!db || !sections[idx] || !sections[idx].questions || !sections[idx].questions.length){ alert('No questions in this section.'); return; }
   clearStdTimer();
-  const upd = {};
-  Object.keys(players).forEach(pid => { upd[`quiz/players/${pid}/answered`] = false; upd[`quiz/players/${pid}/lastAnswer`] = null; upd[`quiz/players/${pid}/lastCorrect`] = null; });
+  var upd = {};
+  Object.keys(players).forEach(function(pid){ upd['quiz/players/'+pid+'/answered'] = false; upd['quiz/players/'+pid+'/lastAnswer'] = null; upd['quiz/players/'+pid+'/lastCorrect'] = null; });
   upd['quiz/roundAnswers']   = null;
   upd['quiz/currentSection'] = idx;
   upd['quiz/currentQIndex']  = -1;
@@ -839,33 +839,36 @@ function goStdSec(idx){
 
 function launchStdQ(qIdx){
   if(!db) return;
-  const q = sections[liveSec]?.questions?.[qIdx]; if(!q) return;
+  var sec = sections[liveSec]; if(!sec || !sec.questions || !sec.questions[qIdx]) return;
+  var q = sec.questions[qIdx];
   clearStdTimer();
-  const now = serverNow(), upd = {};
-  Object.keys(players).forEach(pid => { upd[`quiz/players/${pid}/answered`] = false; upd[`quiz/players/${pid}/lastAnswer`] = null; upd[`quiz/players/${pid}/lastCorrect`] = null; upd[`quiz/players/${pid}/pointsEarned`] = null; });
+  var now = serverNow(), upd = {};
+  Object.keys(players).forEach(function(pid){ upd['quiz/players/'+pid+'/answered'] = false; upd['quiz/players/'+pid+'/lastAnswer'] = null; upd['quiz/players/'+pid+'/lastCorrect'] = null; upd['quiz/players/'+pid+'/pointsEarned'] = null; });
   upd['quiz/roundAnswers']    = null;
   upd['quiz/revealAnswer']    = null;
   upd['quiz/state']           = 'question_active';
   upd['quiz/currentQIndex']   = qIdx;
-  upd['quiz/currentQuestion'] = {index:qIdx, sectionIndex:liveSec, text:q.text, options:q.options, timeLimit:q.timeLimit, startTime:now, total:sections[liveSec].questions.length};
+  upd['quiz/currentQuestion'] = {index:qIdx, sectionIndex:liveSec, text:q.text, options:q.options, answer:q.answer, timeLimit:q.timeLimit, startTime:now, total:sec.questions.length};
   db.ref().update(upd);
 }
 
 function revealAns(){
   if(!db || !gs.cq){ alert('No active question.'); return; }
   clearStdTimer();
-  const correct = gs.cq.answer, tl = gs.cq.timeLimit || 30, upd = {};
-  Object.keys(players).forEach(pid => {
-    const p = players[pid], ra = (gs.roundAnswers || {})[pid];
+  var correct = gs.cq.answer, tl = gs.cq.timeLimit || 30, upd = {};
+  Object.keys(players).forEach(function(pid){
+    var p = players[pid], ra = (gs.roundAnswers || {})[pid];
     if(p.lastAnswer === correct){
-      const tt = ra?.timeTaken || tl, pts = Math.round(1000 - Math.min(tt/tl, 1) * 500);
-      upd[`quiz/players/${pid}/score`] = (p.score || 0) + pts;
-      upd[`quiz/players/${pid}/sectionScores/${liveSec}`] = ((p.sectionScores?.[liveSec]) || 0) + pts;
-      upd[`quiz/players/${pid}/lastCorrect`]  = true;
-      upd[`quiz/players/${pid}/pointsEarned`] = pts;
+      var tt = (ra && ra.timeTaken) ? ra.timeTaken : tl;
+      var pts = Math.round(1000 - Math.min(tt/tl, 1) * 500);
+      upd['quiz/players/'+pid+'/score'] = (p.score || 0) + pts;
+      var secScores = (p.sectionScores) ? (p.sectionScores[liveSec] || 0) : 0;
+      upd['quiz/players/'+pid+'/sectionScores/'+liveSec] = secScores + pts;
+      upd['quiz/players/'+pid+'/lastCorrect']  = true;
+      upd['quiz/players/'+pid+'/pointsEarned'] = pts;
     } else {
-      upd[`quiz/players/${pid}/lastCorrect`]  = false;
-      upd[`quiz/players/${pid}/pointsEarned`] = 0;
+      upd['quiz/players/'+pid+'/lastCorrect']  = false;
+      upd['quiz/players/'+pid+'/pointsEarned'] = 0;
     }
   });
   upd['quiz/state']        = 'reveal';
