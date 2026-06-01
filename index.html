@@ -6,6 +6,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -38,6 +39,7 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .msw{padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:700;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s}
 .msw.on{font-weight:800;color:#fff}
 .msw.standard.on{background:var(--accent)}.msw.team.on{background:#e8192f}.msw.speed.on{background:var(--orange)}
+.msw svg{width:12px;height:12px;vertical-align:-1px}
 .state-badge{padding:3px 10px;border-radius:20px;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace}
 .sb-lobby{background:rgba(37,99,235,.18);color:#60a5fa;border:1px solid var(--accent)}
 .sb-active{background:rgba(16,185,129,.18);color:#34d399;border:1px solid var(--green);animation:blnk .8s step-end infinite}
@@ -58,6 +60,11 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .sidebar.open .nav-lbl{display:block}
 .sb-tog{margin-top:auto;width:32px;height:32px;border-radius:7px;border:1px solid var(--border);cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.9rem;transition:all .15s}
 .sb-tog:hover{background:var(--card)}
+/* Lucide icons sizing */
+.nav-btn svg,.sb-tog svg{width:18px;height:18px;flex-shrink:0}
+.topbar svg{width:16px;height:16px}
+.ct svg{width:13px;height:13px;vertical-align:-2px;margin-right:3px}
+.cbtn svg{width:15px;height:15px}
 .main{flex:1;overflow:hidden;display:flex;flex-direction:column}
 .panel{display:none;flex:1;overflow:hidden;flex-direction:column}
 .panel.on{display:flex}
@@ -207,28 +214,28 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
 
 <div id="app">
   <div class="topbar">
-    <div class="tb-brand">🏆 IJA</div>
+    <div class="tb-brand"><i data-lucide="trophy" style="width:16px;height:16px;display:inline-block;vertical-align:-2px"></i> IJA</div>
     <div class="mode-grp">
-      <button class="msw standard on" onclick="switchMode('standard')">📝 Standard</button>
-      <button class="msw team" onclick="switchMode('team')">⚔️ Team Battle</button>
-      <button class="msw speed" onclick="switchMode('speed')">⚡ Speed Battle</button>
+      <button class="msw standard on" onclick="switchMode('standard')"><i data-lucide="file-text"></i> Standard</button>
+      <button class="msw team" onclick="switchMode('team')"><i data-lucide="swords"></i> Team</button>
+      <button class="msw speed" onclick="switchMode('speed')"><i data-lucide="zap"></i> Speed</button>
     </div>
     <span id="state-badge" class="state-badge sb-lobby">Lobby</span>
     <div class="tb-right">
       <div class="tb-pi">Players: <b id="tb-pc">0</b></div>
-      <button class="bgh bsm" onclick="fullReset()">↺ Full Reset</button>
+      <button class="bgh bsm" onclick="fullReset()"><i data-lucide="rotate-ccw" style="width:12px;height:12px;vertical-align:-1px"></i> Full Reset</button>
     </div>
   </div>
 
   <div class="body">
     <div class="sidebar" id="sidebar">
-      <button class="nav-btn on" id="nb-q" onclick="nav('q')">📝<span class="nav-lbl">Questions</span></button>
-      <button class="nav-btn" id="nb-c" onclick="nav('c')">🎮<span class="nav-lbl">Control</span></button>
-      <button class="nav-btn" id="nb-t" onclick="nav('t')">⚔️<span class="nav-lbl">Team Battle</span></button>
-      <button class="nav-btn" id="nb-sp" onclick="nav('sp')">⚡<span class="nav-lbl">Speed Battle</span></button>
-      <button class="nav-btn" id="nb-s" onclick="nav('s')">📊<span class="nav-lbl">Scoreboard</span></button>
-      <button class="nav-btn" id="nb-x" onclick="nav('x')">⚙️<span class="nav-lbl">Setup</span></button>
-      <button class="sb-tog" onclick="toggleSB()">☰</button>
+      <button class="nav-btn on" id="nb-q" onclick="nav('q')"><i data-lucide="file-text"></i><span class="nav-lbl">Questions</span></button>
+      <button class="nav-btn" id="nb-c" onclick="nav('c')"><i data-lucide="play"></i><span class="nav-lbl">Control</span></button>
+      <button class="nav-btn" id="nb-t" onclick="nav('t')"><i data-lucide="swords"></i><span class="nav-lbl">Team Battle</span></button>
+      <button class="nav-btn" id="nb-sp" onclick="nav('sp')"><i data-lucide="zap"></i><span class="nav-lbl">Speed Battle</span></button>
+      <button class="nav-btn" id="nb-s" onclick="nav('s')"><i data-lucide="bar-chart-3"></i><span class="nav-lbl">Scoreboard</span></button>
+      <button class="nav-btn" id="nb-x" onclick="nav('x')"><i data-lucide="settings"></i><span class="nav-lbl">Setup</span></button>
+      <button class="sb-tog" onclick="toggleSB()"><i data-lucide="menu"></i></button>
     </div>
 
     <div class="main">
@@ -283,19 +290,23 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
             <div id="std-cq-display"><div class="empty" style="padding:8px">Launch a question to start.</div></div>
           </div>
           <div class="card">
-            <div class="ct">🎮 Standard Controls</div>
+            <div class="ct"><i data-lucide="gamepad-2"></i> Standard Controls</div>
             <div class="cbgrid">
-              <button class="cbtn bgrn" onclick="startComp()">▶ Start Competition</button>
-              <button class="cbtn bpu" onclick="showLB('leaderboard')">🏆 Leaderboard</button>
-              <button class="cbtn bg" id="std-rev-btn" onclick="revealAns()">👁 Reveal</button>
-              <button class="cbtn br" onclick="endComp()">⏹ End Competition</button>
+              <button class="cbtn bgrn" onclick="startComp()"><i data-lucide="play"></i> Start Competition</button>
+              <button class="cbtn bpu" onclick="showLB('leaderboard')"><i data-lucide="trophy"></i> Leaderboard</button>
+              <button class="cbtn bg" id="std-rev-btn" onclick="revealAns()"><i data-lucide="eye"></i> Reveal</button>
+              <button class="cbtn br" onclick="endComp()"><i data-lucide="square"></i> End Competition</button>
+            </div>
+            <div class="cbgrid" style="margin-top:7px">
+              <button class="cbtn bor" onclick="exportCSV()"><i data-lucide="download"></i> Export Results CSV</button>
+              <button class="cbtn br" onclick="clearAllPlayers()"><i data-lucide="user-x"></i> Clear All Players</button>
             </div>
             <hr>
-            <div class="ct" style="margin-bottom:8px">📂 Sections</div>
+            <div class="ct" style="margin-bottom:8px"><i data-lucide="folder"></i> Sections</div>
             <div class="rbtns" id="sec-ctrl-btns"></div>
           </div>
           <div class="card">
-            <div class="ct">📋 Questions — <span id="std-sec-name">Section 1</span></div>
+            <div class="ct"><i data-lucide="list"></i> Questions — <span id="std-sec-name">Section 1</span></div>
             <div id="std-nav-q"></div>
           </div>
         </div>
@@ -373,10 +384,10 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
           <div class="card">
             <div class="ct">🎮 Team Controls</div>
             <div class="cbgrid">
-              <button class="cbtn bg" id="tb-rev-btn" onclick="tbReveal()">👁 Reveal Answer</button>
-              <button class="cbtn bpu" onclick="showLB('section_leaderboard')">🏅 Show Scores</button>
-              <button class="cbtn bor" onclick="tbSkip()">⏭ Skip Question</button>
-              <button class="cbtn br" onclick="endComp()">⏹ End</button>
+              <button class="cbtn bg" id="tb-rev-btn" onclick="tbReveal()"><i data-lucide="eye"></i> Reveal Answer</button>
+              <button class="cbtn bpu" onclick="showLB('section_leaderboard')"><i data-lucide="medal"></i> Show Scores</button>
+              <button class="cbtn bor" onclick="tbSkip()"><i data-lucide="skip-forward"></i> Skip Question</button>
+              <button class="cbtn br" onclick="endComp()"><i data-lucide="square"></i> End</button>
             </div>
             <hr>
             <div class="ct" style="margin-bottom:8px">🎯 Launch for Team</div>
@@ -423,8 +434,8 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
           <div class="card">
             <div class="ct">🎮 Controls</div>
             <div class="cbgrid">
-              <button class="cbtn bor" onclick="stopSpeedSession()">⏹ Stop Session</button>
-              <button class="cbtn bpu" onclick="showLB('leaderboard')">🏆 Leaderboard</button>
+              <button class="cbtn bor" onclick="stopSpeedSession()"><i data-lucide="square"></i> Stop Session</button>
+              <button class="cbtn bpu" onclick="showLB('leaderboard')"><i data-lucide="trophy"></i> Leaderboard</button>
             </div>
             <hr>
             <div class="ct" style="margin-bottom:8px">👥 Registered Players — Click ▶ to Launch</div>
@@ -1142,6 +1153,64 @@ function gv(id){ return document.getElementById(id)?.value?.trim() || ''; }
 function sv(id, v){ const el = document.getElementById(id); if(el) el.value = v; }
 function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function dl(name, data){ const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([data],{type:'application/json'})); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+
+/* ═══ CSV RESULTS EXPORT ═══ */
+function exportCSV(){
+  const rows = [['Rank','Name','Score','Mode']];
+  let sorted = [];
+  if(mode === 'standard'){
+    sorted = Object.values(players).sort(function(a,b){return (b.score||0)-(a.score||0);});
+    sorted.forEach(function(p,i){ rows.push([i+1, '"'+(p.name||'?')+'"', p.score||0, 'Standard']); });
+  } else if(mode === 'team'){
+    tb.teams.forEach(function(t,i){ rows.push([i+1, '"'+t.name+'"', t.score||0, 'Team']); });
+    rows.push([]);
+    rows.push(['Player','Team Score','Mode']);
+    Object.values(tb.members||{}).forEach(function(m){ rows.push(['"'+(m.name||'?')+'"', m.score||0, 'Team Member']); });
+  } else if(mode === 'speed'){
+    sorted = Object.values(sp.players||{}).sort(function(a,b){return (b.score||0)-(a.score||0);});
+    sorted.forEach(function(p,i){ rows.push([i+1, '"'+(p.name||'?')+'"', (p.score||0)+'/'+(p.total||20), 'Speed']); });
+  }
+  if(rows.length <= 1){ alert('No results to export.'); return; }
+  const csv = rows.map(function(r){return r.join(',');}).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'IJA_Quiz_Results_' + mode + '_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+}
+
+/* ═══ CLEAR ALL PLAYERS ═══ */
+function clearAllPlayers(){
+  if(!db || !confirm('Remove ALL registered players? They will be logged out and must rejoin.')) return;
+  var token = newSessionToken();
+  db.ref().update({
+    'quiz/players': null,
+    'quiz/sp/players': null,
+    'quiz/tb/members': null,
+    'quiz/roundAnswers': null,
+    'quiz/sessionToken': token,
+    'quiz/state': 'lobby',
+    'quiz/currentQuestion': null,
+    'quiz/sp/activePid': null,
+    'quiz/sp/session': null,
+    'quiz/tb/cq': null,
+    'quiz/tb/lock': null
+  });
+}
+
+/* ═══ REMOVE SINGLE PLAYER ═══ */
+function removePlayer(pid){
+  if(!db || !confirm('Remove this player?')) return;
+  db.ref('quiz/players/' + pid).remove();
+  db.ref('quiz/sp/players/' + pid).remove();
+  db.ref('quiz/tb/members/' + pid).remove();
+}
+
+/* ═══ INIT LUCIDE ICONS ═══ */
+document.addEventListener('DOMContentLoaded', function(){
+  if(window.lucide) lucide.createIcons();
+});
 </script>
 </body>
 </html>
