@@ -198,21 +198,10 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
     <span class="lico">🏆</span>
     <h1>IJA Quiz Organiser</h1>
     <p>Control Panel — Sign in to continue</p>
-    <div id="login-fb-status" style="padding:6px 12px;border-radius:8px;font-size:.75rem;margin-bottom:10px;display:none;font-family:'JetBrains Mono',monospace"></div>
     <input type="email" id="login-email" placeholder="Organiser email…"/>
     <input type="password" id="pass-inp" placeholder="Password…"/>
     <button class="bp" style="width:100%;padding:12px;font-size:14px;margin-top:2px" onclick="doLogin()">Unlock</button>
-    <div class="err" id="lerr">Incorrect password.</div>
-    <details id="login-cfg-panel" style="margin-top:14px;background:var(--bg);border:1px solid var(--border);border-radius:10px">
-      <summary style="padding:8px 12px;cursor:pointer;font-size:.75rem;color:var(--text2);font-weight:600">⚙️ Firebase Config (first-time setup)</summary>
-      <div style="padding:10px 12px">
-        <div class="fg"><label>API Key</label><input id="lcfg-key" placeholder="AIzaSy…" style="font-size:12px"/></div>
-        <div class="fg"><label>Database URL</label><input id="lcfg-db" placeholder="https://project-rtdb.firebaseio.com" style="font-size:12px"/></div>
-        <div class="fg"><label>Project ID</label><input id="lcfg-pid" placeholder="your-project-id" style="font-size:12px"/></div>
-        <div class="fg"><label>Auth Domain</label><input id="lcfg-auth" placeholder="project.firebaseapp.com" style="font-size:12px"/></div>
-        <button class="bp bsm" style="width:100%" onclick="saveLoginCfg()">Save & Connect</button>
-      </div>
-    </details>
+    <div class="err" id="lerr" style="display:none"></div>
   </div>
 </div>
 
@@ -500,90 +489,20 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
 </div><!-- /app -->
 
 <script>
-/* ═══ FIREBASE — dynamic config from Setup panel ═══ */
-let db = null;
+/* ═══ FIREBASE — hardcoded config, connects on page load ═══ */
+const firebaseConfig = {
+  apiKey: "AIzaSyB_BeXdQFOPUVJLL59OWnLFC61_zs62oLs",
+  authDomain: "ija-maths-quiz.firebaseapp.com",
+  databaseURL: "https://ija-maths-quiz-default-rtdb.firebaseio.com",
+  projectId: "ija-maths-quiz",
+  storageBucket: "ija-maths-quiz.firebasestorage.app",
+  messagingSenderId: "940095816285",
+  appId: "1:940095816285:web:a6fb99604427346eef83b4"
+};
 
-function getCfg(){ return JSON.parse(localStorage.getItem('ija_org_cfg') || 'null'); }
-function initFB(cfg){
-  /* Kill any existing app first, then start fresh */
-  try{
-    if(firebase.apps.length){
-      firebase.app().delete().then(function(){ doStartFB(cfg); }).catch(function(){ doStartFB(cfg); });
-    } else {
-      doStartFB(cfg);
-    }
-  }catch(e){ doStartFB(cfg); }
-}
-
-function doStartFB(cfg){
-  try{
-    firebase.initializeApp(cfg);
-    db = firebase.database();
-    /* Show success FIRST, before any listeners */
-    updateLoginStatus(true);
-    showCfgMsg('✓ Connected!','s');
-    /* Server time offset — non-critical, wrap in its own try */
-    try{ initServerOffset(); }catch(e){ /* ignore */ }
-  }catch(e){
-    db = null;
-    updateLoginStatus(false, 'Error: ' + e.message);
-    showCfgMsg('Error: '+e.message,'e');
-  }
-}
-
-/* Show connection status on the login page */
-function updateLoginStatus(connected, errMsg){
-  const el = document.getElementById('login-fb-status');
-  if(!el) return;
-  el.style.display = 'block';
-  if(connected){
-    el.style.background = 'rgba(16,185,129,.1)';
-    el.style.border = '1px solid rgba(16,185,129,.3)';
-    el.style.color = '#10b981';
-    el.textContent = '✓ Firebase connected — enter your email & password above';
-    try{ document.getElementById('login-cfg-panel').removeAttribute('open'); }catch(e){}
-  } else {
-    el.style.background = 'rgba(239,68,68,.1)';
-    el.style.border = '1px solid rgba(239,68,68,.3)';
-    el.style.color = '#ff8080';
-    el.textContent = errMsg || '✗ Not connected — enter Firebase config below and click Save & Connect';
-    try{ document.getElementById('login-cfg-panel').setAttribute('open',''); }catch(e){}
-  }
-}
-
-/* Save config from login page mini-form */
-function saveLoginCfg(){
-  const cfg = {
-    apiKey: gv('lcfg-key'),
-    databaseURL: gv('lcfg-db'),
-    projectId: gv('lcfg-pid'),
-    authDomain: gv('lcfg-auth')
-  };
-  if(!cfg.apiKey || !cfg.databaseURL){
-    updateLoginStatus(false, '✗ Enter at least API Key and Database URL');
-    return;
-  }
-  localStorage.setItem('ija_org_cfg', JSON.stringify(cfg));
-  /* Show immediate "connecting..." feedback */
-  const el = document.getElementById('login-fb-status');
-  if(el){ el.style.display='block'; el.style.background='rgba(245,197,24,.1)'; el.style.border='1px solid rgba(245,197,24,.3)'; el.style.color='#f59e0b'; el.textContent='⏳ Connecting to Firebase…'; }
-  /* Small delay to let UI update before potentially blocking init */
-  setTimeout(function(){ initFB(cfg); }, 100);
-}
-
-/* Auto-connect on load if config saved */
-(function(){
-  const c = getCfg();
-  if(c && c.apiKey && c.databaseURL){
-    initFB(c);
-    setTimeout(function(){
-      sv('lcfg-key', c.apiKey||''); sv('lcfg-db', c.databaseURL||'');
-      sv('lcfg-pid', c.projectId||''); sv('lcfg-auth', c.authDomain||'');
-    },100);
-  } else {
-    updateLoginStatus(false);
-  }
-})();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+try { db.ref('/.info/serverTimeOffset').on('value', function(s){ serverOffset = s.val()||0; }); } catch(e){}
 
 /* ═══ STATE ═══ */
 let timerInt = null, tbTimerInt = null, sbOpen = false;
@@ -605,7 +524,6 @@ function initServerOffset(){
 }
 function serverNow(){ return Date.now() + serverOffset; }
 
-/* ═══ LOGIN ═══ */
 /* ═══ LOGIN — Firebase Auth email+password ═══ */
 function doLogin(){
   const email = gv('login-email');
@@ -615,13 +533,9 @@ function doLogin(){
     document.getElementById('lerr').style.display = 'block';
     return;
   }
-  if(!db){
-    document.getElementById('lerr').textContent = 'Not connected to Firebase. Save your config in Setup first, then reload.';
-    document.getElementById('lerr').style.display = 'block';
-    return;
-  }
+  document.getElementById('lerr').style.display = 'none';
   firebase.auth().signInWithEmailAndPassword(email, pass)
-    .then(() => {
+    .then(function(){
       document.getElementById('login').style.display = 'none';
       document.getElementById('app').classList.add('on');
       loadSectionNames();
@@ -629,7 +543,7 @@ function doLogin(){
       setupListeners();
       loadOrgCfg();
     })
-    .catch(err => {
+    .catch(function(err){
       document.getElementById('lerr').textContent = err.message;
       document.getElementById('lerr').style.display = 'block';
     });
@@ -687,7 +601,7 @@ function saveConfig(){
   const cfg = {apiKey:gv('cfg-key'), databaseURL:gv('cfg-db'), projectId:gv('cfg-pid'), authDomain:gv('cfg-auth')};
   if(!cfg.apiKey || !cfg.databaseURL){ showCfgMsg('Enter at least API Key and Database URL.','e'); return; }
   localStorage.setItem('ija_org_cfg', JSON.stringify(cfg));
-  initFB(cfg);
+  showCfgMsg('Config saved. Firebase is already connected via hardcoded config.','s');
 }
 function testConn(){
   if(!db){ showCfgMsg('Not connected.','e'); return; }
