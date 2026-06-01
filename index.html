@@ -5,7 +5,7 @@
 <title>IJA Quiz — Organiser</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<!-- Auth removed: local password check instead -->
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -197,8 +197,7 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
   <div class="lcard">
     <span class="lico">🏆</span>
     <h1>IJA Quiz Organiser</h1>
-    <p>Control Panel — Sign in to continue</p>
-    <input type="email" id="login-email" placeholder="Organiser email…"/>
+    <p>Control Panel — Enter password to continue</p>
     <input type="password" id="pass-inp" placeholder="Password…"/>
     <button class="bp" style="width:100%;padding:12px;font-size:14px;margin-top:2px" onclick="doLogin()">Unlock</button>
     <div class="err" id="lerr">Incorrect password.</div>
@@ -489,23 +488,36 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
 </div><!-- /app -->
 
 <script>
-/* ═══ FIREBASE CONFIG — fill in your project values here ═══ */
-const firebaseConfig = {
-  apiKey: "AIzaSyB_BeXdQFOPUVJLL59OWnLFC61_zs62oLs",
-  authDomain: "ija-maths-quiz.firebaseapp.com",
-  databaseURL: "https://ija-maths-quiz-default-rtdb.firebaseio.com",
-  projectId: "ija-maths-quiz",
-  storageBucket: "ija-maths-quiz.firebasestorage.app",
-  messagingSenderId: "940095816285",
-  appId: "1:940095816285:web:a6fb99604427346eef83b4"
-};
+<script>
+/* ═══ FIREBASE — dynamic config from Setup panel ═══ */
+const PASS = "IJAadmin2024";
+let db = null;
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-initServerOffset();
+function getCfg(){ return JSON.parse(localStorage.getItem('ija_org_cfg') || 'null'); }
+function initFB(cfg){
+  try{
+    if(firebase.apps.length) firebase.app().delete().then(()=>startFB(cfg)).catch(()=>startFB(cfg));
+    else startFB(cfg);
+  }catch(e){ startFB(cfg); }
+}
+function startFB(cfg){
+  try{
+    firebase.initializeApp(cfg);
+    db = firebase.database();
+    initServerOffset();
+    showCfgMsg('✓ Connected!','s');
+  }catch(e){
+    db = null;
+    showCfgMsg('Error: '+e.message,'e');
+  }
+}
+/* Auto-connect on load if config saved */
+(function(){
+  const c = getCfg();
+  if(c && c.apiKey && c.databaseURL) initFB(c);
+})();
 
 /* ═══ STATE ═══ */
-let organiserUid = null; // set on login
 let timerInt = null, tbTimerInt = null, sbOpen = false;
 let mode = 'standard', editSec = 0, liveSec = 0;
 let sections = [{name:'Section 1',questions:[]},{name:'Section 2',questions:[]},{name:'Section 3',questions:[]}];
@@ -526,23 +538,25 @@ function initServerOffset(){
 function serverNow(){ return Date.now() + serverOffset; }
 
 /* ═══ LOGIN ═══ */
+/* ═══ LOGIN — local password check, no Firebase Auth needed ═══ */
 function doLogin(){
-  const email = gv('login-email');
-  const pass  = gv('pass-inp');
-  firebase.auth().signInWithEmailAndPassword(email, pass)
-    .then(cred => {
-      organiserUid = cred.user.uid;
-      document.getElementById('login').style.display = 'none';
-      document.getElementById('app').classList.add('on');
-      loadSectionNames();
-      buildSectionUI();
-      setupListeners(); // ← wire up all Firebase real-time listeners
-      loadOrgCfg();     // ← populate setup panel inputs from localStorage
-    })
-    .catch(err => {
-      document.getElementById('lerr').textContent = err.message;
-      document.getElementById('lerr').style.display = 'block';
-    });
+  const pass = gv('pass-inp');
+  if(pass !== PASS){
+    document.getElementById('lerr').textContent = 'Incorrect password.';
+    document.getElementById('lerr').style.display = 'block';
+    return;
+  }
+  if(!db){
+    document.getElementById('lerr').textContent = 'Not connected to Firebase. Go to Setup first.';
+    document.getElementById('lerr').style.display = 'block';
+    return;
+  }
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+  loadSectionNames();
+  buildSectionUI();
+  setupListeners();
+  loadOrgCfg();
 }
 document.getElementById('pass-inp').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
 
@@ -597,7 +611,7 @@ function saveConfig(){
   const cfg = {apiKey:gv('cfg-key'), databaseURL:gv('cfg-db'), projectId:gv('cfg-pid'), authDomain:gv('cfg-auth')};
   if(!cfg.apiKey || !cfg.databaseURL){ showCfgMsg('Enter at least API Key and Database URL.','e'); return; }
   localStorage.setItem('ija_org_cfg', JSON.stringify(cfg));
-  showCfgMsg('Saved. Reload the page to apply a new config.','s');
+  initFB(cfg);
 }
 function testConn(){
   if(!db){ showCfgMsg('Not connected.','e'); return; }
