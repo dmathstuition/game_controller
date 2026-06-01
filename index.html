@@ -968,23 +968,24 @@ function tbLaunch(teamIdx){
   upd['quiz/tb/lock']       = null;
   upd['quiz/tb/activeTeam'] = teamIdx;
   upd['quiz/tb/isBonus']    = false;
-  upd['quiz/tb/cq']         = {qIdx, text:q.text, options:q.options, timeLimit:q.timeLimit, startTime:now, isBonus:false, activeTeam:teamIdx};
+  upd['quiz/tb/cq']         = {qIdx:qIdx, text:q.text, options:q.options, answer:q.answer, timeLimit:q.timeLimit, startTime:now, isBonus:false, activeTeam:teamIdx};
   upd['quiz/tb/state']      = 'active';
   db.ref().update(upd);
 }
 function tbReveal(){
   if(!db || !tb.cq){ alert('No active question.'); return; }
   clearTBTimer();
-  const correct = tb.cq.answer, isBonus = tb.cq.isBonus, marks = isBonus ? 2 : 5, upd = {};
-  const lock = tb.lock;
+  var correct = tb.cq.answer, isBonus = tb.cq.isBonus, marks = isBonus ? 2 : 5, upd = {};
+  var lock = tb.lock;
   if(lock && lock.answer === correct){
-    const pid = lock.pid, p = tb.members[pid] || {};
-    upd[`quiz/tb/members/${pid}/score`] = (p.score || 0) + marks;
-    const tIdx = lock.teamIdx;
-    upd[`quiz/tb/teams/${tIdx}/score`] = (tb.teams[tIdx]?.score || 0) + marks;
+    var pid = lock.pid, p = tb.members[pid] || {};
+    upd['quiz/tb/members/'+pid+'/score'] = (p.score || 0) + marks;
+    var tIdx = lock.teamIdx;
+    var teamScore = (tb.teams[tIdx]) ? (tb.teams[tIdx].score||0) : 0;
+    upd['quiz/tb/teams/'+tIdx+'/score'] = teamScore + marks;
   }
-  const used = [...(tb.used || [])];
-  if(tb.cq.qIdx !== undefined && !used.includes(tb.cq.qIdx)) used.push(tb.cq.qIdx);
+  var used = (tb.used || []).slice();
+  if(tb.cq.qIdx !== undefined && used.indexOf(tb.cq.qIdx)===-1) used.push(tb.cq.qIdx);
   upd['quiz/tb/used']         = used;
   upd['quiz/tb/state']        = 'reveal';
   upd['quiz/tb/revealAnswer'] = correct;
@@ -993,21 +994,23 @@ function tbReveal(){
 function tbTimeUp(){
   if(!db || !tb.cq) return; clearTBTimer();
   if(!tb.cq.isBonus){
-    const other = tb.cq.activeTeam === 0 ? 1 : 0, bonusTime = Math.max(10, Math.ceil((tb.cq.timeLimit||30)/2)), now = serverNow(), upd = {};
-    Object.keys(tb.members).forEach(pid => { upd[`quiz/tb/members/${pid}/answered`] = false; upd[`quiz/tb/members/${pid}/lastAnswer`] = null; });
+    var other = tb.cq.activeTeam === 0 ? 1 : 0;
+    var bonusTime = Math.max(10, Math.ceil((tb.cq.timeLimit||30)/2));
+    var now = serverNow(), upd = {};
+    Object.keys(tb.members).forEach(function(pid){ upd['quiz/tb/members/'+pid+'/answered'] = false; upd['quiz/tb/members/'+pid+'/lastAnswer'] = null; });
     upd['quiz/tb/lock']       = null;
     upd['quiz/tb/isBonus']    = true;
     upd['quiz/tb/activeTeam'] = other;
-    upd['quiz/tb/cq']         = {...tb.cq, isBonus:true, activeTeam:other, timeLimit:bonusTime, startTime:now};
+    upd['quiz/tb/cq']         = {qIdx:tb.cq.qIdx, text:tb.cq.text, options:tb.cq.options, answer:tb.cq.answer, isBonus:true, activeTeam:other, timeLimit:bonusTime, startTime:now};
     upd['quiz/tb/state']      = 'bonus';
     db.ref().update(upd);
   } else {
-    const used = [...(tb.used||[])];
-    if(tb.cq.qIdx !== undefined && !used.includes(tb.cq.qIdx)) used.push(tb.cq.qIdx);
-    db.ref().update({'quiz/tb/used':used,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false});
+    var used2 = (tb.used||[]).slice();
+    if(tb.cq.qIdx !== undefined && used2.indexOf(tb.cq.qIdx)===-1) used2.push(tb.cq.qIdx);
+    db.ref().update({'quiz/tb/used':used2,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false});
   }
 }
-function tbSkip(){ if(!db || !confirm('Skip?')) return; clearTBTimer(); const used=[...(tb.used||[])]; if(tb.cq?.qIdx!==undefined && !used.includes(tb.cq.qIdx)) used.push(tb.cq.qIdx); db.ref().update({'quiz/tb/used':used,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false}); }
+function tbSkip(){ if(!db || !confirm('Skip?')) return; clearTBTimer(); var used=(tb.used||[]).slice(); if(tb.cq&&tb.cq.qIdx!==undefined && used.indexOf(tb.cq.qIdx)===-1) used.push(tb.cq.qIdx); db.ref().update({'quiz/tb/used':used,'quiz/tb/state':'idle','quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false}); }
 function resetTeamBattle(){
   if(!db || !confirm('Reset team scores?')) return; clearTBTimer();
   const upd = {'quiz/tb/state':'lobby','quiz/tb/used':[],'quiz/tb/cq':null,'quiz/tb/lock':null,'quiz/tb/isBonus':false};
@@ -1085,24 +1088,29 @@ function delSPQ(i){ if(!confirm('Remove?')) return; sp.bank.splice(i,1); pushSPB
 function launchSpeedPlayer(pid){
   if(!db) return;
   if(!sp.bank.length){ alert('Add speed battle questions first.'); return; }
-  if(sp.activePid && sp.activePid !== pid){ if(!confirm(`Stop ${sp.players[sp.activePid]?.name||'current player'}\'s session and start ${sp.players[pid]?.name||'new player'}?`)) return; }
-  const qs = sp.bank.slice(0,20).map(q => ({text:q.text, options:q.options, answer:q.answer}));
-  const sessionId = 's_' + serverNow() + '_' + Math.random().toString(36).slice(2,5);
-  const session = {sessionId, playerName:sp.players[pid]?.name||'?', pid, currentQ:0, score:0, total:qs.length, questions:qs, startTime:serverNow(), state:'active'};
-  const upd = {};
+  if(sp.activePid && sp.activePid !== pid){
+    var curName=(sp.players[sp.activePid])?sp.players[sp.activePid].name:'current player';
+    var newName=(sp.players[pid])?sp.players[pid].name:'new player';
+    if(!confirm('Stop '+curName+'\'s session and start '+newName+'?')) return;
+  }
+  var qs = sp.bank.slice(0,20).map(function(q){return{text:q.text, options:q.options, answer:q.answer};});
+  var sessionId = 's_' + serverNow() + '_' + Math.random().toString(36).slice(2,5);
+  var pName=(sp.players[pid])?sp.players[pid].name:'?';
+  var session = {sessionId:sessionId, playerName:pName, pid:pid, currentQ:0, score:0, total:qs.length, questions:qs, startTime:serverNow(), state:'active'};
+  var upd = {};
   upd['quiz/mode']                          = 'speed';
   upd['quiz/sp/state']                      = 'running';
   upd['quiz/sp/activePid']                  = pid;
   upd['quiz/sp/session']                    = session;
-  upd[`quiz/sp/players/${pid}/state`]       = 'running';
-  upd[`quiz/sp/players/${pid}/score`]       = 0;
+  upd['quiz/sp/players/'+pid+'/state']      = 'running';
+  upd['quiz/sp/players/'+pid+'/score']      = 0;
   db.ref().update(upd);
   switchMode('speed');
 }
 function stopSpeedSession(){
   if(!db || !confirm('Stop current session?')) return;
-  const upd = {'quiz/sp/state':'lobby','quiz/sp/activePid':null,'quiz/sp/session':null};
-  if(sp.activePid) upd[`quiz/sp/players/${sp.activePid}/state`] = 'waiting';
+  var upd = {'quiz/sp/state':'lobby','quiz/sp/activePid':null,'quiz/sp/session':null};
+  if(sp.activePid) upd['quiz/sp/players/'+sp.activePid+'/state'] = 'waiting';
   db.ref().update(upd);
 }
 function renderSPControl(){
