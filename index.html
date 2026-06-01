@@ -197,6 +197,89 @@ details pre{padding:11px 13px;font-family:'JetBrains Mono',monospace;font-size:.
 hr{border:none;border-top:1px solid var(--border);margin:10px 0}
 pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text2);line-height:1.6;overflow-x:auto}
 .info-box{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:10px;padding:10px 14px;font-size:.78rem;color:var(--orange);margin-bottom:12px;line-height:1.6}
+
+/* ═══ PROFESSIONAL UI ENHANCEMENTS ═══ */
+
+/* Login card dramatic glow */
+.lcard{box-shadow:0 0 80px rgba(37,99,235,.08),0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.lico{filter:drop-shadow(0 0 20px rgba(37,99,235,.3));display:block;text-align:center;font-size:3rem;margin-bottom:12px}
+#login input{transition:all .2s cubic-bezier(.4,0,.2,1)}
+#login input:focus{box-shadow:0 0 0 3px rgba(37,99,235,.15),0 0 20px rgba(37,99,235,.06);border-color:var(--accent)}
+
+/* Sidebar — enhanced active state */
+.nav-btn{transition:all .15s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.nav-btn::before{content:'';position:absolute;left:0;top:25%;bottom:25%;width:3px;border-radius:0 3px 3px 0;background:var(--accent);opacity:0;transition:opacity .15s,transform .15s;transform:scaleY(0)}
+.nav-btn.on::before{opacity:1;transform:scaleY(1)}
+.nav-btn:hover:not(.on){background:rgba(37,99,235,.05);color:rgba(255,255,255,.7)}
+
+/* Topbar — subtle shadow */
+.topbar{box-shadow:0 1px 10px rgba(0,0,0,.3)}
+
+/* Cards — refined depth */
+.card{box-shadow:0 2px 12px rgba(0,0,0,.2);transition:border-color .2s cubic-bezier(.4,0,.2,1),box-shadow .2s,transform .2s}
+.card:hover{border-color:rgba(37,99,235,.2);box-shadow:0 4px 24px rgba(0,0,0,.3);transform:translateY(-1px)}
+
+/* Card titles — subtle icon glow */
+.ct i{opacity:.6;transition:opacity .2s}
+.card:hover .ct i{opacity:1}
+
+/* Buttons — refined hover effects */
+.bp,.cbtn{transition:all .15s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.bp::after,.cbtn::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);pointer-events:none;border-radius:inherit}
+.cbtn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.cbtn:active{transform:translateY(0);box-shadow:none;transition-duration:.05s}
+
+/* Control buttons — color-specific glow on hover */
+.cbtn.bgrn:hover{box-shadow:0 4px 16px rgba(34,197,94,.25)}
+.cbtn.bpu:hover{box-shadow:0 4px 16px rgba(168,85,247,.25)}
+.cbtn.br:hover{box-shadow:0 4px 16px rgba(239,68,68,.2)}
+.cbtn.bor:hover{box-shadow:0 4px 16px rgba(249,115,22,.2)}
+.cbtn.bg:hover{box-shadow:0 4px 16px rgba(245,197,24,.2)}
+
+/* Mode switcher — enhanced active glow */
+.msw{transition:all .15s;position:relative}
+.msw.on::after{content:'';position:absolute;inset:0;border-radius:6px;box-shadow:0 0 12px rgba(37,99,235,.3);pointer-events:none}
+.msw.team.on::after{box-shadow:0 0 12px rgba(232,25,47,.3)}
+.msw.speed.on::after{box-shadow:0 0 12px rgba(249,115,22,.3)}
+
+/* Question items — refined styling */
+.qi{transition:border-color .15s,box-shadow .15s}
+.qi:hover{border-color:rgba(37,99,235,.25);box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.qi-opt.ok{box-shadow:0 0 8px rgba(34,197,94,.1)}
+
+/* Score board — player items */
+.pl-item{transition:background .15s}
+.pl-item:hover{background:rgba(37,99,235,.06)}
+
+/* Timer bar smoothing */
+.tbar-f{transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* Input fields — refined focus */
+input,textarea,select{transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),0 0 16px rgba(37,99,235,.04)}
+
+/* Tabs — better active state */
+.itab{transition:all .12s}
+.itab.on::after{content:'';position:absolute;bottom:-1px;left:15%;right:15%;height:2px;background:var(--accent);border-radius:2px}
+.itab{position:relative}
+
+/* Team assignment chips */
+#ta-team0>div,#ta-team1>div,#ta-unassigned>div{transition:all .15s}
+#ta-team0>div:hover,#ta-team1>div:hover,#ta-unassigned>div:hover{background:rgba(37,99,235,.06)!important;transform:translateX(2px)}
+
+/* Score cards in team mode */
+.team-score-cards .ts-card{transition:transform .2s,box-shadow .2s}
+.team-score-cards .ts-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+
+/* Flash messages — smoother */
+.flash{animation:flashIn .3s ease}
+@keyframes flashIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Scrollbar refinement */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(37,99,235,.2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(37,99,235,.4)}
 </style>
 </head>
 <body>
