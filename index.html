@@ -6,7 +6,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -39,7 +39,7 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .msw{padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:700;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s}
 .msw.on{font-weight:800;color:#fff}
 .msw.standard.on{background:var(--accent)}.msw.team.on{background:#e8192f}.msw.speed.on{background:var(--orange)}
-.msw svg{width:12px;height:12px;vertical-align:-1px}
+.msw i{font-size:10px}
 .state-badge{padding:3px 10px;border-radius:20px;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace}
 .sb-lobby{background:rgba(37,99,235,.18);color:#60a5fa;border:1px solid var(--accent)}
 .sb-active{background:rgba(16,185,129,.18);color:#34d399;border:1px solid var(--green);animation:blnk .8s step-end infinite}
@@ -60,11 +60,11 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .sidebar.open .nav-lbl{display:block}
 .sb-tog{margin-top:auto;width:32px;height:32px;border-radius:7px;border:1px solid var(--border);cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:.9rem;transition:all .15s}
 .sb-tog:hover{background:var(--card)}
-/* Lucide icons sizing */
-.nav-btn svg,.sb-tog svg{width:18px;height:18px;flex-shrink:0}
-.topbar svg{width:16px;height:16px}
-.ct svg{width:13px;height:13px;vertical-align:-2px;margin-right:3px}
-.cbtn svg{width:15px;height:15px}
+/* Font Awesome icon sizing */
+.nav-btn i,.sb-tog i{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.topbar i{font-size:13px}
+.ct i{font-size:11px;margin-right:4px;opacity:.7}
+.cbtn i{font-size:13px}
 .main{flex:1;overflow:hidden;display:flex;flex-direction:column}
 .panel{display:none;flex:1;overflow:hidden;flex-direction:column}
 .panel.on{display:flex}
@@ -77,7 +77,8 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .stab{padding:6px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text2);font-size:.78rem;font-weight:700;cursor:pointer;transition:all .15s;position:relative}
 .stab.on{background:rgba(37,99,235,.15);border-color:var(--accent);color:#60a5fa}
 .stab .qb{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;background:var(--accent);color:#fff;border-radius:9px;font-size:.62rem;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;padding:0 3px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:rgba(37,99,235,.25);box-shadow:0 4px 20px rgba(0,0,0,.2)}
 .ct{font-size:.67rem;color:var(--text2);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:12px;font-family:'JetBrains Mono',monospace}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .fg{margin-bottom:9px}
@@ -214,28 +215,28 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
 
 <div id="app">
   <div class="topbar">
-    <div class="tb-brand"><i data-lucide="trophy" style="width:16px;height:16px;display:inline-block;vertical-align:-2px"></i> IJA</div>
+    <div class="tb-brand"><i class="fa-solid fa-trophy"></i> IJA</div>
     <div class="mode-grp">
-      <button class="msw standard on" onclick="switchMode('standard')"><i data-lucide="file-text"></i> Standard</button>
-      <button class="msw team" onclick="switchMode('team')"><i data-lucide="swords"></i> Team</button>
-      <button class="msw speed" onclick="switchMode('speed')"><i data-lucide="zap"></i> Speed</button>
+      <button class="msw standard on" onclick="switchMode('standard')"><i class="fa-solid fa-file-lines"></i> Standard</button>
+      <button class="msw team" onclick="switchMode('team')"><i class="fa-solid fa-shield-halved"></i> Team</button>
+      <button class="msw speed" onclick="switchMode('speed')"><i class="fa-solid fa-bolt"></i> Speed</button>
     </div>
     <span id="state-badge" class="state-badge sb-lobby">Lobby</span>
     <div class="tb-right">
       <div class="tb-pi">Players: <b id="tb-pc">0</b></div>
-      <button class="bgh bsm" onclick="fullReset()"><i data-lucide="rotate-ccw" style="width:12px;height:12px;vertical-align:-1px"></i> Full Reset</button>
+      <button class="bgh bsm" onclick="fullReset()"><i class="fa-solid fa-rotate-left"></i> Full Reset</button>
     </div>
   </div>
 
   <div class="body">
     <div class="sidebar" id="sidebar">
-      <button class="nav-btn on" id="nb-q" onclick="nav('q')"><i data-lucide="file-text"></i><span class="nav-lbl">Questions</span></button>
-      <button class="nav-btn" id="nb-c" onclick="nav('c')"><i data-lucide="play"></i><span class="nav-lbl">Control</span></button>
-      <button class="nav-btn" id="nb-t" onclick="nav('t')"><i data-lucide="swords"></i><span class="nav-lbl">Team Battle</span></button>
-      <button class="nav-btn" id="nb-sp" onclick="nav('sp')"><i data-lucide="zap"></i><span class="nav-lbl">Speed Battle</span></button>
-      <button class="nav-btn" id="nb-s" onclick="nav('s')"><i data-lucide="bar-chart-3"></i><span class="nav-lbl">Scoreboard</span></button>
-      <button class="nav-btn" id="nb-x" onclick="nav('x')"><i data-lucide="settings"></i><span class="nav-lbl">Setup</span></button>
-      <button class="sb-tog" onclick="toggleSB()"><i data-lucide="menu"></i></button>
+      <button class="nav-btn on" id="nb-q" onclick="nav('q')"><i class="fa-solid fa-file-lines"></i><span class="nav-lbl">Questions</span></button>
+      <button class="nav-btn" id="nb-c" onclick="nav('c')"><i class="fa-solid fa-play"></i><span class="nav-lbl">Control</span></button>
+      <button class="nav-btn" id="nb-t" onclick="nav('t')"><i class="fa-solid fa-shield-halved"></i><span class="nav-lbl">Team Battle</span></button>
+      <button class="nav-btn" id="nb-sp" onclick="nav('sp')"><i class="fa-solid fa-bolt"></i><span class="nav-lbl">Speed Battle</span></button>
+      <button class="nav-btn" id="nb-s" onclick="nav('s')"><i class="fa-solid fa-chart-column"></i><span class="nav-lbl">Scoreboard</span></button>
+      <button class="nav-btn" id="nb-x" onclick="nav('x')"><i class="fa-solid fa-gear"></i><span class="nav-lbl">Setup</span></button>
+      <button class="sb-tog" onclick="toggleSB()"><i class="fa-solid fa-bars"></i></button>
     </div>
 
     <div class="main">
@@ -290,23 +291,23 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
             <div id="std-cq-display"><div class="empty" style="padding:8px">Launch a question to start.</div></div>
           </div>
           <div class="card">
-            <div class="ct"><i data-lucide="gamepad-2"></i> Standard Controls</div>
+            <div class="ct"><i class="fa-solid fa-gamepad"></i> Standard Controls</div>
             <div class="cbgrid">
-              <button class="cbtn bgrn" onclick="startComp()"><i data-lucide="play"></i> Start Competition</button>
-              <button class="cbtn bpu" onclick="showLB('leaderboard')"><i data-lucide="trophy"></i> Leaderboard</button>
-              <button class="cbtn bg" id="std-rev-btn" onclick="revealAns()"><i data-lucide="eye"></i> Reveal</button>
-              <button class="cbtn br" onclick="endComp()"><i data-lucide="square"></i> End Competition</button>
+              <button class="cbtn bgrn" onclick="startComp()"><i class="fa-solid fa-play"></i> Start Competition</button>
+              <button class="cbtn bpu" onclick="showLB('leaderboard')"><i class="fa-solid fa-trophy"></i> Leaderboard</button>
+              <button class="cbtn bg" id="std-rev-btn" onclick="revealAns()"><i class="fa-solid fa-eye"></i> Reveal</button>
+              <button class="cbtn br" onclick="endComp()"><i class="fa-solid fa-stop"></i> End Competition</button>
             </div>
             <div class="cbgrid" style="margin-top:7px">
-              <button class="cbtn bor" onclick="exportCSV()"><i data-lucide="download"></i> Export Results CSV</button>
-              <button class="cbtn br" onclick="clearAllPlayers()"><i data-lucide="user-x"></i> Clear All Players</button>
+              <button class="cbtn bor" onclick="exportCSV()"><i class="fa-solid fa-download"></i> Export Results CSV</button>
+              <button class="cbtn br" onclick="clearAllPlayers()"><i class="fa-solid fa-user-xmark"></i> Clear All Players</button>
             </div>
             <hr>
-            <div class="ct" style="margin-bottom:8px"><i data-lucide="folder"></i> Sections</div>
+            <div class="ct" style="margin-bottom:8px"><i class="fa-solid fa-folder-open"></i> Sections</div>
             <div class="rbtns" id="sec-ctrl-btns"></div>
           </div>
           <div class="card">
-            <div class="ct"><i data-lucide="list"></i> Questions — <span id="std-sec-name">Section 1</span></div>
+            <div class="ct"><i class="fa-solid fa-list"></i> Questions — <span id="std-sec-name">Section 1</span></div>
             <div id="std-nav-q"></div>
           </div>
         </div>
@@ -384,10 +385,10 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
           <div class="card">
             <div class="ct">🎮 Team Controls</div>
             <div class="cbgrid">
-              <button class="cbtn bg" id="tb-rev-btn" onclick="tbReveal()"><i data-lucide="eye"></i> Reveal Answer</button>
-              <button class="cbtn bpu" onclick="showLB('section_leaderboard')"><i data-lucide="medal"></i> Show Scores</button>
-              <button class="cbtn bor" onclick="tbSkip()"><i data-lucide="skip-forward"></i> Skip Question</button>
-              <button class="cbtn br" onclick="endComp()"><i data-lucide="square"></i> End</button>
+              <button class="cbtn bg" id="tb-rev-btn" onclick="tbReveal()"><i class="fa-solid fa-eye"></i> Reveal Answer</button>
+              <button class="cbtn bpu" onclick="showLB('section_leaderboard')"><i class="fa-solid fa-medal"></i> Show Scores</button>
+              <button class="cbtn bor" onclick="tbSkip()"><i class="fa-solid fa-forward-step"></i> Skip Question</button>
+              <button class="cbtn br" onclick="endComp()"><i class="fa-solid fa-stop"></i> End</button>
             </div>
             <hr>
             <div class="ct" style="margin-bottom:8px">🎯 Launch for Team</div>
@@ -434,8 +435,8 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
           <div class="card">
             <div class="ct">🎮 Controls</div>
             <div class="cbgrid">
-              <button class="cbtn bor" onclick="stopSpeedSession()"><i data-lucide="square"></i> Stop Session</button>
-              <button class="cbtn bpu" onclick="showLB('leaderboard')"><i data-lucide="trophy"></i> Leaderboard</button>
+              <button class="cbtn bor" onclick="stopSpeedSession()"><i class="fa-solid fa-stop"></i> Stop Session</button>
+              <button class="cbtn bpu" onclick="showLB('leaderboard')"><i class="fa-solid fa-trophy"></i> Leaderboard</button>
             </div>
             <hr>
             <div class="ct" style="margin-bottom:8px">👥 Registered Players — Click ▶ to Launch</div>
@@ -826,31 +827,31 @@ function endComp(){
 }
 
 function fullReset(){
-  if(!db || !confirm('Full reset — clears scores and active sessions but keeps player registrations.')) return;
+  if(!db || !confirm('FULL RESET — Removes ALL players, clears all scores, and forces everyone to re-register. Continue?')) return;
   clearStdTimer(); clearTBTimer();
-  const token = newSessionToken(), upd = {};
-  Object.keys(players).forEach(pid => { upd[`quiz/players/${pid}/score`] = 0; upd[`quiz/players/${pid}/answered`] = false; upd[`quiz/players/${pid}/lastAnswer`] = null; upd[`quiz/players/${pid}/lastCorrect`] = null; upd[`quiz/players/${pid}/sectionScores`] = {0:0,1:0,2:0}; });
-  Object.keys(sp.players || {}).forEach(pid => { upd[`quiz/sp/players/${pid}/score`] = 0; upd[`quiz/sp/players/${pid}/state`] = 'waiting'; });
-  Object.keys(tb.members || {}).forEach(pid => { upd[`quiz/tb/members/${pid}/score`] = 0; upd[`quiz/tb/members/${pid}/answered`] = false; upd[`quiz/tb/members/${pid}/lastAnswer`] = null; });
-  tb.teams.forEach((_, i) => { upd[`quiz/tb/teams/${i}/score`] = 0; });
-  upd['quiz/sessionToken']    = token;
-  upd['quiz/mode']            = mode;
-  upd['quiz/state']           = 'lobby';
-  upd['quiz/currentSection']  = 0;
-  upd['quiz/currentQIndex']   = -1;
-  upd['quiz/currentQuestion'] = null;
-  upd['quiz/revealAnswer']    = null;
-  upd['quiz/roundAnswers']    = null;
-  upd['quiz/sections']        = sections;
-  upd['quiz/tb/state']        = 'lobby';
-  upd['quiz/tb/used']         = [];
-  upd['quiz/tb/cq']           = null;
-  upd['quiz/tb/lock']         = null;
-  upd['quiz/tb/isBonus']      = false;
-  upd['quiz/sp/state']        = 'lobby';
-  upd['quiz/sp/activePid']    = null;
-  upd['quiz/sp/session']      = null;
-  db.ref().update(upd);
+  var token = newSessionToken();
+  db.ref().update({
+    'quiz/players': null,
+    'quiz/sp/players': null,
+    'quiz/tb/members': null,
+    'quiz/roundAnswers': null,
+    'quiz/sessionToken': token,
+    'quiz/mode': mode,
+    'quiz/state': 'lobby',
+    'quiz/currentSection': 0,
+    'quiz/currentQIndex': -1,
+    'quiz/currentQuestion': null,
+    'quiz/revealAnswer': null,
+    'quiz/sections': sections,
+    'quiz/tb/state': 'lobby',
+    'quiz/tb/used': [],
+    'quiz/tb/cq': null,
+    'quiz/tb/lock': null,
+    'quiz/tb/isBonus': false,
+    'quiz/sp/state': 'lobby',
+    'quiz/sp/activePid': null,
+    'quiz/sp/session': null
+  });
 }
 
 /* ═══ STANDARD TIMER ═══ */
@@ -1207,10 +1208,7 @@ function removePlayer(pid){
   db.ref('quiz/tb/members/' + pid).remove();
 }
 
-/* ═══ INIT LUCIDE ICONS ═══ */
-document.addEventListener('DOMContentLoaded', function(){
-  if(window.lucide) lucide.createIcons();
-});
+/* ═══ FONT AWESOME LOADED VIA CDN — no init needed ═══ */
 </script>
 </body>
 </html>
