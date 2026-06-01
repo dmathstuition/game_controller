@@ -5,7 +5,7 @@
 <title>IJA Quiz — Organiser</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<!-- Auth removed: local password check instead -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -197,10 +197,22 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
   <div class="lcard">
     <span class="lico">🏆</span>
     <h1>IJA Quiz Organiser</h1>
-    <p>Control Panel — Enter password to continue</p>
+    <p>Control Panel — Sign in to continue</p>
+    <div id="login-fb-status" style="padding:6px 12px;border-radius:8px;font-size:.75rem;margin-bottom:10px;display:none;font-family:'JetBrains Mono',monospace"></div>
+    <input type="email" id="login-email" placeholder="Organiser email…"/>
     <input type="password" id="pass-inp" placeholder="Password…"/>
     <button class="bp" style="width:100%;padding:12px;font-size:14px;margin-top:2px" onclick="doLogin()">Unlock</button>
     <div class="err" id="lerr">Incorrect password.</div>
+    <details id="login-cfg-panel" style="margin-top:14px;background:var(--bg);border:1px solid var(--border);border-radius:10px">
+      <summary style="padding:8px 12px;cursor:pointer;font-size:.75rem;color:var(--text2);font-weight:600">⚙️ Firebase Config (first-time setup)</summary>
+      <div style="padding:10px 12px">
+        <div class="fg"><label>API Key</label><input id="lcfg-key" placeholder="AIzaSy…" style="font-size:12px"/></div>
+        <div class="fg"><label>Database URL</label><input id="lcfg-db" placeholder="https://project-rtdb.firebaseio.com" style="font-size:12px"/></div>
+        <div class="fg"><label>Project ID</label><input id="lcfg-pid" placeholder="your-project-id" style="font-size:12px"/></div>
+        <div class="fg"><label>Auth Domain</label><input id="lcfg-auth" placeholder="project.firebaseapp.com" style="font-size:12px"/></div>
+        <button class="bp bsm" style="width:100%" onclick="saveLoginCfg()">Save & Connect</button>
+      </div>
+    </details>
   </div>
 </div>
 
@@ -490,7 +502,6 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
 <script>
 <script>
 /* ═══ FIREBASE — dynamic config from Setup panel ═══ */
-const PASS = "IJAadmin2024";
 let db = null;
 
 function getCfg(){ return JSON.parse(localStorage.getItem('ija_org_cfg') || 'null'); }
@@ -506,15 +517,61 @@ function startFB(cfg){
     db = firebase.database();
     initServerOffset();
     showCfgMsg('✓ Connected!','s');
+    updateLoginStatus(true);
   }catch(e){
     db = null;
     showCfgMsg('Error: '+e.message,'e');
+    updateLoginStatus(false);
   }
 }
+
+/* Show connection status on the login page */
+function updateLoginStatus(connected){
+  const el = document.getElementById('login-fb-status');
+  if(!el) return;
+  if(connected){
+    el.style.display = 'block';
+    el.style.background = 'rgba(16,185,129,.1)';
+    el.style.border = '1px solid rgba(16,185,129,.3)';
+    el.style.color = '#10b981';
+    el.textContent = '✓ Firebase connected — enter your email & password';
+    document.getElementById('login-cfg-panel').removeAttribute('open');
+  } else {
+    el.style.display = 'block';
+    el.style.background = 'rgba(239,68,68,.1)';
+    el.style.border = '1px solid rgba(239,68,68,.3)';
+    el.style.color = '#ff8080';
+    el.textContent = '✗ Not connected — open Firebase Config below';
+    document.getElementById('login-cfg-panel').setAttribute('open','');
+  }
+}
+
+/* Save config from login page mini-form */
+function saveLoginCfg(){
+  const cfg = {
+    apiKey: gv('lcfg-key'),
+    databaseURL: gv('lcfg-db'),
+    projectId: gv('lcfg-pid'),
+    authDomain: gv('lcfg-auth')
+  };
+  if(!cfg.apiKey || !cfg.databaseURL){ alert('Enter at least API Key and Database URL.'); return; }
+  localStorage.setItem('ija_org_cfg', JSON.stringify(cfg));
+  initFB(cfg);
+}
+
 /* Auto-connect on load if config saved */
 (function(){
   const c = getCfg();
-  if(c && c.apiKey && c.databaseURL) initFB(c);
+  if(c && c.apiKey && c.databaseURL){
+    initFB(c);
+    /* Pre-fill login config panel from saved values */
+    setTimeout(()=>{
+      sv('lcfg-key', c.apiKey||''); sv('lcfg-db', c.databaseURL||'');
+      sv('lcfg-pid', c.projectId||''); sv('lcfg-auth', c.authDomain||'');
+    },100);
+  } else {
+    updateLoginStatus(false);
+  }
 })();
 
 /* ═══ STATE ═══ */
@@ -538,25 +595,33 @@ function initServerOffset(){
 function serverNow(){ return Date.now() + serverOffset; }
 
 /* ═══ LOGIN ═══ */
-/* ═══ LOGIN — local password check, no Firebase Auth needed ═══ */
+/* ═══ LOGIN — Firebase Auth email+password ═══ */
 function doLogin(){
+  const email = gv('login-email');
   const pass = gv('pass-inp');
-  if(pass !== PASS){
-    document.getElementById('lerr').textContent = 'Incorrect password.';
+  if(!email || !pass){
+    document.getElementById('lerr').textContent = 'Enter both email and password.';
     document.getElementById('lerr').style.display = 'block';
     return;
   }
   if(!db){
-    document.getElementById('lerr').textContent = 'Not connected to Firebase. Go to Setup first.';
+    document.getElementById('lerr').textContent = 'Not connected to Firebase. Save your config in Setup first, then reload.';
     document.getElementById('lerr').style.display = 'block';
     return;
   }
-  document.getElementById('login').style.display = 'none';
-  document.getElementById('app').classList.add('on');
-  loadSectionNames();
-  buildSectionUI();
-  setupListeners();
-  loadOrgCfg();
+  firebase.auth().signInWithEmailAndPassword(email, pass)
+    .then(() => {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('app').classList.add('on');
+      loadSectionNames();
+      buildSectionUI();
+      setupListeners();
+      loadOrgCfg();
+    })
+    .catch(err => {
+      document.getElementById('lerr').textContent = err.message;
+      document.getElementById('lerr').style.display = 'block';
+    });
 }
 document.getElementById('pass-inp').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
 
