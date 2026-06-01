@@ -506,43 +506,49 @@ let db = null;
 
 function getCfg(){ return JSON.parse(localStorage.getItem('ija_org_cfg') || 'null'); }
 function initFB(cfg){
+  /* Kill any existing app first, then start fresh */
   try{
-    if(firebase.apps.length) firebase.app().delete().then(()=>startFB(cfg)).catch(()=>startFB(cfg));
-    else startFB(cfg);
-  }catch(e){ startFB(cfg); }
+    if(firebase.apps.length){
+      firebase.app().delete().then(function(){ doStartFB(cfg); }).catch(function(){ doStartFB(cfg); });
+    } else {
+      doStartFB(cfg);
+    }
+  }catch(e){ doStartFB(cfg); }
 }
-function startFB(cfg){
+
+function doStartFB(cfg){
   try{
     firebase.initializeApp(cfg);
     db = firebase.database();
-    initServerOffset();
-    showCfgMsg('✓ Connected!','s');
+    /* Show success FIRST, before any listeners */
     updateLoginStatus(true);
+    showCfgMsg('✓ Connected!','s');
+    /* Server time offset — non-critical, wrap in its own try */
+    try{ initServerOffset(); }catch(e){ /* ignore */ }
   }catch(e){
     db = null;
+    updateLoginStatus(false, 'Error: ' + e.message);
     showCfgMsg('Error: '+e.message,'e');
-    updateLoginStatus(false);
   }
 }
 
 /* Show connection status on the login page */
-function updateLoginStatus(connected){
+function updateLoginStatus(connected, errMsg){
   const el = document.getElementById('login-fb-status');
   if(!el) return;
+  el.style.display = 'block';
   if(connected){
-    el.style.display = 'block';
     el.style.background = 'rgba(16,185,129,.1)';
     el.style.border = '1px solid rgba(16,185,129,.3)';
     el.style.color = '#10b981';
-    el.textContent = '✓ Firebase connected — enter your email & password';
-    document.getElementById('login-cfg-panel').removeAttribute('open');
+    el.textContent = '✓ Firebase connected — enter your email & password above';
+    try{ document.getElementById('login-cfg-panel').removeAttribute('open'); }catch(e){}
   } else {
-    el.style.display = 'block';
     el.style.background = 'rgba(239,68,68,.1)';
     el.style.border = '1px solid rgba(239,68,68,.3)';
     el.style.color = '#ff8080';
-    el.textContent = '✗ Not connected — open Firebase Config below';
-    document.getElementById('login-cfg-panel').setAttribute('open','');
+    el.textContent = errMsg || '✗ Not connected — enter Firebase config below and click Save & Connect';
+    try{ document.getElementById('login-cfg-panel').setAttribute('open',''); }catch(e){}
   }
 }
 
@@ -554,9 +560,16 @@ function saveLoginCfg(){
     projectId: gv('lcfg-pid'),
     authDomain: gv('lcfg-auth')
   };
-  if(!cfg.apiKey || !cfg.databaseURL){ alert('Enter at least API Key and Database URL.'); return; }
+  if(!cfg.apiKey || !cfg.databaseURL){
+    updateLoginStatus(false, '✗ Enter at least API Key and Database URL');
+    return;
+  }
   localStorage.setItem('ija_org_cfg', JSON.stringify(cfg));
-  initFB(cfg);
+  /* Show immediate "connecting..." feedback */
+  const el = document.getElementById('login-fb-status');
+  if(el){ el.style.display='block'; el.style.background='rgba(245,197,24,.1)'; el.style.border='1px solid rgba(245,197,24,.3)'; el.style.color='#f59e0b'; el.textContent='⏳ Connecting to Firebase…'; }
+  /* Small delay to let UI update before potentially blocking init */
+  setTimeout(function(){ initFB(cfg); }, 100);
 }
 
 /* Auto-connect on load if config saved */
@@ -564,8 +577,7 @@ function saveLoginCfg(){
   const c = getCfg();
   if(c && c.apiKey && c.databaseURL){
     initFB(c);
-    /* Pre-fill login config panel from saved values */
-    setTimeout(()=>{
+    setTimeout(function(){
       sv('lcfg-key', c.apiKey||''); sv('lcfg-db', c.databaseURL||'');
       sv('lcfg-pid', c.projectId||''); sv('lcfg-auth', c.authDomain||'');
     },100);
