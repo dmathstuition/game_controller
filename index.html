@@ -372,6 +372,33 @@ pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;paddin
         </div>
         <div class="ipanel" id="team-control">
           <div class="team-score-cards" id="team-score-cards"></div>
+          <!-- TEAM ASSIGNMENT -->
+          <div class="card">
+            <div class="ct"><i class="fa-solid fa-users"></i> Team Assignment — Click a player to assign</div>
+            <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:start">
+              <div>
+                <div style="font-size:.72rem;font-weight:800;color:#ff8080;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-family:'JetBrains Mono',monospace" id="ta-t0-label">Red Eagles (0)</div>
+                <div id="ta-team0" style="min-height:40px"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:18px">
+                <div style="width:1px;height:30px;background:var(--border)"></div>
+                <div style="font-size:.65rem;color:var(--text2);font-family:'JetBrains Mono',monospace">POOL</div>
+                <div style="width:1px;height:30px;background:var(--border)"></div>
+              </div>
+              <div>
+                <div style="font-size:.72rem;font-weight:800;color:#60a5fa;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-family:'JetBrains Mono',monospace" id="ta-t1-label">Blue Lions (0)</div>
+                <div id="ta-team1" style="min-height:40px"></div>
+              </div>
+            </div>
+            <div style="margin-top:8px">
+              <div style="font-size:.72rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-family:'JetBrains Mono',monospace" id="ta-unassigned-label">Unassigned (0)</div>
+              <div id="ta-unassigned" style="min-height:30px"></div>
+            </div>
+            <div class="rbtns" style="margin-top:8px">
+              <button class="bgh bsm" onclick="autoAssignTeams()"><i class="fa-solid fa-shuffle"></i> Auto-Assign Evenly</button>
+              <button class="bgh bsm" onclick="unassignAll()"><i class="fa-solid fa-rotate-left"></i> Unassign All</button>
+            </div>
+          </div>
           <div id="tb-bonus-tag"></div>
           <div id="tb-lock-display"></div>
           <div class="cq-card" style="margin-bottom:11px">
@@ -994,7 +1021,7 @@ function renderTBControl(){
   document.getElementById('tb-bonus-tag').innerHTML = tb.cq?.isBonus ? `<div class="bonus-tag">⚡ BONUS — ${esc(tb.teams[tb.cq.activeTeam]?.name||'?')} for 2 marks</div>` : '';
   const lock = tb.lock;
   document.getElementById('tb-lock-display').innerHTML = lock ? `<div class="lock-card">🔒 <b>${esc(tb.members[lock.pid]?.name||'?')}</b> answered <b>${lock.answer}</b> for ${esc(tb.teams[lock.teamIdx]?.name||'?')}</div>` : '';
-  renderTBCQ(); renderTBNavQ();
+  renderTBCQ(); renderTBNavQ(); renderTeamAssignment();
 }
 function startTBTimer(limit, startTime, isBonus){
   clearTBTimer();
@@ -1206,6 +1233,61 @@ function removePlayer(pid){
   db.ref('quiz/players/' + pid).remove();
   db.ref('quiz/sp/players/' + pid).remove();
   db.ref('quiz/tb/members/' + pid).remove();
+}
+
+/* ═══ TEAM ASSIGNMENT ═══ */
+function renderTeamAssignment(){
+  var t0=[],t1=[],unassigned=[];
+  var members=tb.members||{};
+  Object.keys(members).forEach(function(pid){
+    var m=members[pid];
+    if(m.team===0)t0.push({pid:pid,name:m.name||'?'});
+    else if(m.team===1)t1.push({pid:pid,name:m.name||'?'});
+    else unassigned.push({pid:pid,name:m.name||'?'});
+  });
+  function chip(p,fromTeam){
+    var nextTeam=fromTeam===-1?0:(fromTeam===0?1:-1);
+    var label=fromTeam===-1?'→ Assign':'→ Move';
+    var col=fromTeam===0?'#ff8080':fromTeam===1?'#60a5fa':'var(--text2)';
+    return '<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-radius:7px;background:var(--bg);border:1px solid var(--border);margin-bottom:3px;font-size:.78rem">'
+      +'<span style="flex:1;font-weight:600;color:'+col+'">'+esc(p.name)+'</span>'
+      +'<button onclick="assignPlayer(\''+p.pid+'\','+nextTeam+')" style="border:none;background:rgba(37,99,235,.15);color:#60a5fa;border-radius:5px;padding:2px 7px;font-size:.68rem;font-weight:700;cursor:pointer;font-family:inherit">'+label+'</button>'
+      +'<button onclick="assignPlayer(\''+p.pid+'\',-1)" style="border:none;background:rgba(239,68,68,.1);color:#ff8080;border-radius:5px;padding:2px 5px;font-size:.68rem;cursor:pointer;font-family:inherit">✕</button>'
+      +'</div>';
+  }
+  document.getElementById('ta-t0-label').textContent=tb.teams[0].name+' ('+t0.length+')';
+  document.getElementById('ta-t1-label').textContent=tb.teams[1].name+' ('+t1.length+')';
+  document.getElementById('ta-unassigned-label').textContent='Unassigned ('+unassigned.length+')';
+  document.getElementById('ta-team0').innerHTML=t0.length?t0.map(function(p){return chip(p,0);}).join(''):'<div style="color:var(--text2);font-size:.72rem;padding:4px">No members</div>';
+  document.getElementById('ta-team1').innerHTML=t1.length?t1.map(function(p){return chip(p,1);}).join(''):'<div style="color:var(--text2);font-size:.72rem;padding:4px">No members</div>';
+  document.getElementById('ta-unassigned').innerHTML=unassigned.length?unassigned.map(function(p){return chip(p,-1);}).join(''):'<div style="color:var(--text2);font-size:.72rem;padding:4px">All assigned!</div>';
+}
+
+function assignPlayer(pid,teamIdx){
+  if(!db)return;
+  db.ref('quiz/tb/members/'+pid+'/team').set(teamIdx);
+}
+
+function autoAssignTeams(){
+  if(!db)return;
+  var members=tb.members||{};
+  var pids=Object.keys(members);
+  /* Shuffle */
+  for(var i=pids.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=pids[i];pids[i]=pids[j];pids[j]=tmp;}
+  var upd={};
+  pids.forEach(function(pid,i){
+    upd['quiz/tb/members/'+pid+'/team']=i%2;
+  });
+  db.ref().update(upd);
+}
+
+function unassignAll(){
+  if(!db||!confirm('Unassign all players from teams?'))return;
+  var upd={};
+  Object.keys(tb.members||{}).forEach(function(pid){
+    upd['quiz/tb/members/'+pid+'/team']=-1;
+  });
+  db.ref().update(upd);
 }
 
 /* ═══ FONT AWESOME LOADED VIA CDN — no init needed ═══ */
