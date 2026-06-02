@@ -381,6 +381,8 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
               <button class="cbtn bg" id="std-rev-btn" onclick="revealAns()"><i class="fa-solid fa-eye"></i> Reveal</button>
               <button class="cbtn bor" onclick="endComp()"><i class="fa-solid fa-circle-pause"></i> End Round</button>
             </div>
+            <div id="answered-counter" style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--text2);padding:6px 0;transition:color .2s">— / — answered</div>
+            </div>
             <div class="cbgrid" style="margin-top:7px">
               <button class="cbtn bor" onclick="exportCSV()"><i class="fa-solid fa-download"></i> Export CSV</button>
               <button class="cbtn br" style="font-size:.72rem" onclick="endCompAndLogout()"><i class="fa-solid fa-power-off"></i> End & Logout All</button>
@@ -1022,17 +1024,36 @@ function fullReset(){
 /* ═══ STANDARD TIMER ═══ */
 function startStdTimer(limit, startTime){
   clearStdTimer();
-  const ring = document.getElementById('std-ring'), bar = document.getElementById('std-bar'), num = document.getElementById('std-timer');
+  var ring = document.getElementById('std-ring'), bar = document.getElementById('std-bar'), num = document.getElementById('std-timer');
   function tick(){
-    const left = Math.max(0, limit - (serverNow() - startTime) / 1000), pct = left / limit;
+    var left = Math.max(0, limit - (serverNow() - startTime) / 1000), pct = left / limit;
     ring.style.strokeDashoffset = (1 - pct) * CIRC;
     bar.style.width = (pct * 100) + '%';
-    const low = left <= 8, col = low ? '#ef4444' : '#f59e0b';
+    var low = left <= 8, col = low ? '#ef4444' : '#f59e0b';
     ring.style.stroke = col; bar.style.background = col; num.style.color = col;
     num.textContent = Math.ceil(left);
-    if(left <= 0){ clearStdTimer(); num.textContent = '0'; if(gs.state === 'question_active' && db) db.ref('quiz/state').set('time_up'); document.getElementById('std-rev-btn').classList.add('pulse'); }
+    /* Live answered counter */
+    updateAnsweredCounter();
+    if(left <= 0){
+      clearStdTimer(); num.textContent = '0';
+      if(gs.state === 'question_active' && db) db.ref('quiz/state').set('time_up');
+      document.getElementById('std-rev-btn').classList.add('pulse');
+      /* AUTO-REVEAL: 2.5s after time up */
+      setTimeout(function(){ if(gs.state === 'time_up') revealAns(); }, 2500);
+    }
   }
   tick(); timerInt = setInterval(tick, 250);
+}
+
+/* Answered counter — shows on organizer during question */
+function updateAnsweredCounter(){
+  var el = document.getElementById('answered-counter');
+  if(!el) return;
+  var total = Object.keys(players).length;
+  var answered = 0;
+  Object.keys(players).forEach(function(pid){ if(players[pid].answered) answered++; });
+  el.textContent = answered + ' / ' + total + ' answered';
+  el.style.color = (answered >= total) ? '#22c55e' : '#f59e0b';
 }
 function clearStdTimer(){
   clearInterval(timerInt); timerInt = null;
