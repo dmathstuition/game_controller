@@ -109,39 +109,45 @@ details pre{padding:11px 13px;font-family:'JetBrains Mono',monospace;font-size:.
 .qi-meta{display:flex;align-items:center;gap:7px}
 .qi-time{font-size:.68rem;color:var(--text2);font-family:'JetBrains Mono',monospace}
 .used-tag{font-size:.67rem;font-family:'JetBrains Mono',monospace;padding:2px 7px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:5px;color:#ff8080}
-.ctrl-wrap{display:grid;grid-template-columns:1fr 260px;height:100%;overflow:hidden}
-.ctrl-main{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px}
-.ctrl-side{overflow-y:auto;padding:12px;border-left:1px solid var(--border);display:flex;flex-direction:column;gap:9px}
-.cq-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
-.cq-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.cq-meta{font-size:.69rem;color:var(--text2);font-family:'JetBrains Mono',monospace;line-height:1.6}
-.tring{position:relative;width:72px;height:72px;flex-shrink:0}
+.ctrl-wrap{display:grid;grid-template-columns:1fr 280px;height:100%;overflow:hidden}
+.ctrl-main{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.ctrl-side{overflow-y:auto;padding:10px;border-left:1px solid var(--border);display:flex;flex-direction:column;gap:6px}
+.cq-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;position:relative;overflow:hidden}
+.cq-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--gold),var(--accent));opacity:.5}
+.cq-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cq-meta{font-size:.68rem;color:var(--text2);font-family:'JetBrains Mono',monospace;line-height:1.5}
+.tring{position:relative;width:56px;height:56px;flex-shrink:0}
 .tring svg{transform:rotate(-90deg)}
-.tr-bg{fill:none;stroke:var(--border);stroke-width:7}
-.tr-pr{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .45s linear,stroke .3s}
-.tr-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:800}
-.tbar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:12px}
+.tr-bg{fill:none;stroke:var(--border);stroke-width:6}
+.tr-pr{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .45s linear,stroke .3s}
+.tr-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:800}
+.tbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:10px}
 .tbar-f{height:100%;border-radius:2px;transition:width .45s linear,background .3s}
-.cq-txt{font-size:.96rem;font-weight:700;line-height:1.4;margin-bottom:9px}
-.cq-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.cq-opt{padding:7px 9px;border-radius:8px;font-size:.8rem;border:1px solid;display:flex;gap:5px;align-items:center}
-.cq-opt b{font-size:.85rem;flex-shrink:0}
+.cq-txt{font-size:.9rem;font-weight:700;line-height:1.4;margin-bottom:8px}
+.cq-opts{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cq-opt{padding:6px 8px;border-radius:7px;font-size:.78rem;border:1px solid;display:flex;gap:4px;align-items:center}
+.cq-opt b{font-size:.82rem;flex-shrink:0}
 .cq-opt.A{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3)}.cq-opt.A b{color:#ef4444}
 .cq-opt.B{background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.3)}.cq-opt.B b{color:#3b82f6}
 .cq-opt.C{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3)}.cq-opt.C b{color:#f59e0b}
 .cq-opt.D{background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3)}.cq-opt.D b{color:#10b981}
 .cq-opt.rv-ok{background:rgba(16,185,129,.2);border-color:var(--green)}
 .cq-opt.rv-no{opacity:.28}
-.cbgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.cbtn{padding:13px;border-radius:10px;border:none;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:700;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.cbgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cbgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.cbtn{padding:10px 8px;border-radius:9px;border:none;cursor:pointer;font-family:inherit;font-size:.78rem;font-weight:700;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
 .cbtn:disabled{opacity:.35;cursor:not-allowed}
 .cbtn:hover:not(:disabled){transform:translateY(-1px)}
 .cbtn.pulse{animation:rpu 1s ease-in-out infinite}
 @keyframes rpu{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.5)}50%{box-shadow:0 0 0 10px rgba(245,158,11,0)}}
-.nav-q{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:4px;transition:all .15s}
+.nav-q{display:flex;align-items:center;gap:6px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 8px;margin-bottom:3px;transition:all .15s;cursor:pointer}
+.nav-q:hover{border-color:var(--accent);background:rgba(37,99,235,.04)}
 .nav-q.live{border-color:var(--green);background:rgba(16,185,129,.07)}
-.nav-q-num{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text2);width:22px;flex-shrink:0}
-.nav-q-txt{flex:1;font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-q-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--text2);width:20px;flex-shrink:0}
+.nav-q-txt{flex:1;font-size:.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live-tag{font-size:.64rem;padding:1px 6px;border-radius:16px;background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green);flex-shrink:0;font-weight:700}
+.nav-q-btn{padding:3px 10px;border-radius:6px;border:none;background:var(--accent);color:#fff;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;transition:all .12s}
+.nav-q-btn:hover{background:#3b82f6;transform:scale(1.04)}
 .live-tag{font-size:.67rem;padding:2px 7px;border-radius:20px;background:rgba(16,185,129,.15);color:var(--green);border:1px solid var(--green);flex-shrink:0}
 .stat-item{margin-bottom:8px}
 .stat-row{display:flex;align-items:center;gap:6px}
@@ -198,95 +204,168 @@ hr{border:none;border-top:1px solid var(--border);margin:10px 0}
 pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text2);line-height:1.6;overflow-x:auto}
 .info-box{background:rgba(249,115,22,.08);border:1px solid rgba(249,115,22,.3);border-radius:10px;padding:10px 14px;font-size:.78rem;color:var(--orange);margin-bottom:12px;line-height:1.6}
 
-/* ═══ PROFESSIONAL UI ENHANCEMENTS ═══ */
+/* ═══ ORGANIZER UI OVERHAUL ═══ */
 
-/* Login card dramatic glow */
-.lcard{box-shadow:0 0 80px rgba(37,99,235,.08),0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.lico{filter:drop-shadow(0 0 20px rgba(37,99,235,.3));display:block;text-align:center;font-size:3rem;margin-bottom:12px}
-#login input{transition:all .2s cubic-bezier(.4,0,.2,1)}
-#login input:focus{box-shadow:0 0 0 3px rgba(37,99,235,.15),0 0 20px rgba(37,99,235,.06);border-color:var(--accent)}
+/* ── Topbar ── */
+.topbar{box-shadow:0 1px 12px rgba(0,0,0,.4);padding:0 16px;height:48px;gap:12px}
+.tb-brand{font-size:.9rem;font-weight:800;letter-spacing:1px}
+.mode-grp{gap:3px}
+.msw{padding:5px 14px;font-size:.72rem;border-radius:6px;font-weight:700;transition:all .15s;position:relative}
+.msw.on::after{content:'';position:absolute;bottom:-2px;left:20%;right:20%;height:2px;border-radius:2px;background:currentColor}
+.state-badge{font-size:.6rem;padding:3px 10px}
+.tb-right{gap:10px}
+.tb-pi{font-size:.75rem}
 
-/* Sidebar — enhanced active state */
-.nav-btn{transition:all .15s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
-.nav-btn::before{content:'';position:absolute;left:0;top:25%;bottom:25%;width:3px;border-radius:0 3px 3px 0;background:var(--accent);opacity:0;transition:opacity .15s,transform .15s;transform:scaleY(0)}
+/* ── Sidebar ── */
+.sidebar{width:52px;padding:8px 4px;gap:2px}
+.nav-btn{border-radius:10px;padding:8px 0;font-size:.65rem;gap:2px;position:relative}
+.nav-btn::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;border-radius:0 3px 3px 0;background:var(--accent);opacity:0;transition:opacity .15s,transform .15s;transform:scaleY(0)}
 .nav-btn.on::before{opacity:1;transform:scaleY(1)}
-.nav-btn:hover:not(.on){background:rgba(37,99,235,.05);color:rgba(255,255,255,.7)}
+.nav-btn.on{background:rgba(37,99,235,.08)}
+.nav-btn i{font-size:14px}
+.nav-lbl{font-size:.55rem}
+.sb-tog{font-size:.7rem}
 
-/* Topbar — subtle shadow */
-.topbar{box-shadow:0 1px 10px rgba(0,0,0,.3)}
+/* ── Main content area ── */
+.main{padding:0}
+.panel{overflow:hidden}
+.pscroll{padding:12px;gap:10px}
 
-/* Cards — refined depth */
-.card{box-shadow:0 2px 12px rgba(0,0,0,.2);transition:border-color .2s cubic-bezier(.4,0,.2,1),box-shadow .2s,transform .2s}
-.card:hover{border-color:rgba(37,99,235,.2);box-shadow:0 4px 24px rgba(0,0,0,.3);transform:translateY(-1px)}
+/* ── Cards — tighter, cleaner ── */
+.card{border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid rgba(255,255,255,.04);background:rgba(10,21,37,.7)}
+.card:hover{border-color:rgba(37,99,235,.15);box-shadow:0 2px 16px rgba(0,0,0,.2)}
+.ct{font-size:.72rem;color:var(--text2);letter-spacing:.8px;text-transform:uppercase;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.ct i{font-size:10px;opacity:.5}
 
-/* Card titles — subtle icon glow */
-.ct i{opacity:.6;transition:opacity .2s}
-.card:hover .ct i{opacity:1}
+/* ── Question Preview Card — compact ── */
+.cq-card{border-radius:12px;padding:10px 12px;margin-bottom:8px;background:rgba(10,21,37,.8);border:1px solid rgba(37,99,235,.12)}
+.cq-card::before{height:2px;opacity:.3}
+.cq-head{margin-bottom:4px}
+.cq-meta{font-size:.68rem;color:var(--text2)}
+.tring{width:44px;height:44px}
+.tring svg{width:44px;height:44px}
+.tr-num{font-size:.85rem}
+.tbar{height:2px;margin-bottom:6px;border-radius:1px}
+#std-cq-display,#tb-cq-display{font-size:.82rem;line-height:1.5}
+.cq-qtext{font-size:.88rem!important;font-weight:700;margin-bottom:4px}
+.cq-opts{display:grid;grid-template-columns:1fr 1fr;gap:3px;font-size:.72rem}
+.cq-opt{padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.2)}
+.cq-opt.ok{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08);color:var(--green)}
 
-/* Buttons — refined hover effects */
-.bp,.cbtn{transition:all .15s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
-.bp::after,.cbtn::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);pointer-events:none;border-radius:inherit}
-.cbtn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.3)}
-.cbtn:active{transform:translateY(0);box-shadow:none;transition-duration:.05s}
+/* ── Control Grid — compact buttons ── */
+.cbgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.cbgrid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px}
+.cbtn{padding:8px 10px;font-size:.72rem;border-radius:8px;font-weight:700;transition:all .12s;border-width:1px;display:flex;align-items:center;justify-content:center;gap:5px}
+.cbtn i{font-size:10px}
+.cbtn:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.3)}
+.cbtn:active{transform:translateY(0);transition-duration:.05s}
+.cbtn.bgrn:hover{box-shadow:0 3px 12px rgba(34,197,94,.25)}
+.cbtn.bpu:hover{box-shadow:0 3px 12px rgba(168,85,247,.25)}
+.cbtn.br:hover{box-shadow:0 3px 12px rgba(239,68,68,.2)}
+.cbtn.bor:hover{box-shadow:0 3px 12px rgba(249,115,22,.2)}
+.cbtn.bg:hover{box-shadow:0 3px 12px rgba(245,197,24,.2)}
 
-/* Control buttons — color-specific glow on hover */
-.cbtn.bgrn:hover{box-shadow:0 4px 16px rgba(34,197,94,.25)}
-.cbtn.bpu:hover{box-shadow:0 4px 16px rgba(168,85,247,.25)}
-.cbtn.br:hover{box-shadow:0 4px 16px rgba(239,68,68,.2)}
-.cbtn.bor:hover{box-shadow:0 4px 16px rgba(249,115,22,.2)}
-.cbtn.bg:hover{box-shadow:0 4px 16px rgba(245,197,24,.2)}
+/* ── Reveal button pulse ── */
+.cbtn.pulse{animation:revPulse 1s ease-in-out infinite}
+@keyframes revPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,197,24,.5)}50%{box-shadow:0 0 0 8px rgba(245,197,24,0)}}
 
-/* Mode switcher — enhanced active glow */
-.msw{transition:all .15s;position:relative}
-.msw.on::after{content:'';position:absolute;inset:0;border-radius:6px;box-shadow:0 0 12px rgba(37,99,235,.3);pointer-events:none}
-.msw.team.on::after{box-shadow:0 0 12px rgba(232,25,47,.3)}
-.msw.speed.on::after{box-shadow:0 0 12px rgba(249,115,22,.3)}
+/* ── Control layout — main + sidebar ── */
+.ctrl-wrap{grid-template-columns:1fr 240px}
+.ctrl-main{padding:12px;gap:8px}
+.ctrl-side{padding:10px;gap:4px;border-left:1px solid rgba(255,255,255,.04);background:rgba(6,12,22,.5)}
 
-/* Question items — refined styling */
-.qi{transition:border-color .15s,box-shadow .15s}
-.qi:hover{border-color:rgba(37,99,235,.25);box-shadow:0 2px 12px rgba(0,0,0,.2)}
-.qi-opt.ok{box-shadow:0 0 8px rgba(34,197,94,.1)}
+/* ── Info box — subtle ── */
+.info-box{font-size:.68rem;padding:6px 10px;margin-bottom:6px;border-radius:8px;opacity:.8}
 
-/* Score board — player items */
-.pl-item{transition:background .15s}
+/* ── Answer distribution bars ── */
+.ans-bar{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-size:.68rem}
+.ans-lbl{width:14px;font-weight:800;flex-shrink:0}
+.ans-track{flex:1;height:6px;background:rgba(255,255,255,.04);border-radius:3px;overflow:hidden}
+.ans-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.ans-cnt{width:18px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--text2)}
+
+/* ── Player list — compact ── */
+.pl-item{display:flex;align-items:center;gap:6px;padding:4px 6px;border-radius:6px;font-size:.72rem;transition:background .12s}
 .pl-item:hover{background:rgba(37,99,235,.06)}
+.pl-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.12);flex-shrink:0;transition:background .2s}
+.pl-dot.ans{background:var(--green);box-shadow:0 0 6px rgba(34,197,94,.3)}
+.pl-name{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.pl-score{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--gold);flex-shrink:0}
 
-/* Timer bar smoothing */
-.tbar-f{transition:width .4s cubic-bezier(.4,0,.2,1)}
+/* ── Question items in list ── */
+.qi{padding:8px 10px;border-radius:8px;margin-bottom:4px;font-size:.75rem;border:1px solid rgba(255,255,255,.04);transition:all .12s;background:rgba(10,21,37,.5)}
+.qi:hover{border-color:rgba(37,99,235,.2);background:rgba(37,99,235,.03)}
+.qi-meta{font-size:.65rem;color:var(--text2)}
+.qi-opts{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:4px;font-size:.68rem}
+.qi-opt{padding:2px 6px;border-radius:4px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.04)}
+.qi-opt.ok{border-color:rgba(34,197,94,.3);color:var(--green)}
 
-/* Input fields — refined focus */
-input,textarea,select{transition:border-color .2s,box-shadow .2s}
-input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),0 0 16px rgba(37,99,235,.04)}
+/* ── Import area — compact ── */
+.imp-tabs{gap:2px;margin-bottom:6px}
+.imptab{font-size:.7rem;padding:4px 10px}
+.paste-box{font-size:.7rem;min-height:60px}
+.file-lbl{font-size:.72rem;padding:8px}
 
-/* Tabs — better active state */
-.itab{transition:all .12s}
-.itab.on::after{content:'';position:absolute;bottom:-1px;left:15%;right:15%;height:2px;background:var(--accent);border-radius:2px}
-.itab{position:relative}
+/* ── Section tabs ── */
+.stabs{gap:3px;margin-bottom:8px}
+.stab{font-size:.7rem;padding:5px 12px;border-radius:6px}
 
-/* Team assignment chips */
-#ta-team0>div,#ta-team1>div,#ta-unassigned>div{transition:all .15s}
-#ta-team0>div:hover,#ta-team1>div:hover,#ta-unassigned>div:hover{background:rgba(37,99,235,.06)!important;transform:translateX(2px)}
+/* ── Team score cards ── */
+.team-score-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.ts-card{border-radius:12px;padding:12px;text-align:center;border:1px solid;transition:transform .15s,box-shadow .15s}
+.ts-card:hover{transform:translateY(-2px)}
+.ts-card.t0{background:rgba(232,25,47,.06);border-color:rgba(232,25,47,.25)}
+.ts-card.t1{background:rgba(37,99,235,.06);border-color:rgba(37,99,235,.25)}
+.ts-name{font-size:.72rem;font-weight:700;margin-bottom:4px}
+.ts-score{font-family:'JetBrains Mono',monospace;font-size:1.5rem;font-weight:900;color:var(--gold)}
 
-/* Score cards in team mode */
-.team-score-cards .ts-card{transition:transform .2s,box-shadow .2s}
-.team-score-cards .ts-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+/* ── Tab system — clean ── */
+.itabs{display:flex;gap:3px;background:rgba(0,0,0,.2);border-radius:8px;padding:3px;margin-bottom:10px}
+.itab{flex:1;padding:6px;text-align:center;border-radius:6px;font-size:.72rem;font-weight:700;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;position:relative}
+.itab.on{background:rgba(37,99,235,.12);color:var(--text)}
+.itab.on::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--accent);border-radius:2px}
 
-/* Flash messages — smoother */
-.flash{animation:flashIn .3s ease}
-@keyframes flashIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+/* ── Speed player list ── */
+.sp-pl{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.04);margin-bottom:4px;font-size:.78rem;transition:all .12s;background:rgba(10,21,37,.5)}
+.sp-pl:hover{border-color:rgba(249,115,22,.2);background:rgba(249,115,22,.03)}
+.sp-status{font-size:.6rem;padding:2px 6px;border-radius:4px;font-weight:700}
+.sp-status.waiting{background:rgba(245,197,24,.1);color:var(--gold)}
+.sp-status.running{background:rgba(34,197,94,.1);color:var(--green)}
+.sp-status.done{background:rgba(168,85,247,.1);color:var(--purple)}
 
-/* Scrollbar refinement */
-::-webkit-scrollbar{width:5px}
+/* ── Login page refinement ── */
+.lcard{background:rgba(10,21,37,.95);border:1px solid rgba(37,99,235,.15);border-radius:20px;padding:36px 30px;max-width:360px;width:90%;box-shadow:0 0 80px rgba(37,99,235,.06),0 20px 60px rgba(0,0,0,.5);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.lico{display:block;text-align:center;font-size:2.8rem;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(37,99,235,.2))}
+.lcard h1{text-align:center;font-size:1.2rem;font-weight:800;color:var(--text);margin-bottom:2px}
+.lcard p{text-align:center;font-size:.78rem;color:var(--text2);margin-bottom:16px}
+.lcard input{margin-bottom:8px;padding:10px 12px;border-radius:8px;font-size:.85rem}
+.err{color:#ff8080;font-size:.72rem;margin-top:6px;text-align:center;display:none}
+
+/* ── General refinements ── */
+.rbtns{display:flex;gap:4px;flex-wrap:wrap}
+.bgh{font-size:.68rem;padding:5px 10px;border-radius:6px}
+.bsm{font-size:.7rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.fg{margin-bottom:6px}
+.fg label{font-size:.62rem;margin-bottom:2px}
+.fg input,.fg textarea,.fg select{padding:7px 10px;font-size:.78rem;border-radius:7px}
+hr{margin:6px 0;border-color:rgba(255,255,255,.04)}
+.empty{color:var(--text2);font-size:.72rem;font-style:italic}
+details summary{font-size:.7rem;color:var(--text2);cursor:pointer;padding:4px 0}
+pre{font-size:.65rem;padding:6px 10px}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(37,99,235,.2);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:rgba(37,99,235,.4)}
+::-webkit-scrollbar-thumb{background:rgba(37,99,235,.15);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:rgba(37,99,235,.3)}
 </style>
 </head>
 <body>
 
 <div id="login">
   <div class="lcard">
-    <span class="lico">🏆</span>
+    <span class="lico"><i class="fa-solid fa-trophy" style="font-size:2.8rem;color:var(--accent)"></i></span>
     <h1>IJA Quiz Organiser</h1>
     <p>Control Panel — Sign in to continue</p>
     <input type="email" id="login-email" placeholder="Organiser email…"/>
@@ -329,23 +408,23 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
       <div class="pscroll">
         <div class="stabs" id="s-tabs"></div>
         <div class="card">
-          <div class="ct">📥 Import — <span id="cur-sec-lbl">Section 1</span></div>
+          <div class="ct"><i class="fa-solid fa-file-import"></i> Import — <span id="cur-sec-lbl">Section 1</span></div>
           <div class="imp-tabs">
-            <button class="imptab on" onclick="switchImpTab('std','file')">📂 File</button>
-            <button class="imptab" onclick="switchImpTab('std','paste')">📋 Paste JSON</button>
+            <button class="imptab on" onclick="switchImpTab('std','file')"><i class="fa-solid fa-folder-open"></i> File</button>
+            <button class="imptab" onclick="switchImpTab('std','paste')"><i class="fa-solid fa-clipboard"></i> Paste JSON</button>
           </div>
-          <div id="std-imp-file"><label class="file-lbl" for="std-jfile">📂 Choose JSON File</label><input type="file" id="std-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'std')"></div>
+          <div id="std-imp-file"><label class="file-lbl" for="std-jfile"><i class="fa-solid fa-folder-open"></i> Choose JSON File</label><input type="file" id="std-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'std')"></div>
           <div id="std-imp-paste" style="display:none"><textarea class="paste-box" id="std-paste-json" placeholder='[{"text":"Question?","options":{"A":"","B":"","C":"","D":""},"answer":"A","timeLimit":30}]'></textarea><button class="bp bsm" onclick="importPaste('std')" style="width:100%">Import Pasted JSON</button></div>
           <div class="rbtns" style="margin-top:9px">
-            <button class="bgh bsm" onclick="exportSec()">📤 Export Section</button>
-            <button class="bgh bsm" onclick="exportAll()">📤 Export All</button>
-            <button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearSec()">🗑 Clear</button>
+            <button class="bgh bsm" onclick="exportSec()"><i class="fa-solid fa-file-export"></i> Export Section</button>
+            <button class="bgh bsm" onclick="exportAll()"><i class="fa-solid fa-file-export"></i> Export All</button>
+            <button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearSec()"><i class="fa-solid fa-trash"></i> Clear</button>
           </div>
           <details><summary>JSON Format</summary><pre>[{"text":"Q?","options":{"A":"","B":"","C":"","D":""},"answer":"A","timeLimit":30}]</pre></details>
           <div id="std-flash" class="flash" style="margin-bottom:0"></div>
         </div>
         <div class="card">
-          <div class="ct">➕ Add Single Question</div>
+          <div class="ct"><i class="fa-solid fa-plus"></i> Add Single Question</div>
           <div class="fg"><label>Question</label><textarea id="nq-text" placeholder="Question text…"></textarea></div>
           <div class="g2">
             <div class="fg"><label>A</label><input id="nq-a"/></div><div class="fg"><label>B</label><input id="nq-b"/></div>
@@ -364,46 +443,46 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
     <div class="panel" id="panel-c">
       <div class="ctrl-wrap">
         <div class="ctrl-main">
-          <div class="info-box">💡 <b>End Round</b> returns everyone to lobby (players stay connected). <b>End & Logout All</b> kicks everyone out — use only when the whole event is over.</div>
+          <div class="card" style="padding:10px;margin-bottom:6px">
+            <div class="ct"><i class="fa-solid fa-gamepad"></i> Controls</div>
+            <div class="cbgrid" style="margin-bottom:4px">
+              <button class="cbtn bgrn" onclick="startComp()"><i class="fa-solid fa-play"></i> Start</button>
+              <button class="cbtn bg" id="std-rev-btn" onclick="revealAns()"><i class="fa-solid fa-eye"></i> Reveal</button>
+            </div>
+            <div id="answered-counter" style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:700;color:var(--text2);padding:3px 0;transition:color .2s">— / — answered</div>
+            <div class="cbgrid" style="margin-bottom:4px">
+              <button class="cbtn bpu" onclick="showLB('leaderboard')"><i class="fa-solid fa-trophy"></i> Board</button>
+              <button class="cbtn bor" onclick="endComp()"><i class="fa-solid fa-circle-pause"></i> End Round</button>
+            </div>
+            <div class="cbgrid3">
+              <button class="cbtn bor" onclick="exportCSV()"><i class="fa-solid fa-download"></i> CSV</button>
+              <button class="cbtn br" onclick="endCompAndLogout()"><i class="fa-solid fa-power-off"></i> Logout</button>
+              <button class="cbtn br" onclick="clearAllPlayers()"><i class="fa-solid fa-user-xmark"></i> Clear</button>
+            </div>
+          </div>
           <div class="cq-card">
             <div class="cq-head">
               <div class="cq-meta" id="std-cq-meta">No active question</div>
-              <div class="tring"><svg viewBox="0 0 72 72" width="72" height="72"><circle class="tr-bg" cx="36" cy="36" r="30"/><circle class="tr-pr" id="std-ring" cx="36" cy="36" r="30" stroke="var(--gold)" stroke-dasharray="188.5" stroke-dashoffset="0"/></svg><div class="tr-num" id="std-timer" style="color:var(--gold)">—</div></div>
+              <div class="tring"><svg viewBox="0 0 56 56" width="44" height="44"><circle class="tr-bg" cx="28" cy="28" r="23"/><circle class="tr-pr" id="std-ring" cx="28" cy="28" r="23" stroke="var(--gold)" stroke-dasharray="144.5" stroke-dashoffset="0"/></svg><div class="tr-num" id="std-timer" style="color:var(--gold)">—</div></div>
             </div>
             <div class="tbar"><div class="tbar-f" id="std-bar" style="width:100%;background:var(--gold)"></div></div>
-            <div id="std-cq-display"><div class="empty" style="padding:8px">Launch a question to start.</div></div>
+            <div id="std-cq-display"><div class="empty">Launch a question →</div></div>
           </div>
-          <div class="card">
-            <div class="ct"><i class="fa-solid fa-gamepad"></i> Standard Controls</div>
-            <div class="cbgrid">
-              <button class="cbtn bgrn" onclick="startComp()"><i class="fa-solid fa-play"></i> Start Competition</button>
-              <button class="cbtn bpu" onclick="showLB('leaderboard')"><i class="fa-solid fa-trophy"></i> Leaderboard</button>
-              <button class="cbtn bg" id="std-rev-btn" onclick="revealAns()"><i class="fa-solid fa-eye"></i> Reveal</button>
-              <button class="cbtn bor" onclick="endComp()"><i class="fa-solid fa-circle-pause"></i> End Round</button>
-            </div>
-            <div id="answered-counter" style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--text2);padding:6px 0;transition:color .2s">— / — answered</div>
-            </div>
-            <div class="cbgrid" style="margin-top:7px">
-              <button class="cbtn bor" onclick="exportCSV()"><i class="fa-solid fa-download"></i> Export CSV</button>
-              <button class="cbtn br" style="font-size:.72rem" onclick="endCompAndLogout()"><i class="fa-solid fa-power-off"></i> End & Logout All</button>
-              <button class="cbtn br" style="font-size:.72rem" onclick="clearAllPlayers()"><i class="fa-solid fa-user-xmark"></i> Clear Players</button>
-            </div>
-            <hr>
-            <div class="ct" style="margin-bottom:8px"><i class="fa-solid fa-folder-open"></i> Sections</div>
+          <div class="card" style="padding:10px">
+            <div class="ct"><i class="fa-solid fa-folder-open"></i> Sections</div>
             <div class="rbtns" id="sec-ctrl-btns"></div>
-          </div>
-          <div class="card">
-            <div class="ct"><i class="fa-solid fa-list"></i> Questions — <span id="std-sec-name">Section 1</span></div>
-            <div id="std-nav-q"></div>
           </div>
         </div>
         <div class="ctrl-side">
-          <div class="ct">📊 Answers</div>
-          <div id="std-ans-hdr" style="font-size:.78rem;color:var(--text2);margin-bottom:8px">—</div>
+          <div class="ct"><i class="fa-solid fa-chart-bar"></i> Answers</div>
+          <div id="std-ans-hdr" style="font-size:.7rem;color:var(--text2);margin-bottom:6px">—</div>
           <div id="std-ans-bars"></div>
           <hr>
-          <div class="ct">👥 Players <b id="side-pc" style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.85rem">0</b></div>
+          <div class="ct"><i class="fa-solid fa-users"></i> Players <b id="side-pc" style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.8rem">0</b></div>
           <div id="std-players"></div>
+          <hr>
+          <div class="ct"><i class="fa-solid fa-list"></i> <span id="std-sec-name">Section 1</span></div>
+          <div id="std-nav-q"></div>
         </div>
       </div>
     </div>
@@ -412,25 +491,25 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
     <div class="panel" id="panel-t">
       <div class="pscroll">
         <div class="itabs">
-          <button class="itab on" onclick="itab('team','setup')">⚙️ Setup</button>
-          <button class="itab" onclick="itab('team','questions')">📝 Questions</button>
-          <button class="itab" onclick="itab('team','control')">🎮 Control</button>
+          <button class="itab on" onclick="itab('team','setup')"><i class="fa-solid fa-gear"></i> Setup</button>
+          <button class="itab" onclick="itab('team','questions')"><i class="fa-solid fa-file-lines"></i> Questions</button>
+          <button class="itab" onclick="itab('team','control')"><i class="fa-solid fa-play"></i> Control</button>
         </div>
         <div class="ipanel on" id="team-setup">
           <div class="card">
-            <div class="ct">⚔️ Team Configuration</div>
+            <div class="ct"><i class="fa-solid fa-shield-halved"></i> Team Configuration</div>
             <div class="g2">
               <div class="fg"><label style="color:#ff8080">Team 1 Name</label><input id="team0-name" value="Red Eagles" style="border-color:rgba(232,25,47,.4)"/></div>
               <div class="fg"><label style="color:#60a5fa">Team 2 Name</label><input id="team1-name" value="Blue Lions" style="border-color:rgba(37,99,235,.4)"/></div>
             </div>
             <div class="rbtns">
               <button class="bp bsm" onclick="saveTeamSetup()">Save Names</button>
-              <button class="bgrn bsm" onclick="startTeamBattle()">▶ Start Team Battle</button>
-              <button class="br bsm" onclick="resetTeamBattle()">↺ Reset Scores</button>
+              <button class="bgrn bsm" onclick="startTeamBattle()"><i class="fa-solid fa-play"></i> Start Team Battle</button>
+              <button class="br bsm" onclick="resetTeamBattle()"><i class="fa-solid fa-rotate-left"></i> Reset Scores</button>
             </div>
           </div>
           <div class="card">
-            <div class="ct">📖 Team Battle Rules</div>
+            <div class="ct"><i class="fa-solid fa-book-open"></i> Team Battle Rules</div>
             <div style="color:var(--text2);font-size:.82rem;line-height:1.7">
               <b style="color:var(--text)">Normal Round:</b> Question assigned to active team. Correct = <b style="color:var(--gold)">5 marks</b>.<br><br>
               <b style="color:var(--text)">Bonus Round:</b> Time out or wrong answer → question shifts to other team. Correct = <b style="color:var(--orange)">2 marks</b>.<br><br>
@@ -440,16 +519,16 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
         </div>
         <div class="ipanel" id="team-questions">
           <div class="card">
-            <div class="ct">📥 Team Battle Questions</div>
+            <div class="ct"><i class="fa-solid fa-file-import"></i> Team Battle Questions</div>
             <div class="imp-tabs">
-              <button class="imptab on" onclick="switchImpTab('tb','file')">📂 File</button>
-              <button class="imptab" onclick="switchImpTab('tb','paste')">📋 Paste JSON</button>
+              <button class="imptab on" onclick="switchImpTab('tb','file')"><i class="fa-solid fa-folder-open"></i> File</button>
+              <button class="imptab" onclick="switchImpTab('tb','paste')"><i class="fa-solid fa-clipboard"></i> Paste JSON</button>
             </div>
-            <div id="tb-imp-file"><label class="file-lbl" for="tb-jfile">📂 Choose JSON File</label><input type="file" id="tb-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'tb')"></div>
+            <div id="tb-imp-file"><label class="file-lbl" for="tb-jfile"><i class="fa-solid fa-folder-open"></i> Choose JSON File</label><input type="file" id="tb-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'tb')"></div>
             <div id="tb-imp-paste" style="display:none"><textarea class="paste-box" id="tb-paste-json" placeholder='[{"text":"Q?","options":{"A":"","B":"","C":"","D":""},"answer":"A","timeLimit":30}]'></textarea><button class="bp bsm" onclick="importPaste('tb')" style="width:100%">Import</button></div>
             <div class="rbtns" style="margin-top:9px">
-              <button class="bgh bsm" style="color:var(--orange);border-color:var(--orange)" onclick="revalidateQ()">🔄 Revalidate Questions</button>
-              <button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearTBQ()">🗑 Clear</button>
+              <button class="bgh bsm" style="color:var(--orange);border-color:var(--orange)" onclick="revalidateQ()"><i class="fa-solid fa-rotate"></i> Revalidate Questions</button>
+              <button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearTBQ()"><i class="fa-solid fa-trash"></i> Clear</button>
             </div>
             <div id="tb-flash" class="flash" style="margin-bottom:0"></div>
           </div>
@@ -490,13 +569,13 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
           <div class="cq-card" style="margin-bottom:11px">
             <div class="cq-head">
               <div class="cq-meta" id="tb-cq-meta">No active question</div>
-              <div class="tring"><svg viewBox="0 0 72 72" width="72" height="72"><circle class="tr-bg" cx="36" cy="36" r="30"/><circle class="tr-pr" id="tb-ring" cx="36" cy="36" r="30" stroke="var(--gold)" stroke-dasharray="188.5" stroke-dashoffset="0"/></svg><div class="tr-num" id="tb-timer" style="color:var(--gold)">—</div></div>
+              <div class="tring"><svg viewBox="0 0 56 56" width="56" height="56"><circle class="tr-bg" cx="28" cy="28" r="23"/><circle class="tr-pr" id="tb-ring" cx="28" cy="28" r="23" stroke="var(--gold)" stroke-dasharray="144.5" stroke-dashoffset="0"/></svg><div class="tr-num" id="tb-timer" style="color:var(--gold)">—</div></div>
             </div>
             <div class="tbar"><div class="tbar-f" id="tb-bar" style="width:100%;background:var(--gold)"></div></div>
             <div id="tb-cq-display"><div class="empty" style="padding:8px">Launch for a team below.</div></div>
           </div>
           <div class="card">
-            <div class="ct">🎮 Team Controls</div>
+            <div class="ct"><i class="fa-solid fa-gamepad"></i> Team Controls</div>
             <div class="cbgrid">
               <button class="cbtn bg" id="tb-rev-btn" onclick="tbReveal()"><i class="fa-solid fa-eye"></i> Reveal Answer</button>
               <button class="cbtn bpu" onclick="showLB('section_leaderboard')"><i class="fa-solid fa-medal"></i> Show Scores</button>
@@ -507,11 +586,11 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
             <div class="ct" style="margin-bottom:8px">🎯 Launch for Team</div>
             <div class="rbtns" id="tb-team-launch"></div>
             <hr>
-            <div class="ct" style="margin-bottom:8px">🔄 Switch Active Team</div>
+            <div class="ct" style="margin-bottom:8px"><i class="fa-solid fa-arrows-rotate"></i> Switch Active Team</div>
             <div class="rbtns" id="tb-team-switch"></div>
           </div>
           <div class="card">
-            <div class="ct">📋 Available Questions</div>
+            <div class="ct"><i class="fa-solid fa-list"></i> Available Questions</div>
             <div id="tb-nav-q"></div>
           </div>
         </div>
@@ -522,19 +601,19 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
     <div class="panel" id="panel-sp">
       <div class="pscroll">
         <div class="itabs">
-          <button class="itab on" onclick="itab('speed','questions')">📝 Questions</button>
-          <button class="itab" onclick="itab('speed','control')">🎮 Control</button>
+          <button class="itab on" onclick="itab('speed','questions')"><i class="fa-solid fa-file-lines"></i> Questions</button>
+          <button class="itab" onclick="itab('speed','control')"><i class="fa-solid fa-play"></i> Control</button>
         </div>
         <div class="ipanel on" id="speed-questions">
           <div class="card">
-            <div class="ct">⚡ Speed Battle Questions <span style="color:var(--text2);font-size:.75rem">(15s each, up to 20 per session)</span></div>
+            <div class="ct"><i class="fa-solid fa-bolt"></i> Speed Questions <span style="color:var(--text2);font-size:.75rem">(15s each, up to 20 per session)</span></div>
             <div class="imp-tabs">
-              <button class="imptab on" onclick="switchImpTab('sp','file')">📂 File</button>
-              <button class="imptab" onclick="switchImpTab('sp','paste')">📋 Paste JSON</button>
+              <button class="imptab on" onclick="switchImpTab('sp','file')"><i class="fa-solid fa-folder-open"></i> File</button>
+              <button class="imptab" onclick="switchImpTab('sp','paste')"><i class="fa-solid fa-clipboard"></i> Paste JSON</button>
             </div>
-            <div id="sp-imp-file"><label class="file-lbl" for="sp-jfile">📂 Choose JSON File</label><input type="file" id="sp-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'sp')"></div>
+            <div id="sp-imp-file"><label class="file-lbl" for="sp-jfile"><i class="fa-solid fa-folder-open"></i> Choose JSON File</label><input type="file" id="sp-jfile" class="file-inp" accept=".json" onchange="importJSON(event,'sp')"></div>
             <div id="sp-imp-paste" style="display:none"><textarea class="paste-box" id="sp-paste-json" placeholder='[{"text":"12 × 8 = ?","options":{"A":"84","B":"96","C":"102","D":"88"},"answer":"B"}]'></textarea><button class="bp bsm" onclick="importPaste('sp')" style="width:100%">Import</button></div>
-            <div class="rbtns" style="margin-top:9px"><button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearSPQ()">🗑 Clear</button></div>
+            <div class="rbtns" style="margin-top:9px"><button class="bgh bsm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="clearSPQ()"><i class="fa-solid fa-trash"></i> Clear</button></div>
             <div id="sp-flash" class="flash" style="margin-bottom:0"></div>
           </div>
           <div style="font-weight:700;font-size:.84rem;margin-bottom:9px;color:var(--text3)">Questions <span id="sp-q-count" style="color:var(--text2);font-weight:400"></span></div>
@@ -542,22 +621,22 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
         </div>
         <div class="ipanel" id="speed-control">
           <div class="card">
-            <div class="ct">⚡ Current Runner</div>
+            <div class="ct"><i class="fa-solid fa-person-running"></i> Current Runner</div>
             <div id="sp-current-display"><div class="empty" style="padding:8px">No active session.</div></div>
           </div>
           <div class="card">
-            <div class="ct">🎮 Controls</div>
+            <div class="ct"><i class="fa-solid fa-gamepad"></i> Controls</div>
             <div class="cbgrid">
               <button class="cbtn bor" onclick="stopSpeedSession()"><i class="fa-solid fa-stop"></i> Stop Session</button>
               <button class="cbtn bpu" onclick="showLB('leaderboard')"><i class="fa-solid fa-trophy"></i> Leaderboard</button>
               <button class="cbtn bor" onclick="endComp()"><i class="fa-solid fa-circle-pause"></i> End Round</button>
             </div>
             <hr>
-            <div class="ct" style="margin-bottom:8px">👥 Registered Players — Click ▶ to Launch</div>
+            <div class="ct" style="margin-bottom:8px"><i class="fa-solid fa-users"></i> Registered Players — Click ▶ to Launch</div>
             <div id="sp-player-list"><div class="empty" style="padding:8px">No players yet. Players must join the competition first.</div></div>
           </div>
           <div class="card">
-            <div class="ct">🏆 Speed Battle Results</div>
+            <div class="ct"><i class="fa-solid fa-ranking-star"></i> Speed Results</div>
             <div id="sp-results"><div style="color:var(--text2);font-size:.8rem">No sessions completed yet.</div></div>
           </div>
         </div>
@@ -568,7 +647,7 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
     <div class="panel" id="panel-s">
       <div class="pscroll">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-          <div style="font-weight:800;font-size:1rem">📊 Scoreboard</div>
+          <div style="font-weight:800;font-size:1rem"><i class="fa-solid fa-chart-column"></i> Scoreboard</div>
           <span id="sb-mode-tag" style="font-size:.75rem;color:var(--text2)"></span>
         </div>
         <table class="sb-table">
@@ -584,7 +663,7 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
         <div class="two-col">
           <div>
             <div class="card">
-              <div class="ct">🔥 Firebase Config</div>
+              <div class="ct"><i class="fa-solid fa-fire"></i> Firebase Config</div>
               <div class="fg"><label>API Key</label><input id="cfg-key" placeholder="AIzaSy…"/></div>
               <div class="fg"><label>Database URL</label><input id="cfg-db" placeholder="https://project-rtdb.firebaseio.com"/></div>
               <div class="fg"><label>Project ID</label><input id="cfg-pid" placeholder="your-project-id"/></div>
@@ -595,14 +674,14 @@ input:focus,textarea:focus,select:focus{box-shadow:0 0 0 3px rgba(37,99,235,.1),
           </div>
           <div>
             <div class="card">
-              <div class="ct">📋 Section Names (Standard)</div>
+              <div class="ct"><i class="fa-solid fa-pen"></i> Section Names (Standard)</div>
               <div class="fg"><label>Section 1</label><input id="sn0" value="Section 1"/></div>
               <div class="fg"><label>Section 2</label><input id="sn1" value="Section 2"/></div>
               <div class="fg"><label>Section 3</label><input id="sn2" value="Section 3"/></div>
               <button class="bp bsm" onclick="saveSectionNames()">Save Names</button>
             </div>
             <div class="card">
-              <div class="ct">🔒 DB Rules</div>
+              <div class="ct"><i class="fa-solid fa-lock"></i> DB Rules</div>
               <pre>{"rules":{".read":true,".write":true}}</pre>
             </div>
           </div>
@@ -638,7 +717,7 @@ let players = {}, gs = {state:'lobby',currentQIndex:-1,cq:null,roundAnswers:{}};
 let tb = {state:'lobby',teams:[{name:'Red Eagles',score:0},{name:'Blue Lions',score:0}],bank:[],used:[],activeTeam:0,isBonus:false,cq:null,lock:null,members:{}};
 let sp = {state:'lobby',bank:[],players:{},activePid:null,session:null};
 
-const CIRC = 188.5;
+const CIRC = 144.5;
 const OC = {A:'#ef4444',B:'#3b82f6',C:'#f59e0b',D:'#10b981'};
 
 /* ═══ SERVER TIME ═══ */
@@ -1077,7 +1156,7 @@ function renderStdNavQ(){
   if(!qs.length){ el.innerHTML = '<div class="empty" style="padding:8px">No questions.</div>'; return; }
   el.innerHTML = qs.map((q, i) => {
     const live = i === gs.currentQIndex, done = live && (gs.state === 'reveal' || gs.state === 'time_up');
-    return `<div class="nav-q ${live?'live':''}"><span class="nav-q-num">Q${i+1}</span><span class="nav-q-txt">${esc(q.text)}</span>${live?`<span class="live-tag">${done?'✓':'●'}</span>`:`<button class="bp bsm" onclick="launchStdQ(${i})">Launch</button>`}</div>`;
+    return `<div class="nav-q ${live?'live':''}"><span class="nav-q-num">Q${i+1}</span><span class="nav-q-txt">${esc(q.text)}</span>${live?`<span class="live-tag">${done?'✓':'●'}</span>`:`<button class="nav-q-btn" onclick="launchStdQ(${i})">Launch</button>`}</div>`;
   }).join('');
 }
 function renderStdPlayers(){
