@@ -1018,6 +1018,7 @@ function launchStdQ(qIdx){
 
 function revealAns(){
   if(!db || !gs.cq){ alert('No active question.'); return; }
+  if(gs.state === 'reveal'){ return; } /* Already revealed — prevent double-scoring */
   clearStdTimer();
   var correct = gs.cq.answer, tl = gs.cq.timeLimit || 30, upd = {};
   Object.keys(players).forEach(function(pid){
@@ -1212,6 +1213,7 @@ function tbLaunch(teamIdx){
 }
 function tbReveal(){
   if(!db || !tb.cq){ alert('No active question.'); return; }
+  if(tb.state === 'reveal'){ return; } /* Already revealed — prevent double-scoring */
   clearTBTimer();
   var correct = tb.cq.answer, isBonus = tb.cq.isBonus, marks = isBonus ? 2 : 5, upd = {};
   var lock = tb.lock;
