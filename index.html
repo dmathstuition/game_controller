@@ -774,23 +774,50 @@ function switchMode(m){
   var prevMode = mode;
   mode = m;
   document.querySelectorAll('.msw').forEach(function(b){b.classList.toggle('on', b.classList.contains(m));});
-  var upd = {'quiz/mode': m};
-  /* Only clean up if actually changing modes */
-  if(prevMode !== m){
-    upd['quiz/state'] = 'lobby';
-    if(prevMode === 'speed'){
-      upd['quiz/sp/state'] = 'lobby';
-      upd['quiz/sp/activePid'] = null;
-      upd['quiz/sp/session'] = null;
-    }
-    if(prevMode === 'team'){
-      upd['quiz/tb/state'] = 'idle';
-      upd['quiz/tb/cq'] = null;
-      upd['quiz/tb/lock'] = null;
-      upd['quiz/tb/isBonus'] = false;
-    }
-    clearStdTimer(); clearTBTimer();
+  clearStdTimer(); clearTBTimer();
+  var upd = {'quiz/mode': m, 'quiz/state': 'lobby'};
+
+  /* Clean up the mode we're LEAVING (stop any active session) */
+  if(prevMode === 'speed' && prevMode !== m){
+    upd['quiz/sp/state'] = 'lobby';
+    upd['quiz/sp/activePid'] = null;
+    upd['quiz/sp/session'] = null;
   }
+  if(prevMode === 'team' && prevMode !== m){
+    upd['quiz/tb/state'] = 'idle';
+    upd['quiz/tb/cq'] = null;
+    upd['quiz/tb/lock'] = null;
+    upd['quiz/tb/isBonus'] = false;
+  }
+  if(prevMode === 'standard' && prevMode !== m){
+    upd['quiz/currentQuestion'] = null;
+    upd['quiz/currentQIndex'] = -1;
+  }
+
+  /* Initialize the mode we're ENTERING to a clean, ready state.
+     This is the fix — previously stale state in the target mode carried over. */
+  if(m === 'standard'){
+    upd['quiz/currentQuestion'] = null;
+    upd['quiz/currentQIndex'] = -1;
+    upd['quiz/revealAnswer'] = null;
+  }
+  if(m === 'speed'){
+    upd['quiz/sp/state'] = 'lobby';
+    upd['quiz/sp/activePid'] = null;
+    upd['quiz/sp/session'] = null;
+    /* reset every speed player to "waiting" so they can be launched fresh */
+    Object.keys(sp.players || {}).forEach(function(pid){
+      upd['quiz/sp/players/'+pid+'/state'] = 'waiting';
+    });
+  }
+  if(m === 'team'){
+    upd['quiz/tb/state'] = 'lobby';
+    upd['quiz/tb/cq'] = null;
+    upd['quiz/tb/lock'] = null;
+    upd['quiz/tb/isBonus'] = false;
+    upd['quiz/tb/used'] = [];   /* make all team questions available again */
+  }
+
   db.ref().update(upd);
   updateBadge();
 }
@@ -1054,19 +1081,29 @@ function revealAns(){
 function showLB(type){ if(!db) return; clearStdTimer(); db.ref('quiz/state').set(type); }
 
 function endComp(){
-  if(!db || !confirm('End this round? Players stay connected and can participate in the next round.')) return;
+  if(!db) return;
+  var label = {standard:'Standard round',team:'Team Battle',speed:'Speed Battle'}[mode] || 'this stage';
+  if(!confirm('End the '+label+'? Final results will be shown on all screens. Players stay connected for the next stage.')) return;
   clearStdTimer(); clearTBTimer();
-  db.ref().update({
-    'quiz/state': 'lobby',
+  /* Stop any active question/session for the current mode, then show final results */
+  var upd = {
     'quiz/currentQuestion': null,
-    'quiz/tb/state': 'idle',
     'quiz/tb/cq': null,
     'quiz/tb/lock': null,
-    'quiz/tb/isBonus': false,
-    'quiz/sp/state': 'lobby',
-    'quiz/sp/activePid': null,
-    'quiz/sp/session': null
-  });
+    'quiz/tb/isBonus': false
+  };
+  if(mode === 'speed'){
+    /* end the active runner cleanly */
+    upd['quiz/sp/state'] = 'lobby';
+    upd['quiz/sp/activePid'] = null;
+    upd['quiz/sp/session'] = null;
+  }
+  if(mode === 'team'){
+    upd['quiz/tb/state'] = 'idle';
+  }
+  /* Show the leaderboard / final standings for this stage on every screen */
+  upd['quiz/state'] = 'leaderboard';
+  db.ref().update(upd);
 }
 
 function endCompAndLogout(){
