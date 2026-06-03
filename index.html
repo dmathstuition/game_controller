@@ -463,8 +463,11 @@ pre{font-size:.65rem;padding:6px 10px}
             </div>
             <div class="cbgrid3">
               <button class="cbtn bor" onclick="exportCSV()"><i class="fa-solid fa-download"></i> CSV</button>
-              <button class="cbtn br" onclick="endCompAndLogout()"><i class="fa-solid fa-power-off"></i> Logout</button>
+              <button class="cbtn bpu" onclick="exportPDF()"><i class="fa-solid fa-print"></i> PDF</button>
               <button class="cbtn br" onclick="clearAllPlayers()"><i class="fa-solid fa-user-xmark"></i> Clear</button>
+            </div>
+            <div class="cbgrid" style="margin-top:4px">
+              <button class="cbtn br" onclick="endCompAndLogout()"><i class="fa-solid fa-power-off"></i> End & Logout All</button>
             </div>
           </div>
           <div class="cq-card">
@@ -1472,6 +1475,112 @@ function exportCSV(){
   a.download = 'IJA_Quiz_Results_' + mode + '_' + new Date().toISOString().slice(0,10) + '.csv';
   a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+}
+
+/* ═══ PRINTABLE / PDF RESULTS — pure read & render, no Firebase writes ═══ */
+function exportPDF(){
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  var timeStr = now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+  var modeLabel = {standard:'Standard Round',team:'Team Battle',speed:'Speed Battle'}[mode] || 'Results';
+  var medals = ['🥇','🥈','🥉'];
+
+  function rankRows(arr, scoreFmt){
+    if(!arr.length) return '<tr><td colspan="3" style="text-align:center;color:#888;padding:20px">No results recorded.</td></tr>';
+    return arr.map(function(p,i){
+      var pos = (i<3 ? medals[i]+' ' : '') + (i+1);
+      return '<tr'+(i<3?' class="top3"':'')+'><td class="rank">'+pos+'</td><td class="name">'+escHtml(p.name||'?')+'</td><td class="score">'+scoreFmt(p)+'</td></tr>';
+    }).join('');
+  }
+  function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+  var pages = '';
+
+  if(mode === 'standard'){
+    var sp1 = Object.values(players).sort(function(a,b){return (b.score||0)-(a.score||0);});
+    pages = resultPage('Standard Round Results', '<table><thead><tr><th>Rank</th><th>Competitor</th><th>Score</th></tr></thead><tbody>'+
+      rankRows(sp1, function(p){return (p.score||0)+' pts';})+'</tbody></table>');
+  }
+  else if(mode === 'speed'){
+    var sp2 = Object.values(sp.players||{}).sort(function(a,b){return (b.score||0)-(a.score||0);});
+    pages = resultPage('Speed Battle Results', '<table><thead><tr><th>Rank</th><th>Competitor</th><th>Score</th></tr></thead><tbody>'+
+      rankRows(sp2, function(p){var tot=p.total||20;var pct=tot?Math.round((p.score||0)/tot*100):0;return (p.score||0)+' / '+tot+' ('+pct+'%)';})+'</tbody></table>');
+  }
+  else if(mode === 'team'){
+    /* Page 1: team standings */
+    var teamArr = tb.teams.map(function(t,i){return {name:t.name,score:t.score||0,idx:i};}).sort(function(a,b){return b.score-a.score;});
+    var teamTable = '<table><thead><tr><th>Rank</th><th>Team</th><th>Marks</th></tr></thead><tbody>'+
+      rankRows(teamArr, function(t){return (t.score||0)+' marks';})+'</tbody></table>';
+    var winner = teamArr[0] ? '<div class="winner-line">🏆 Winning Team: <b>'+escHtml(teamArr[0].name)+'</b> — '+(teamArr[0].score||0)+' marks</div>' : '';
+    pages += resultPage('Team Battle — Final Standings', teamTable + winner);
+    /* Page 2: individual members grouped by team */
+    var membersByTeam = [[],[]];
+    Object.values(tb.members||{}).forEach(function(m){
+      if(m.team===0||m.team===1) membersByTeam[m.team].push(m);
+    });
+    var memberHtml = '';
+    [0,1].forEach(function(ti){
+      var list = membersByTeam[ti].sort(function(a,b){return (b.score||0)-(a.score||0);});
+      var teamName = (tb.teams[ti]) ? tb.teams[ti].name : 'Team '+(ti+1);
+      memberHtml += '<h3 class="team-sub '+(ti===0?'t0':'t1')+'">'+escHtml(teamName)+'</h3>';
+      memberHtml += '<table><thead><tr><th>Member</th><th>Marks</th></tr></thead><tbody>';
+      if(!list.length){ memberHtml += '<tr><td colspan="2" style="text-align:center;color:#888;padding:14px">No members</td></tr>'; }
+      else { memberHtml += list.map(function(m){return '<tr><td class="name">'+escHtml(m.name||'?')+'</td><td class="score">'+(m.score||0)+'</td></tr>';}).join(''); }
+      memberHtml += '</tbody></table>';
+    });
+    pages += '<div class="page-break"></div>' + resultPage('Team Battle — Individual Contributions', memberHtml);
+  }
+
+  function resultPage(title, body){
+    return '<div class="page">'+
+      '<div class="header">'+
+        '<div class="crest">🏆</div>'+
+        '<div class="sch-name">Infant Jesus Academy</div>'+
+        '<div class="sch-sub">D=MATHS Quiz Competition</div>'+
+      '</div>'+
+      '<h2 class="stage-title">'+title+'</h2>'+
+      '<div class="meta">'+dateStr+' &nbsp;•&nbsp; '+timeStr+'</div>'+
+      body+
+      '<div class="footer">Generated by IJA Quiz Platform — '+dateStr+'</div>'+
+    '</div>';
+  }
+
+  var win = window.open('', '_blank');
+  if(!win){ alert('Please allow pop-ups to print results.'); return; }
+  win.document.write('<!DOCTYPE html><html><head><title>IJA Quiz Results — '+modeLabel+'</title><meta charset="utf-8">'+
+    '<style>'+
+    '*{margin:0;padding:0;box-sizing:border-box}'+
+    'body{font-family:Georgia,"Times New Roman",serif;color:#1a1a1a;background:#fff;padding:0}'+
+    '.page{max-width:720px;margin:0 auto;padding:40px 48px;min-height:100vh}'+
+    '.page-break{page-break-after:always}'+
+    '.header{text-align:center;border-bottom:3px double #b8860b;padding-bottom:16px;margin-bottom:24px}'+
+    '.crest{font-size:42px;margin-bottom:4px}'+
+    '.sch-name{font-size:26px;font-weight:bold;letter-spacing:1px;color:#7a0a18}'+
+    '.sch-sub{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#666;margin-top:2px}'+
+    '.stage-title{text-align:center;font-size:20px;color:#1a1a1a;margin-bottom:4px}'+
+    '.meta{text-align:center;font-size:12px;color:#888;margin-bottom:24px;font-style:italic}'+
+    'table{width:100%;border-collapse:collapse;margin-bottom:16px}'+
+    'th{background:#7a0a18;color:#fff;padding:10px 14px;text-align:left;font-size:13px;letter-spacing:.5px}'+
+    'th:last-child,td:last-child{text-align:right}'+
+    'td{padding:9px 14px;border-bottom:1px solid #e5e5e5;font-size:14px}'+
+    'tr.top3 td{font-weight:bold;background:#fdf6e3}'+
+    '.rank{width:70px;font-weight:bold}'+
+    '.name{font-weight:600}'+
+    '.score{font-family:"Courier New",monospace;font-weight:bold;color:#7a0a18}'+
+    '.winner-line{margin-top:16px;padding:14px;background:#fdf6e3;border:1px solid #b8860b;border-radius:6px;text-align:center;font-size:15px}'+
+    '.team-sub{margin:20px 0 8px;padding-bottom:4px;border-bottom:2px solid;font-size:16px}'+
+    '.team-sub.t0{color:#c0152a;border-color:#c0152a}'+
+    '.team-sub.t1{color:#1d4ed8;border-color:#1d4ed8}'+
+    '.footer{margin-top:30px;text-align:center;font-size:11px;color:#aaa;border-top:1px solid #e5e5e5;padding-top:12px}'+
+    '@media print{body{padding:0}.page{padding:30px 40px}.no-print{display:none}}'+
+    '.print-bar{position:fixed;top:0;left:0;right:0;background:#7a0a18;color:#fff;padding:12px;text-align:center;font-family:Arial,sans-serif}'+
+    '.print-bar button{background:#fff;color:#7a0a18;border:none;padding:8px 20px;border-radius:6px;font-weight:bold;cursor:pointer;margin:0 6px;font-size:14px}'+
+    '</style></head><body>'+
+    '<div class="print-bar no-print">Results ready — <button onclick="window.print()">🖨️ Print / Save as PDF</button><button onclick="window.close()">Close</button></div>'+
+    '<div style="height:50px" class="no-print"></div>'+
+    pages+
+    '</body></html>');
+  win.document.close();
 }
 
 /* ═══ CLEAR ALL PLAYERS ═══ */
