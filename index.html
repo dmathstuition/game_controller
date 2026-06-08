@@ -794,28 +794,30 @@ function switchMode(m){
     upd['quiz/currentQIndex'] = -1;
   }
 
-  /* Initialize the mode we're ENTERING to a clean, ready state.
-     This is the fix — previously stale state in the target mode carried over. */
-  if(m === 'standard'){
-    upd['quiz/currentQuestion'] = null;
-    upd['quiz/currentQIndex'] = -1;
-    upd['quiz/revealAnswer'] = null;
-  }
-  if(m === 'speed'){
-    upd['quiz/sp/state'] = 'lobby';
-    upd['quiz/sp/activePid'] = null;
-    upd['quiz/sp/session'] = null;
-    /* reset every speed player to "waiting" so they can be launched fresh */
-    Object.keys(sp.players || {}).forEach(function(pid){
-      upd['quiz/sp/players/'+pid+'/state'] = 'waiting';
-    });
-  }
-  if(m === 'team'){
-    upd['quiz/tb/state'] = 'lobby';
-    upd['quiz/tb/cq'] = null;
-    upd['quiz/tb/lock'] = null;
-    upd['quiz/tb/isBonus'] = false;
-    upd['quiz/tb/used'] = [];   /* make all team questions available again */
+  /* Initialize the mode we're ENTERING to a clean, ready state —
+     ONLY when actually changing modes, so we never wipe a live session
+     that was just launched within the same mode (e.g. speed player launch). */
+  if(prevMode !== m){
+    if(m === 'standard'){
+      upd['quiz/currentQuestion'] = null;
+      upd['quiz/currentQIndex'] = -1;
+      upd['quiz/revealAnswer'] = null;
+    }
+    if(m === 'speed'){
+      upd['quiz/sp/state'] = 'lobby';
+      upd['quiz/sp/activePid'] = null;
+      upd['quiz/sp/session'] = null;
+      Object.keys(sp.players || {}).forEach(function(pid){
+        upd['quiz/sp/players/'+pid+'/state'] = 'waiting';
+      });
+    }
+    if(m === 'team'){
+      upd['quiz/tb/state'] = 'lobby';
+      upd['quiz/tb/cq'] = null;
+      upd['quiz/tb/lock'] = null;
+      upd['quiz/tb/isBonus'] = false;
+      upd['quiz/tb/used'] = [];
+    }
   }
 
   db.ref().update(upd);
@@ -1250,7 +1252,12 @@ function startTeamBattle(){
   upd['quiz/tb/bank'] = tb.bank; upd['quiz/tb/used'] = []; upd['quiz/tb/activeTeam'] = 0;
   upd['quiz/tb/isBonus'] = false; upd['quiz/tb/cq'] = null; upd['quiz/tb/lock'] = null;
   Object.keys(tb.members).forEach(pid => { upd[`quiz/tb/members/${pid}/score`] = 0; });
-  db.ref().update(upd); switchMode('team');
+  upd['quiz/state'] = 'lobby';
+  db.ref().update(upd);
+  /* Set mode inline (quiz/mode already written) — avoids switchMode re-wiping setup */
+  mode = 'team';
+  document.querySelectorAll('.msw').forEach(function(b){b.classList.toggle('on', b.classList.contains('team'));});
+  clearStdTimer(); clearTBTimer();
 }
 function pushTBBank(){ if(db) db.ref('quiz/tb/bank').set(tb.bank); }
 function clearTBQ(){ if(!confirm('Clear team battle questions?')) return; tb.bank = []; tb.used = []; pushTBBank(); if(db) db.ref('quiz/tb/used').set([]); renderTBQL(); }
@@ -1402,8 +1409,13 @@ function launchSpeedPlayer(pid){
   upd['quiz/sp/session']                    = session;
   upd['quiz/sp/players/'+pid+'/state']      = 'running';
   upd['quiz/sp/players/'+pid+'/score']      = 0;
+  upd['quiz/state']                         = 'lobby';
   db.ref().update(upd);
-  switchMode('speed');
+  /* Set mode locally + update tab UI WITHOUT calling switchMode (which would
+     reset the speed session we just launched). quiz/mode is already written above. */
+  mode = 'speed';
+  document.querySelectorAll('.msw').forEach(function(b){b.classList.toggle('on', b.classList.contains('speed'));});
+  clearStdTimer(); clearTBTimer();
 }
 function stopSpeedSession(){
   if(!db || !confirm('Stop current session?')) return;
