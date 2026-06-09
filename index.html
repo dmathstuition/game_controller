@@ -38,7 +38,7 @@ button{padding:9px 16px;border-radius:9px;border:none;cursor:pointer;font-family
 .mode-grp{display:flex;gap:4px;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:3px}
 .msw{padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:700;border:none;background:transparent;color:var(--text2);cursor:pointer;transition:all .15s}
 .msw.on{font-weight:800;color:#fff}
-.msw.standard.on{background:var(--accent)}.msw.team.on{background:#e8192f}.msw.speed.on{background:var(--orange)}
+.msw.standard.on{background:var(--accent)}.msw.team.on{background:#e8192f}.msw.speed.on{background:var(--orange)}.msw.oral.on{background:#a855f7}
 .msw i{font-size:10px}
 .state-badge{padding:3px 10px;border-radius:20px;font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace}
 .sb-lobby{background:rgba(37,99,235,.18);color:#60a5fa;border:1px solid var(--accent)}
@@ -382,6 +382,7 @@ pre{font-size:.65rem;padding:6px 10px}
       <button class="msw standard on" onclick="switchMode('standard')"><i class="fa-solid fa-file-lines"></i> Standard</button>
       <button class="msw team" onclick="switchMode('team')"><i class="fa-solid fa-shield-halved"></i> Team</button>
       <button class="msw speed" onclick="switchMode('speed')"><i class="fa-solid fa-bolt"></i> Speed</button>
+      <button class="msw oral" onclick="switchMode('oral')"><i class="fa-solid fa-microphone"></i> Oral</button>
     </div>
     <span id="state-badge" class="state-badge sb-lobby">Lobby</span>
     <div class="tb-right">
@@ -403,6 +404,7 @@ pre{font-size:.65rem;padding:6px 10px}
       <button class="nav-btn" id="nb-c" onclick="nav('c')"><i class="fa-solid fa-play"></i><span class="nav-lbl">Control</span></button>
       <button class="nav-btn" id="nb-t" onclick="nav('t')"><i class="fa-solid fa-shield-halved"></i><span class="nav-lbl">Team Battle</span></button>
       <button class="nav-btn" id="nb-sp" onclick="nav('sp')"><i class="fa-solid fa-bolt"></i><span class="nav-lbl">Speed Battle</span></button>
+      <button class="nav-btn" id="nb-o" onclick="nav('o')"><i class="fa-solid fa-microphone"></i><span class="nav-lbl">Oral Round</span></button>
       <button class="nav-btn" id="nb-s" onclick="nav('s')"><i class="fa-solid fa-chart-column"></i><span class="nav-lbl">Scoreboard</span></button>
       <button class="nav-btn" id="nb-x" onclick="nav('x')"><i class="fa-solid fa-gear"></i><span class="nav-lbl">Setup</span></button>
       <button class="sb-tog" onclick="toggleSB()"><i class="fa-solid fa-bars"></i></button>
@@ -653,6 +655,63 @@ pre{font-size:.65rem;padding:6px 10px}
       </div>
     </div>
 
+    <!-- ORAL ROUND -->
+    <div class="panel" id="panel-o">
+      <div class="pscroll">
+        <div class="card" style="padding:12px">
+          <div class="ct"><i class="fa-solid fa-microphone"></i> Oral Round — Live Judging</div>
+          <div style="font-size:.74rem;color:var(--text2);line-height:1.5">Students answer aloud when their number is called. Select the active contestant, then mark the answer Correct or Wrong. The result and score show on the audience screen.</div>
+        </div>
+
+        <div class="card" style="padding:12px">
+          <div class="ct"><i class="fa-solid fa-user-plus"></i> Contestants</div>
+          <div class="g2" style="margin-bottom:6px">
+            <input id="oral-num" type="number" min="1" placeholder="No." style="padding:7px 10px;font-size:.8rem">
+            <input id="oral-name" type="text" placeholder="Student name" style="padding:7px 10px;font-size:.8rem" onkeydown="if(event.key==='Enter')addOralContestant()">
+          </div>
+          <button class="cbtn bgrn" style="width:100%;margin-bottom:8px" onclick="addOralContestant()"><i class="fa-solid fa-plus"></i> Add Contestant</button>
+          <div id="oral-roster"></div>
+        </div>
+
+        <div class="card" style="padding:12px">
+          <div class="ct"><i class="fa-solid fa-hand-pointer"></i> Active Contestant</div>
+          <div id="oral-pick-grid" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px"></div>
+          <div id="oral-active-display" style="text-align:center;padding:8px;font-size:.82rem;color:var(--text2)">No contestant selected</div>
+        </div>
+
+        <div class="card" style="padding:12px">
+          <div class="ct"><i class="fa-solid fa-circle-question"></i> Question (optional — shows on audience)</div>
+          <textarea id="oral-q" placeholder="Type the question to display, or leave blank and read it aloud…" style="width:100%;min-height:50px;padding:8px;font-size:.78rem;margin-bottom:6px"></textarea>
+          <div class="cbgrid">
+            <button class="cbtn bp" onclick="showOralQuestion()"><i class="fa-solid fa-display"></i> Show on Screen</button>
+            <button class="cbtn bor" onclick="clearOralQuestion()"><i class="fa-solid fa-eraser"></i> Clear</button>
+          </div>
+        </div>
+
+        <div class="card" style="padding:12px">
+          <div class="ct"><i class="fa-solid fa-gavel"></i> Judge the Answer</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <span style="font-size:.74rem;color:var(--text2)">Points per correct answer:</span>
+            <input id="oral-pts" type="number" min="1" value="10" style="width:64px;padding:5px 8px;font-size:.8rem;text-align:center">
+          </div>
+          <div class="cbgrid" style="gap:8px">
+            <button class="cbtn bgrn" style="padding:16px;font-size:.95rem" onclick="judgeOral(true)"><i class="fa-solid fa-check"></i> Correct</button>
+            <button class="cbtn br" style="padding:16px;font-size:.95rem" onclick="judgeOral(false)"><i class="fa-solid fa-xmark"></i> Wrong</button>
+          </div>
+        </div>
+
+        <div class="card" style="padding:12px">
+          <div class="ct"><i class="fa-solid fa-ranking-star"></i> Standings</div>
+          <div id="oral-standings"></div>
+          <div class="cbgrid3" style="margin-top:8px">
+            <button class="cbtn bpu" onclick="showOralResults()"><i class="fa-solid fa-trophy"></i> Show Results</button>
+            <button class="cbtn bor" onclick="resetOralScores()"><i class="fa-solid fa-rotate-left"></i> Reset Scores</button>
+            <button class="cbtn br" onclick="clearOralContestants()"><i class="fa-solid fa-trash"></i> Clear All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- SCOREBOARD -->
     <div class="panel" id="panel-s">
       <div class="pscroll">
@@ -726,6 +785,7 @@ let sections = [{name:'Section 1',questions:[]},{name:'Section 2',questions:[]},
 let players = {}, gs = {state:'lobby',currentQIndex:-1,cq:null,roundAnswers:{}};
 let tb = {state:'lobby',teams:[{name:'Red Eagles',score:0},{name:'Blue Lions',score:0}],bank:[],used:[],activeTeam:0,isBonus:false,cq:null,lock:null,members:{}};
 let sp = {state:'lobby',bank:[],players:{},activePid:null,session:null};
+let oral = {state:'idle',contestants:{},activeCid:null,question:null,pointsPerQ:10,lastResult:null};
 
 const CIRC = 144.5;
 const OC = {A:'#ef4444',B:'#3b82f6',C:'#f59e0b',D:'#10b981'};
@@ -793,6 +853,12 @@ function switchMode(m){
     upd['quiz/currentQuestion'] = null;
     upd['quiz/currentQIndex'] = -1;
   }
+  if(prevMode === 'oral' && prevMode !== m){
+    upd['quiz/oral/state'] = 'idle';
+    upd['quiz/oral/activeCid'] = null;
+    upd['quiz/oral/question'] = null;
+    upd['quiz/oral/lastResult'] = null;
+  }
 
   /* Initialize the mode we're ENTERING to a clean, ready state —
      ONLY when actually changing modes, so we never wipe a live session
@@ -818,6 +884,12 @@ function switchMode(m){
       upd['quiz/tb/isBonus'] = false;
       upd['quiz/tb/used'] = [];
     }
+    if(m === 'oral'){
+      upd['quiz/oral/state'] = 'idle';
+      upd['quiz/oral/activeCid'] = null;
+      upd['quiz/oral/question'] = null;
+      upd['quiz/oral/lastResult'] = null;
+    }
   }
 
   db.ref().update(upd);
@@ -825,8 +897,8 @@ function switchMode(m){
 }
 
 /* ═══ NAV ═══ */
-const PANELS = {q:'panel-q',c:'panel-c',t:'panel-t',sp:'panel-sp',s:'panel-s',x:'panel-x'};
-const NAVS   = {q:'nb-q',c:'nb-c',t:'nb-t',sp:'nb-sp',s:'nb-s',x:'nb-x'};
+const PANELS = {q:'panel-q',c:'panel-c',t:'panel-t',sp:'panel-sp',o:'panel-o',s:'panel-s',x:'panel-x'};
+const NAVS   = {q:'nb-q',c:'nb-c',t:'nb-t',sp:'nb-sp',o:'nb-o',s:'nb-s',x:'nb-x'};
 function nav(k){
   Object.keys(PANELS).forEach(p => {
     document.getElementById(PANELS[p]).classList.toggle('on', p === k);
@@ -836,6 +908,7 @@ function nav(k){
   if(k === 's') renderSB();
   if(k === 't' && document.getElementById('team-control').classList.contains('on')) renderTBControl();
   if(k === 'sp' && document.getElementById('speed-control').classList.contains('on')) renderSPControl();
+  if(k === 'o') renderOral();
   if(k === 'x') loadOrgCfg(); // refresh setup inputs when panel opens
 }
 function toggleSB(){ sbOpen = !sbOpen; document.getElementById('sidebar').classList.toggle('open', sbOpen); }
@@ -1211,7 +1284,7 @@ function renderStdNavQ(){
 }
 function renderStdPlayers(){
   const el = document.getElementById('std-players');
-  const arr = Object.values(players).sort((a,b) => (b.score||0) - (a.score||0));
+  const arr = Object.values(players).filter(function(p){return p&&p.name;}).sort((a,b) => (b.score||0) - (a.score||0));
   if(!arr.length){ el.innerHTML = '<div style="color:var(--text2);font-size:.78rem;padding:5px 0">No players.</div>'; return; }
   var now = Date.now();
   el.innerHTML = arr.map(function(p){
@@ -1463,7 +1536,17 @@ function setupListeners(){
   db.ref('quiz/currentQIndex').on('value', s => { gs.currentQIndex = s.val()??-1; renderStdNavQ(); });
   db.ref('quiz/currentQuestion').on('value', s => { gs.cq = s.val(); renderStdCQ(); if(gs.cq && gs.state === 'question_active') startStdTimer(gs.cq.timeLimit, gs.cq.startTime); });
   db.ref('quiz/sections').on('value', s => { if(s.val()){ sections = normSections(s.val()); renderStdQL(); renderStdNavQ(); buildSectionUI(); } });
-  db.ref('quiz/players').on('value', s => { players = s.val()||{}; const n = Object.keys(players).length; document.getElementById('tb-pc').textContent = n; document.getElementById('side-pc').textContent = n; renderStdPlayers(); renderStdAnsBars(); });
+  db.ref('quiz/players').on('value', s => { players = s.val()||{}; const n = Object.values(players).filter(function(p){return p&&p.name;}).length; document.getElementById('tb-pc').textContent = n; document.getElementById('side-pc').textContent = n; renderStdPlayers(); renderStdAnsBars(); });
+  db.ref('quiz/oral').on('value', s => {
+    var d = s.val()||{};
+    oral.contestants = d.contestants || {};
+    oral.activeCid = d.activeCid || null;
+    oral.state = d.state || 'idle';
+    oral.question = d.question || null;
+    oral.lastResult = d.lastResult || null;
+    if(document.getElementById('panel-o') && document.getElementById('panel-o').classList.contains('on')) renderOral();
+    if(mode==='oral') updateBadge();
+  });
   db.ref('quiz/roundAnswers').on('value', s => { gs.roundAnswers = s.val()||{}; renderStdAnsBars(); });
   db.ref('quiz/tb').on('value', s => {
     const d = s.val(); if(!d) return;
@@ -1491,6 +1574,7 @@ function updateBadge(){
   if(mode === 'standard'){ const map = {lobby:'sb-lobby Lobby',question_active:'sb-active Live',time_up:'sb-active Time Up',reveal:'sb-reveal Reveal',ended:'sb-ended Ended'}; const p = (map[gs.state]||'sb-lobby Lobby').split(' '); cls = p[0]; txt = p.slice(1).join(' '); }
   else if(mode === 'team'){ const map = {lobby:'sb-lobby Lobby',active:'sb-active Active',bonus:'sb-bonus Bonus!',reveal:'sb-reveal Reveal',idle:'sb-lobby Ready',ended:'sb-ended Ended'}; const p = (map[tb.state]||'sb-lobby Lobby').split(' '); cls = p[0]; txt = p.slice(1).join(' '); }
   else if(mode === 'speed'){ cls = sp.state === 'running' ? 'sb-active' : 'sb-lobby'; txt = sp.state === 'running' ? 'Speed Running' : 'Speed Lobby'; }
+  else if(mode === 'oral'){ var om={idle:'sb-lobby Oral Ready',active:'sb-active Answering',reveal:'sb-reveal Result'}; var op=(om[oral.state]||'sb-lobby Oral Ready').split(' '); cls=op[0]; txt=op.slice(1).join(' '); }
   b.className = 'state-badge ' + cls; b.textContent = txt;
 }
 
@@ -1657,6 +1741,112 @@ function removePlayer(pid){
   db.ref('quiz/players/' + pid).remove();
   db.ref('quiz/sp/players/' + pid).remove();
   db.ref('quiz/tb/members/' + pid).remove();
+}
+
+/* ═══ ORAL ROUND ═══ */
+function renderOral(){
+  /* Roster */
+  var roster = document.getElementById('oral-roster');
+  var cs = oral.contestants || {};
+  var arr = Object.keys(cs).map(function(cid){return Object.assign({cid:cid}, cs[cid]);})
+                  .sort(function(a,b){return (a.num||0)-(b.num||0);});
+  if(!arr.length){
+    roster.innerHTML = '<div style="color:var(--text2);font-size:.74rem;padding:4px 0">No contestants yet. Add students with their numbers above.</div>';
+  } else {
+    roster.innerHTML = arr.map(function(c){
+      return '<div class="pl-item"><div style="width:26px;height:26px;border-radius:50%;background:rgba(37,99,235,.15);color:#60a5fa;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;flex-shrink:0">'+c.num+'</div><div class="pl-name">'+esc(c.name||'?')+'</div><div class="pl-score">'+(c.score||0)+'</div><button onclick="removeOralContestant(\''+c.cid+'\')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:.8rem;padding:2px 4px"><i class="fa-solid fa-xmark"></i></button></div>';
+    }).join('');
+  }
+  /* Active-pick grid */
+  var grid = document.getElementById('oral-pick-grid');
+  grid.innerHTML = arr.map(function(c){
+    var on = c.cid===oral.activeCid;
+    return '<button onclick="selectOralActive(\''+c.cid+'\')" style="min-width:44px;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:800;font-size:.85rem;border:2px solid '+(on?'#60a5fa':'rgba(255,255,255,.1)')+';background:'+(on?'rgba(37,99,235,.25)':'rgba(255,255,255,.03)')+';color:'+(on?'#fff':'var(--text2)')+'">'+c.num+'</button>';
+  }).join('') || '<div style="color:var(--text2);font-size:.74rem">Add contestants first.</div>';
+  /* Active display */
+  var ad = document.getElementById('oral-active-display');
+  var active = oral.activeCid ? cs[oral.activeCid] : null;
+  if(active){
+    ad.innerHTML = '<span style="color:var(--text2)">Now answering: </span><b style="color:#60a5fa;font-size:1rem">#'+active.num+' — '+esc(active.name)+'</b>';
+  } else {
+    ad.textContent = 'No contestant selected';
+  }
+  /* Standings */
+  var st = document.getElementById('oral-standings');
+  var ranked = arr.slice().sort(function(a,b){return (b.score||0)-(a.score||0);});
+  if(!ranked.length){ st.innerHTML = '<div style="color:var(--text2);font-size:.74rem">No scores yet.</div>'; }
+  else {
+    var medals=['🥇','🥈','🥉'];
+    st.innerHTML = ranked.map(function(c,i){
+      return '<div class="pl-item"><div style="width:20px;font-weight:800">'+(medals[i]||(i+1))+'</div><div class="pl-name">#'+c.num+' '+esc(c.name||'?')+'</div><div class="pl-score">'+(c.score||0)+'</div></div>';
+    }).join('');
+  }
+}
+function addOralContestant(){
+  if(!db){ alert('Not connected.'); return; }
+  var num = parseInt(document.getElementById('oral-num').value,10);
+  var name = (document.getElementById('oral-name').value||'').trim();
+  if(!num || num<1){ alert('Enter a valid number.'); return; }
+  if(!name){ alert('Enter a name.'); return; }
+  /* Prevent duplicate numbers */
+  var dup = Object.keys(oral.contestants||{}).some(function(cid){return oral.contestants[cid].num===num;});
+  if(dup){ alert('Number '+num+' is already taken.'); return; }
+  var cid = 'o_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  db.ref('quiz/oral/contestants/'+cid).set({num:num, name:name, score:0});
+  document.getElementById('oral-num').value='';
+  document.getElementById('oral-name').value='';
+  document.getElementById('oral-num').focus();
+}
+function removeOralContestant(cid){
+  if(!db) return;
+  if(!confirm('Remove this contestant?')) return;
+  db.ref('quiz/oral/contestants/'+cid).remove();
+  if(oral.activeCid===cid) db.ref('quiz/oral/activeCid').set(null);
+}
+function selectOralActive(cid){
+  if(!db) return;
+  db.ref('quiz/oral').update({activeCid:cid, state:'active', lastResult:null});
+}
+function showOralQuestion(){
+  if(!db) return;
+  var q = (document.getElementById('oral-q').value||'').trim();
+  db.ref('quiz/oral/question').set(q || null);
+}
+function clearOralQuestion(){
+  if(!db) return;
+  document.getElementById('oral-q').value='';
+  db.ref('quiz/oral/question').set(null);
+}
+function judgeOral(correct){
+  if(!db) return;
+  if(!oral.activeCid || !oral.contestants[oral.activeCid]){ alert('Select the active contestant first.'); return; }
+  var pts = parseInt(document.getElementById('oral-pts').value,10) || 10;
+  var c = oral.contestants[oral.activeCid];
+  var earned = correct ? pts : 0;
+  var newScore = (c.score||0) + earned;
+  var upd = {};
+  upd['quiz/oral/contestants/'+oral.activeCid+'/score'] = newScore;
+  upd['quiz/oral/state'] = 'reveal';
+  upd['quiz/oral/lastResult'] = {cid:oral.activeCid, num:c.num, name:c.name, correct:correct, points:earned, newScore:newScore, ts:Date.now()};
+  db.ref().update(upd);
+}
+function showOralResults(){
+  if(!db) return;
+  db.ref('quiz/state').set('leaderboard');
+}
+function resetOralScores(){
+  if(!db || !confirm('Reset all oral scores to 0?')) return;
+  var upd = {};
+  Object.keys(oral.contestants||{}).forEach(function(cid){ upd['quiz/oral/contestants/'+cid+'/score'] = 0; });
+  upd['quiz/oral/lastResult'] = null;
+  upd['quiz/oral/state'] = 'idle';
+  upd['quiz/oral/activeCid'] = null;
+  db.ref().update(upd);
+}
+function clearOralContestants(){
+  if(!db || !confirm('Remove ALL oral contestants? This cannot be undone.')) return;
+  db.ref('quiz/oral/contestants').remove();
+  db.ref('quiz/oral').update({activeCid:null, state:'idle', lastResult:null});
 }
 
 /* ═══ BROADCAST ═══ */
