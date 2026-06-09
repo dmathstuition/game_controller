@@ -655,58 +655,81 @@ pre{font-size:.65rem;padding:6px 10px}
       </div>
     </div>
 
-    <!-- ORAL ROUND -->
+    <!-- ORAL ROUND (two groups, JSON bank, 60s, pass mechanic) -->
     <div class="panel" id="panel-o">
       <div class="pscroll">
-        <div class="card" style="padding:12px">
-          <div class="ct"><i class="fa-solid fa-microphone"></i> Oral Round — Live Judging</div>
-          <div style="font-size:.74rem;color:var(--text2);line-height:1.5">Students answer aloud when their number is called. Select the active contestant, then mark the answer Correct or Wrong. The result and score show on the audience screen.</div>
+        <div class="itabs">
+          <button class="itab on" onclick="oralTab('setup')"><i class="fa-solid fa-gear"></i> Setup</button>
+          <button class="itab" onclick="oralTab('questions')"><i class="fa-solid fa-file-lines"></i> Questions</button>
+          <button class="itab" onclick="oralTab('control')"><i class="fa-solid fa-microphone"></i> Control</button>
         </div>
 
-        <div class="card" style="padding:12px">
-          <div class="ct"><i class="fa-solid fa-user-plus"></i> Contestants</div>
-          <div class="g2" style="margin-bottom:6px">
-            <input id="oral-num" type="number" min="1" placeholder="No." style="padding:7px 10px;font-size:.8rem">
-            <input id="oral-name" type="text" placeholder="Student name" style="padding:7px 10px;font-size:.8rem" onkeydown="if(event.key==='Enter')addOralContestant()">
+        <!-- SETUP -->
+        <div id="oral-setup">
+          <div class="card" style="padding:12px">
+            <div class="ct"><i class="fa-solid fa-users"></i> Group Names</div>
+            <div class="g2">
+              <div class="fg"><label>Group A</label><input id="oral-gn0" type="text" value="Group A"></div>
+              <div class="fg"><label>Group B</label><input id="oral-gn1" type="text" value="Group B"></div>
+            </div>
+            <button class="cbtn bp" style="width:100%" onclick="saveOralGroups()"><i class="fa-solid fa-floppy-disk"></i> Save Group Names</button>
           </div>
-          <button class="cbtn bgrn" style="width:100%;margin-bottom:8px" onclick="addOralContestant()"><i class="fa-solid fa-plus"></i> Add Contestant</button>
-          <div id="oral-roster"></div>
-        </div>
-
-        <div class="card" style="padding:12px">
-          <div class="ct"><i class="fa-solid fa-hand-pointer"></i> Active Contestant</div>
-          <div id="oral-pick-grid" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px"></div>
-          <div id="oral-active-display" style="text-align:center;padding:8px;font-size:.82rem;color:var(--text2)">No contestant selected</div>
-        </div>
-
-        <div class="card" style="padding:12px">
-          <div class="ct"><i class="fa-solid fa-circle-question"></i> Question (optional — shows on audience)</div>
-          <textarea id="oral-q" placeholder="Type the question to display, or leave blank and read it aloud…" style="width:100%;min-height:50px;padding:8px;font-size:.78rem;margin-bottom:6px"></textarea>
-          <div class="cbgrid">
-            <button class="cbtn bp" onclick="showOralQuestion()"><i class="fa-solid fa-display"></i> Show on Screen</button>
-            <button class="cbtn bor" onclick="clearOralQuestion()"><i class="fa-solid fa-eraser"></i> Clear</button>
+          <div class="card" style="padding:12px">
+            <div class="ct"><i class="fa-solid fa-circle-info"></i> How Oral Round Works</div>
+            <div style="font-size:.74rem;color:var(--text2);line-height:1.6">Import questions (JSON), then in Control launch a question to a group. They answer aloud within 60 seconds. Mark <b>Correct</b> (+10) or <b>Wrong</b>. On a wrong answer you can <b>pass</b> the question to the other group for +5, or skip and reveal the answer.</div>
           </div>
         </div>
 
-        <div class="card" style="padding:12px">
-          <div class="ct"><i class="fa-solid fa-gavel"></i> Judge the Answer</div>
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-            <span style="font-size:.74rem;color:var(--text2)">Points per correct answer:</span>
-            <input id="oral-pts" type="number" min="1" value="10" style="width:64px;padding:5px 8px;font-size:.8rem;text-align:center">
+        <!-- QUESTIONS -->
+        <div id="oral-questions" style="display:none">
+          <div class="card" style="padding:12px">
+            <div class="ct"><i class="fa-solid fa-file-import"></i> Import Questions (JSON)</div>
+            <div class="imp-tabs"><button class="imptab on" onclick="oralImpTab('file')">File</button><button class="imptab" onclick="oralImpTab('paste')">Paste</button></div>
+            <div id="oral-imp-file"><label class="file-lbl"><input type="file" accept=".json" onchange="oralImportFile(event)" style="display:none"><i class="fa-solid fa-folder-open"></i> Choose JSON file</label></div>
+            <div id="oral-imp-paste" style="display:none"><textarea id="oral-paste" class="paste-box" placeholder='[{"text":"Q?","options":{"A":"","B":"","C":"","D":""},"answer":"A","timeLimit":60}]'></textarea><button class="cbtn bp" style="width:100%;margin-top:6px" onclick="oralImportPaste()"><i class="fa-solid fa-clipboard"></i> Import Pasted</button></div>
+            <div style="font-size:.68rem;color:var(--text2);margin-top:6px">Format: text, options A-D, answer (letter), timeLimit (default 60s).</div>
           </div>
-          <div class="cbgrid" style="gap:8px">
-            <button class="cbtn bgrn" style="padding:16px;font-size:.95rem" onclick="judgeOral(true)"><i class="fa-solid fa-check"></i> Correct</button>
-            <button class="cbtn br" style="padding:16px;font-size:.95rem" onclick="judgeOral(false)"><i class="fa-solid fa-xmark"></i> Wrong</button>
+          <div class="card" style="padding:12px">
+            <div class="ct"><i class="fa-solid fa-list"></i> Question Bank <span id="oral-bank-count" style="color:var(--text);font-family:'JetBrains Mono',monospace">(0)</span></div>
+            <div id="oral-bank-list"></div>
+            <button class="cbtn br" style="width:100%;margin-top:6px" onclick="clearOralBank()"><i class="fa-solid fa-trash"></i> Clear Bank</button>
           </div>
         </div>
 
-        <div class="card" style="padding:12px">
-          <div class="ct"><i class="fa-solid fa-ranking-star"></i> Standings</div>
-          <div id="oral-standings"></div>
-          <div class="cbgrid3" style="margin-top:8px">
-            <button class="cbtn bpu" onclick="showOralResults()"><i class="fa-solid fa-trophy"></i> Show Results</button>
-            <button class="cbtn bor" onclick="resetOralScores()"><i class="fa-solid fa-rotate-left"></i> Reset Scores</button>
-            <button class="cbtn br" onclick="clearOralContestants()"><i class="fa-solid fa-trash"></i> Clear All</button>
+        <!-- CONTROL -->
+        <div id="oral-control" style="display:none">
+          <div class="oral-score-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+            <div class="ts-card t0" id="oral-sc0"><div class="ts-name" id="oral-scn0">Group A</div><div class="ts-score" id="oral-scv0">0</div></div>
+            <div class="ts-card t1" id="oral-sc1"><div class="ts-name" id="oral-scn1">Group B</div><div class="ts-score" id="oral-scv1">0</div></div>
+          </div>
+          <div class="cq-card">
+            <div class="cq-head">
+              <div class="cq-meta" id="oral-cq-meta">No active question</div>
+              <div class="tring"><svg viewBox="0 0 56 56" width="44" height="44"><circle class="tr-bg" cx="28" cy="28" r="23"/><circle class="tr-pr" id="oral-ring" cx="28" cy="28" r="23" stroke="#a855f7" stroke-dasharray="144.5" stroke-dashoffset="0"/></svg><div class="tr-num" id="oral-timer" style="color:#c084fc">--</div></div>
+            </div>
+            <div class="tbar"><div class="tbar-f" id="oral-bar" style="width:100%;background:#a855f7"></div></div>
+            <div id="oral-cq-display"><div class="empty">Launch a question from below.</div></div>
+          </div>
+          <div class="card" style="padding:12px">
+            <div class="ct"><i class="fa-solid fa-gavel"></i> Judge</div>
+            <div id="oral-judge-area"><div style="color:var(--text2);font-size:.74rem">Launch a question to begin judging.</div></div>
+          </div>
+          <div class="card" style="padding:12px">
+            <div class="ct"><i class="fa-solid fa-list"></i> Launch a Question</div>
+            <div style="font-size:.7rem;color:var(--text2);margin-bottom:6px">Pick which group answers first, then launch:</div>
+            <div class="cbgrid" style="margin-bottom:8px">
+              <button class="cbtn bp" id="oral-first0" onclick="setOralFirst(0)"><i class="fa-solid fa-flag"></i> <span id="oral-first0-lbl">Group A first</span></button>
+              <button class="cbtn bor" id="oral-first1" onclick="setOralFirst(1)"><i class="fa-solid fa-flag"></i> <span id="oral-first1-lbl">Group B first</span></button>
+            </div>
+            <div id="oral-launch-list"></div>
+          </div>
+          <div class="card" style="padding:12px">
+            <div class="ct"><i class="fa-solid fa-ranking-star"></i> Results</div>
+            <div class="cbgrid3">
+              <button class="cbtn bpu" onclick="showOralResults()"><i class="fa-solid fa-trophy"></i> Show Results</button>
+              <button class="cbtn bor" onclick="resetOralScores()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+              <button class="cbtn br" onclick="endComp()"><i class="fa-solid fa-circle-pause"></i> End Round</button>
+            </div>
           </div>
         </div>
       </div>
@@ -785,7 +808,7 @@ let sections = [{name:'Section 1',questions:[]},{name:'Section 2',questions:[]},
 let players = {}, gs = {state:'lobby',currentQIndex:-1,cq:null,roundAnswers:{}};
 let tb = {state:'lobby',teams:[{name:'Red Eagles',score:0},{name:'Blue Lions',score:0}],bank:[],used:[],activeTeam:0,isBonus:false,cq:null,lock:null,members:{}};
 let sp = {state:'lobby',bank:[],players:{},activePid:null,session:null};
-let oral = {state:'idle',contestants:{},activeCid:null,question:null,pointsPerQ:10,lastResult:null};
+let oral = {state:'idle',groups:[{name:'Group A',score:0},{name:'Group B',score:0}],bank:[],used:[],cq:null,selected:null,lastResult:null};
 
 const CIRC = 144.5;
 const OC = {A:'#ef4444',B:'#3b82f6',C:'#f59e0b',D:'#10b981'};
@@ -855,8 +878,7 @@ function switchMode(m){
   }
   if(prevMode === 'oral' && prevMode !== m){
     upd['quiz/oral/state'] = 'idle';
-    upd['quiz/oral/activeCid'] = null;
-    upd['quiz/oral/question'] = null;
+    upd['quiz/oral/cq'] = null;
     upd['quiz/oral/lastResult'] = null;
   }
 
@@ -886,9 +908,9 @@ function switchMode(m){
     }
     if(m === 'oral'){
       upd['quiz/oral/state'] = 'idle';
-      upd['quiz/oral/activeCid'] = null;
-      upd['quiz/oral/question'] = null;
+      upd['quiz/oral/cq'] = null;
       upd['quiz/oral/lastResult'] = null;
+      upd['quiz/oral/used'] = [];
     }
   }
 
@@ -908,7 +930,7 @@ function nav(k){
   if(k === 's') renderSB();
   if(k === 't' && document.getElementById('team-control').classList.contains('on')) renderTBControl();
   if(k === 'sp' && document.getElementById('speed-control').classList.contains('on')) renderSPControl();
-  if(k === 'o') renderOral();
+  if(k === 'o') oralTab('setup');
   if(k === 'x') loadOrgCfg(); // refresh setup inputs when panel opens
 }
 function toggleSB(){ sbOpen = !sbOpen; document.getElementById('sidebar').classList.toggle('open', sbOpen); }
@@ -1539,12 +1561,18 @@ function setupListeners(){
   db.ref('quiz/players').on('value', s => { players = s.val()||{}; const n = Object.values(players).filter(function(p){return p&&p.name;}).length; document.getElementById('tb-pc').textContent = n; document.getElementById('side-pc').textContent = n; renderStdPlayers(); renderStdAnsBars(); });
   db.ref('quiz/oral').on('value', s => {
     var d = s.val()||{};
-    oral.contestants = d.contestants || {};
-    oral.activeCid = d.activeCid || null;
+    oral.groups = d.groups || [{name:'Group A',score:0},{name:'Group B',score:0}];
+    oral.bank = d.bank || [];
+    oral.used = d.used || [];
+    oral.cq = d.cq || null;
     oral.state = d.state || 'idle';
-    oral.question = d.question || null;
     oral.lastResult = d.lastResult || null;
-    if(document.getElementById('panel-o') && document.getElementById('panel-o').classList.contains('on')) renderOral();
+    if(document.getElementById('panel-o') && document.getElementById('panel-o').classList.contains('on')){
+      var sv=document.getElementById('oral-control');
+      if(sv && sv.style.display!=='none') renderOralControl();
+      var qv=document.getElementById('oral-questions');
+      if(qv && qv.style.display!=='none') renderOralBank();
+    }
     if(mode==='oral') updateBadge();
   });
   db.ref('quiz/roundAnswers').on('value', s => { gs.roundAnswers = s.val()||{}; renderStdAnsBars(); });
@@ -1743,110 +1771,162 @@ function removePlayer(pid){
   db.ref('quiz/tb/members/' + pid).remove();
 }
 
-/* ═══ ORAL ROUND ═══ */
-function renderOral(){
-  /* Roster */
-  var roster = document.getElementById('oral-roster');
-  var cs = oral.contestants || {};
-  var arr = Object.keys(cs).map(function(cid){return Object.assign({cid:cid}, cs[cid]);})
-                  .sort(function(a,b){return (a.num||0)-(b.num||0);});
-  if(!arr.length){
-    roster.innerHTML = '<div style="color:var(--text2);font-size:.74rem;padding:4px 0">No contestants yet. Add students with their numbers above.</div>';
-  } else {
-    roster.innerHTML = arr.map(function(c){
-      return '<div class="pl-item"><div style="width:26px;height:26px;border-radius:50%;background:rgba(37,99,235,.15);color:#60a5fa;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;flex-shrink:0">'+c.num+'</div><div class="pl-name">'+esc(c.name||'?')+'</div><div class="pl-score">'+(c.score||0)+'</div><button onclick="removeOralContestant(\''+c.cid+'\')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:.8rem;padding:2px 4px"><i class="fa-solid fa-xmark"></i></button></div>';
+/* ═══ ORAL ROUND (two groups, JSON, 10/5, 60s, admin pass/skip) ═══ */
+var ORAL_DEF_TL=60, oralFirstGroup=0, oralTimerInt=null;
+function oralTab(t){
+  ['setup','questions','control'].forEach(function(p){var e=document.getElementById('oral-'+p);if(e)e.style.display=(p===t)?'block':'none';});
+  var tabs=document.querySelectorAll('#panel-o .itab');var idx=['setup','questions','control'].indexOf(t);
+  tabs.forEach(function(b,i){b.classList.toggle('on',i===idx);});
+  if(t==='questions')renderOralBank();
+  if(t==='control')renderOralControl();
+}
+function oralImpTab(w){
+  document.getElementById('oral-imp-file').style.display=(w==='file')?'block':'none';
+  document.getElementById('oral-imp-paste').style.display=(w==='paste')?'block':'none';
+  document.querySelectorAll('#oral-questions .imptab').forEach(function(b,i){b.classList.toggle('on',(w==='file')?i===0:i===1);});
+}
+function oralParse(txt){
+  var arr;try{arr=JSON.parse(txt);}catch(e){alert('Invalid JSON: '+e.message);return null;}
+  if(!Array.isArray(arr)){alert('JSON must be an array of questions.');return null;}
+  var clean=[];
+  for(var i=0;i<arr.length;i++){var q=arr[i];
+    if(!q.text||!q.options||!q.answer){alert('Question '+(i+1)+' is missing text, options, or answer.');return null;}
+    clean.push({text:q.text,options:q.options,answer:String(q.answer).trim().toUpperCase(),timeLimit:q.timeLimit||ORAL_DEF_TL});
+  }
+  return clean;
+}
+function oralImportFile(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){var q=oralParse(ev.target.result);if(q)saveOralBank(q);};r.readAsText(f);}
+function oralImportPaste(){var q=oralParse(document.getElementById('oral-paste').value);if(q)saveOralBank(q);}
+function saveOralBank(q){if(db){db.ref('quiz/oral/bank').set(q);alert('Loaded '+q.length+' oral questions.');}}
+function clearOralBank(){if(db&&confirm('Clear the oral question bank?'))db.ref('quiz/oral/bank').set([]);}
+function renderOralBank(){
+  var el=document.getElementById('oral-bank-list'),bank=oral.bank||[];
+  document.getElementById('oral-bank-count').textContent='('+bank.length+')';
+  if(!bank.length){el.innerHTML='<div class="empty">No questions imported.</div>';return;}
+  el.innerHTML=bank.map(function(q,i){
+    var opts=Object.keys(q.options||{}).map(function(k){return '<div class="qi-opt'+(k===q.answer?' ok':'')+'">'+k+': '+esc(q.options[k])+'</div>';}).join('');
+    return '<div class="qi"><div><b>Q'+(i+1)+'.</b> '+esc(q.text)+'</div><div class="qi-meta">'+(q.timeLimit||ORAL_DEF_TL)+'s • answer '+q.answer+'</div><div class="qi-opts">'+opts+'</div></div>';
+  }).join('');
+}
+function saveOralGroups(){
+  if(!db)return;
+  var a=(document.getElementById('oral-gn0').value||'').trim()||'Group A';
+  var b=(document.getElementById('oral-gn1').value||'').trim()||'Group B';
+  var s0=(oral.groups&&oral.groups[0])?(oral.groups[0].score||0):0;
+  var s1=(oral.groups&&oral.groups[1])?(oral.groups[1].score||0):0;
+  db.ref('quiz/oral/groups').set([{name:a,score:s0},{name:b,score:s1}]);
+  alert('Group names saved.');
+}
+function setOralFirst(gi){
+  oralFirstGroup=gi;
+  document.getElementById('oral-first0').classList.toggle('on',gi===0);
+  document.getElementById('oral-first1').classList.toggle('on',gi===1);
+}
+function oralLaunch(idx){
+  if(!db)return;
+  var bank=oral.bank||[];if(!bank[idx]){alert('Question not found.');return;}
+  var q=bank[idx];
+  var used=(oral.used||[]).slice();if(used.indexOf(idx)<0)used.push(idx);
+  var cq={text:q.text,options:q.options,answer:q.answer,timeLimit:q.timeLimit||ORAL_DEF_TL,qIdx:idx,activeGroup:oralFirstGroup,isBonus:false,startTime:serverNow()};
+  db.ref('quiz/oral').update({cq:cq,state:'active',used:used,lastResult:null});
+}
+function startOralTimer(){
+  clearOralTimer();
+  var ring=document.getElementById('oral-ring'),bar=document.getElementById('oral-bar'),num=document.getElementById('oral-timer');
+  if(!oral.cq||!ring)return;
+  var limit=oral.cq.timeLimit||ORAL_DEF_TL, start=oral.cq.startTime;
+  function tick(){
+    if(!oral.cq){clearOralTimer();return;}
+    var left=Math.max(0,limit-(serverNow()-start)/1000),pct=left/limit;
+    ring.style.strokeDashoffset=(1-pct)*CIRC;bar.style.width=(pct*100)+'%';
+    var low=left<=10,col=low?'#ef4444':'#a855f7';ring.style.stroke=col;bar.style.background=col;num.style.color=col;
+    num.textContent=Math.ceil(left);
+    if(left<=0){clearOralTimer();num.textContent='0';}
+  }
+  tick();oralTimerInt=setInterval(tick,250);
+}
+function clearOralTimer(){if(oralTimerInt){clearInterval(oralTimerInt);oralTimerInt=null;}}
+function renderOralControl(){
+  var g=oral.groups||[{name:'Group A',score:0},{name:'Group B',score:0}];
+  document.getElementById('oral-scn0').textContent=g[0]?g[0].name:'Group A';
+  document.getElementById('oral-scn1').textContent=g[1]?g[1].name:'Group B';
+  document.getElementById('oral-scv0').textContent=g[0]?(g[0].score||0):0;
+  document.getElementById('oral-scv1').textContent=g[1]?(g[1].score||0):0;
+  document.getElementById('oral-first0-lbl').textContent=(g[0]?g[0].name:'Group A')+' first';
+  document.getElementById('oral-first1-lbl').textContent=(g[1]?g[1].name:'Group B')+' first';
+  document.getElementById('oral-first0').classList.toggle('on',oralFirstGroup===0);
+  document.getElementById('oral-first1').classList.toggle('on',oralFirstGroup===1);
+  /* Current question */
+  var meta=document.getElementById('oral-cq-meta'),disp=document.getElementById('oral-cq-display');
+  if(oral.cq){
+    var gi=oral.cq.activeGroup||0;var gn=g[gi]?g[gi].name:'Group';
+    meta.innerHTML=(oral.cq.isBonus?'<span style="color:#f59e0b">PASS (+5) — </span>':'<span style="color:#c084fc">MAIN (+10) — </span>')+esc(gn)+' answering';
+    var showAns=(oral.state==='reveal');
+    var opts=Object.keys(oral.cq.options||{}).map(function(k){return '<div class="cq-opt'+(showAns&&k===oral.cq.answer?' ok':'')+'">'+k+': '+esc(oral.cq.options[k])+'</div>';}).join('');
+    disp.innerHTML='<div class="cq-qtext">'+esc(oral.cq.text)+'</div><div class="cq-opts">'+opts+'</div><div style="margin-top:6px;font-size:.72rem;color:var(--gold)">Correct answer: '+oral.cq.answer+'</div>';
+  }else{meta.textContent='No active question';disp.innerHTML='<div class="empty">Launch a question from the list below.</div>';}
+  /* Judge area — buttons depend on state */
+  var ja=document.getElementById('oral-judge-area');
+  if(!oral.cq){ja.innerHTML='<div style="color:var(--text2);font-size:.74rem">Launch a question to begin judging.</div>';}
+  else if(oral.state==='active'){
+    var pts=oral.cq.isBonus?5:10;
+    ja.innerHTML='<div class="cbgrid" style="gap:8px"><button class="cbtn bgrn" style="padding:15px;font-size:.9rem" onclick="oralCorrect()"><i class="fa-solid fa-check"></i> Correct (+'+pts+')</button><button class="cbtn br" style="padding:15px;font-size:.9rem" onclick="oralWrong()"><i class="fa-solid fa-xmark"></i> Wrong</button></div>';
+  }
+  else if(oral.state==='await'){
+    var other=1-(oral.cq.activeGroup||0);var on=g[other]?g[other].name:'other group';
+    ja.innerHTML='<div style="font-size:.76rem;color:var(--text2);margin-bottom:6px">Wrong answer. Pass to '+esc(on)+' for +5, or skip and reveal?</div><div class="cbgrid" style="gap:8px"><button class="cbtn bor" style="padding:14px" onclick="oralPass()"><i class="fa-solid fa-arrow-right-arrow-left"></i> Pass to '+esc(on)+'</button><button class="cbtn bp" style="padding:14px" onclick="oralSkip()"><i class="fa-solid fa-eye"></i> Skip & Reveal</button></div>';
+  }
+  else if(oral.state==='reveal'){
+    ja.innerHTML='<div style="text-align:center;padding:8px;color:var(--green);font-weight:700;font-size:.82rem">Revealed — launch the next question.</div>';
+  }
+  /* Launch list */
+  var ll=document.getElementById('oral-launch-list'),bank=oral.bank||[],used=oral.used||[];
+  if(!bank.length){ll.innerHTML='<div class="empty">Import questions in the Questions tab first.</div>';}
+  else{
+    ll.innerHTML=bank.map(function(q,i){
+      var isUsed=used.indexOf(i)>=0;
+      return '<div class="qi" style="display:flex;align-items:center;gap:8px;'+(isUsed?'opacity:.5':'')+'"><div style="flex:1"><b>Q'+(i+1)+'.</b> '+esc(q.text.length>54?q.text.slice(0,54)+'…':q.text)+'</div><button class="cbtn bp bsm" onclick="oralLaunch('+i+')"'+(isUsed?' disabled':'')+'>'+(isUsed?'Used':'Launch')+'</button></div>';
     }).join('');
   }
-  /* Active-pick grid */
-  var grid = document.getElementById('oral-pick-grid');
-  grid.innerHTML = arr.map(function(c){
-    var on = c.cid===oral.activeCid;
-    return '<button onclick="selectOralActive(\''+c.cid+'\')" style="min-width:44px;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:800;font-size:.85rem;border:2px solid '+(on?'#60a5fa':'rgba(255,255,255,.1)')+';background:'+(on?'rgba(37,99,235,.25)':'rgba(255,255,255,.03)')+';color:'+(on?'#fff':'var(--text2)')+'">'+c.num+'</button>';
-  }).join('') || '<div style="color:var(--text2);font-size:.74rem">Add contestants first.</div>';
-  /* Active display */
-  var ad = document.getElementById('oral-active-display');
-  var active = oral.activeCid ? cs[oral.activeCid] : null;
-  if(active){
-    ad.innerHTML = '<span style="color:var(--text2)">Now answering: </span><b style="color:#60a5fa;font-size:1rem">#'+active.num+' — '+esc(active.name)+'</b>';
-  } else {
-    ad.textContent = 'No contestant selected';
-  }
-  /* Standings */
-  var st = document.getElementById('oral-standings');
-  var ranked = arr.slice().sort(function(a,b){return (b.score||0)-(a.score||0);});
-  if(!ranked.length){ st.innerHTML = '<div style="color:var(--text2);font-size:.74rem">No scores yet.</div>'; }
-  else {
-    var medals=['🥇','🥈','🥉'];
-    st.innerHTML = ranked.map(function(c,i){
-      return '<div class="pl-item"><div style="width:20px;font-weight:800">'+(medals[i]||(i+1))+'</div><div class="pl-name">#'+c.num+' '+esc(c.name||'?')+'</div><div class="pl-score">'+(c.score||0)+'</div></div>';
-    }).join('');
+  startOralTimer();
+}
+function oralCorrect(){
+  if(!db||!oral.cq||oral.state!=='active')return;
+  clearOralTimer();
+  var cq=oral.cq,gi=cq.activeGroup||0,pts=cq.isBonus?5:10;
+  var g=(oral.groups||[{name:'Group A',score:0},{name:'Group B',score:0}]).slice();
+  g[gi]={name:g[gi].name,score:(g[gi].score||0)+pts};
+  db.ref('quiz/oral').update({groups:g,state:'reveal',lastResult:{group:gi,groupName:g[gi].name,correct:true,points:pts,answer:cq.answer,isBonus:cq.isBonus}});
+}
+function oralWrong(){
+  if(!db||!oral.cq||oral.state!=='active')return;
+  clearOralTimer();
+  if(!oral.cq.isBonus){
+    /* main wrong → admin chooses pass or skip */
+    db.ref('quiz/oral/state').set('await');
+  }else{
+    /* bonus wrong → nobody scores, reveal */
+    var gi=oral.cq.activeGroup||0;var g=oral.groups||[{name:'Group A'},{name:'Group B'}];
+    db.ref('quiz/oral').update({state:'reveal',lastResult:{group:gi,groupName:g[gi]?g[gi].name:'',correct:false,points:0,answer:oral.cq.answer,isBonus:true,bothMissed:true}});
   }
 }
-function addOralContestant(){
-  if(!db){ alert('Not connected.'); return; }
-  var num = parseInt(document.getElementById('oral-num').value,10);
-  var name = (document.getElementById('oral-name').value||'').trim();
-  if(!num || num<1){ alert('Enter a valid number.'); return; }
-  if(!name){ alert('Enter a name.'); return; }
-  /* Prevent duplicate numbers */
-  var dup = Object.keys(oral.contestants||{}).some(function(cid){return oral.contestants[cid].num===num;});
-  if(dup){ alert('Number '+num+' is already taken.'); return; }
-  var cid = 'o_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
-  db.ref('quiz/oral/contestants/'+cid).set({num:num, name:name, score:0});
-  document.getElementById('oral-num').value='';
-  document.getElementById('oral-name').value='';
-  document.getElementById('oral-num').focus();
+function oralPass(){
+  if(!db||!oral.cq||oral.state!=='await')return;
+  var cq=oral.cq,other=1-(cq.activeGroup||0);
+  var ncq={text:cq.text,options:cq.options,answer:cq.answer,timeLimit:cq.timeLimit,qIdx:cq.qIdx,activeGroup:other,isBonus:true,startTime:serverNow()};
+  var g=oral.groups||[{name:'Group A'},{name:'Group B'}];
+  db.ref('quiz/oral').update({cq:ncq,state:'active',lastResult:{group:cq.activeGroup||0,groupName:g[cq.activeGroup||0]?g[cq.activeGroup||0].name:'',correct:false,points:0,answer:cq.answer,isBonus:false,passedTo:other,passedName:g[other]?g[other].name:''}});
 }
-function removeOralContestant(cid){
-  if(!db) return;
-  if(!confirm('Remove this contestant?')) return;
-  db.ref('quiz/oral/contestants/'+cid).remove();
-  if(oral.activeCid===cid) db.ref('quiz/oral/activeCid').set(null);
+function oralSkip(){
+  if(!db||!oral.cq||oral.state!=='await')return;
+  var gi=oral.cq.activeGroup||0;var g=oral.groups||[{name:'Group A'},{name:'Group B'}];
+  db.ref('quiz/oral').update({state:'reveal',lastResult:{group:gi,groupName:g[gi]?g[gi].name:'',correct:false,points:0,answer:oral.cq.answer,isBonus:false,skipped:true}});
 }
-function selectOralActive(cid){
-  if(!db) return;
-  db.ref('quiz/oral').update({activeCid:cid, state:'active', lastResult:null});
-}
-function showOralQuestion(){
-  if(!db) return;
-  var q = (document.getElementById('oral-q').value||'').trim();
-  db.ref('quiz/oral/question').set(q || null);
-}
-function clearOralQuestion(){
-  if(!db) return;
-  document.getElementById('oral-q').value='';
-  db.ref('quiz/oral/question').set(null);
-}
-function judgeOral(correct){
-  if(!db) return;
-  if(!oral.activeCid || !oral.contestants[oral.activeCid]){ alert('Select the active contestant first.'); return; }
-  var pts = parseInt(document.getElementById('oral-pts').value,10) || 10;
-  var c = oral.contestants[oral.activeCid];
-  var earned = correct ? pts : 0;
-  var newScore = (c.score||0) + earned;
-  var upd = {};
-  upd['quiz/oral/contestants/'+oral.activeCid+'/score'] = newScore;
-  upd['quiz/oral/state'] = 'reveal';
-  upd['quiz/oral/lastResult'] = {cid:oral.activeCid, num:c.num, name:c.name, correct:correct, points:earned, newScore:newScore, ts:Date.now()};
-  db.ref().update(upd);
-}
-function showOralResults(){
-  if(!db) return;
-  db.ref('quiz/state').set('leaderboard');
-}
+function showOralResults(){if(db)db.ref('quiz/state').set('leaderboard');}
 function resetOralScores(){
-  if(!db || !confirm('Reset all oral scores to 0?')) return;
-  var upd = {};
-  Object.keys(oral.contestants||{}).forEach(function(cid){ upd['quiz/oral/contestants/'+cid+'/score'] = 0; });
-  upd['quiz/oral/lastResult'] = null;
-  upd['quiz/oral/state'] = 'idle';
-  upd['quiz/oral/activeCid'] = null;
-  db.ref().update(upd);
-}
-function clearOralContestants(){
-  if(!db || !confirm('Remove ALL oral contestants? This cannot be undone.')) return;
-  db.ref('quiz/oral/contestants').remove();
-  db.ref('quiz/oral').update({activeCid:null, state:'idle', lastResult:null});
+  if(!db||!confirm('Reset both group scores to 0?'))return;
+  var g=(oral.groups||[{name:'Group A'},{name:'Group B'}]).map(function(x){return{name:x.name,score:0};});
+  db.ref('quiz/oral').update({groups:g,used:[],cq:null,state:'idle',lastResult:null});
 }
 
 /* ═══ BROADCAST ═══ */
