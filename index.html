@@ -804,6 +804,7 @@ try { db.ref('/.info/serverTimeOffset').on('value', function(s){ serverOffset = 
 /* ═══ STATE ═══ */
 let timerInt = null, tbTimerInt = null, sbOpen = false;
 let mode = 'standard', editSec = 0, liveSec = 0;
+let _recovered = false; /* one-time crash-recovery panel restore */
 let sections = [{name:'Section 1',questions:[]},{name:'Section 2',questions:[]},{name:'Section 3',questions:[]}];
 let players = {}, gs = {state:'lobby',currentQIndex:-1,cq:null,roundAnswers:{}};
 let tb = {state:'lobby',teams:[{name:'Red Eagles',score:0},{name:'Blue Lions',score:0}],bank:[],used:[],activeTeam:0,isBonus:false,cq:null,lock:null,members:{}};
@@ -1552,8 +1553,22 @@ function renderSB(){
 
 /* ═══ FIREBASE LISTENERS ═══ */
 function setupListeners(){
-  db.ref('quiz/mode').on('value', s => { const m = s.val()||'standard'; mode = m; document.querySelectorAll('.msw').forEach(b => b.classList.toggle('on', b.classList.contains(m))); updateBadge(); });
-  db.ref('quiz/state').on('value', s => { gs.state = s.val()||'lobby'; updateBadge(); });
+  db.ref('quiz/mode').on('value', s => {
+    const m = s.val()||'standard'; mode = m;
+    document.querySelectorAll('.msw').forEach(b => b.classList.toggle('on', b.classList.contains(m)));
+    updateBadge();
+    /* CRASH RECOVERY: on first load, navigate to the active mode's control panel
+       so a mid-event refresh lands the organiser back where the game is running. */
+    if(!_recovered){
+      _recovered = true;
+      var panelMap = {standard:'c', team:'t', speed:'sp', oral:'o'};
+      nav(panelMap[m] || 'c');
+      if(m === 'team') itab('team','control');
+      else if(m === 'speed') itab('speed','control');
+      else if(m === 'oral') oralTab('control');
+    }
+  });
+  db.ref('quiz/state').on('value', s => { gs.state = s.val()||'lobby'; updateBadge(); if(mode==='standard' && gs.state==='question_active' && gs.cq){ startStdTimer(gs.cq.timeLimit, gs.cq.startTime); } });
   db.ref('quiz/currentSection').on('value', s => { liveSec = s.val()??0; document.getElementById('std-sec-name').textContent = sections[liveSec]?.name||'Section '+(liveSec+1); renderStdNavQ(); });
   db.ref('quiz/currentQIndex').on('value', s => { gs.currentQIndex = s.val()??-1; renderStdNavQ(); });
   db.ref('quiz/currentQuestion').on('value', s => { gs.cq = s.val(); renderStdCQ(); if(gs.cq && gs.state === 'question_active') startStdTimer(gs.cq.timeLimit, gs.cq.startTime); });
