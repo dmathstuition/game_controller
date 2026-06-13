@@ -388,6 +388,7 @@ pre{font-size:.65rem;padding:6px 10px}
     <div class="tb-right">
       <div class="tb-pi">Players: <b id="tb-pc">0</b></div>
       <button class="bgh bsm" onclick="fullReset()"><i class="fa-solid fa-rotate-left"></i> Full Reset</button>
+      <button class="bgh bsm" onclick="adminLogout()" style="border-color:rgba(239,68,68,.3);color:#ff8080"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
     </div>
   </div>
 
@@ -848,6 +849,19 @@ function doLogin(){
     });
 }
 document.getElementById('pass-inp').addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+
+/* ═══ ADMIN LOGOUT — sign out + clear local cache, return to login ═══ */
+function adminLogout(){
+  if(!confirm('Log out of the organiser?\n\nThis signs you out and clears this device\u2019s cached login. The competition data in Firebase is NOT affected — players stay connected and scores are kept.')) return;
+  /* Clear local cache (login/session remnants on THIS device only) */
+  try{ localStorage.clear(); }catch(e){}
+  try{ sessionStorage.clear(); }catch(e){}
+  /* Sign the admin out of Firebase auth, then reload to a clean login screen */
+  function done(){ location.reload(); }
+  if(window.firebase && firebase.auth){
+    firebase.auth().signOut().then(done).catch(done);
+  } else { done(); }
+}
 
 /* ═══ SESSION TOKEN — forces logout of all competitors ═══ */
 function newSessionToken(){ return 'tok_' + serverNow() + '_' + Math.random().toString(36).slice(2,6); }
